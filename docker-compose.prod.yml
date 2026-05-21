@@ -12,6 +12,7 @@ services:
       - zbyszek-network
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=zbyszek-network"
       - "traefik.http.routers.car-repair-tracker.rule=Host(`car-repair-tracker.msolve.it`)"
       - "traefik.http.routers.car-repair-tracker.entrypoints=web"
       - "traefik.http.services.car-repair-tracker.loadbalancer.server.port=4321"

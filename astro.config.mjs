@@ -16,9 +16,7 @@ export default defineConfig({
   },
   adapter: node({ mode: "standalone" }),
   security: {
-    allowedDomains: [
-      { hostname: "car-repair-tracker.msolve.it", protocol: "https" },
-    ],
+    allowedDomains: [{ hostname: "car-repair-tracker.msolve.it", protocol: "https" }],
   },
   env: {
     schema: {

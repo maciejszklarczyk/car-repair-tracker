@@ -53,8 +53,10 @@ jobs:
     runs-on: self-hosted
     if: github.ref == 'refs/heads/main'
     steps:
-      - name: Pull and restart
+      - uses: actions/checkout@v4
+      - name: Sync compose file and restart
         run: |
+          cp docker-compose.prod.yml /home/maciej/docker/apps/car-repair-tracker/docker-compose.prod.yml
           cd /home/maciej/docker/apps/car-repair-tracker
           docker compose -f docker-compose.prod.yml pull
           docker compose -f docker-compose.prod.yml up -d

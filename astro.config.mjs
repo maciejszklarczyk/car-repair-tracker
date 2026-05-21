@@ -8,6 +8,7 @@ import node from "@astrojs/node";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://car-repair-tracker.msolve.it",
   output: "server",
   integrations: [react(), sitemap()],
   vite: {

@@ -16,6 +16,9 @@ services:
       - "traefik.http.routers.car-repair-tracker.rule=Host(`car-repair-tracker.msolve.it`)"
       - "traefik.http.routers.car-repair-tracker.entrypoints=web"
       - "traefik.http.services.car-repair-tracker.loadbalancer.server.port=4321"
+      - "traefik.http.routers.car-repair-tracker.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=${BASIC_AUTH_USERS}"
+
     healthcheck:
       test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:4321"]
       interval: 30s

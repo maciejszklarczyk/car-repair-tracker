@@ -15,6 +15,11 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   adapter: node({ mode: "standalone" }),
+  security: {
+    allowedDomains: [
+      { hostname: "car-repair-tracker.msolve.it", protocol: "https" },
+    ],
+  },
   env: {
     schema: {
       SUPABASE_URL: envField.string({ context: "server", access: "secret", optional: true }),

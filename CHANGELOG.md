@@ -2,6 +2,7 @@
 
 ## 2026-05-21
 
+- [8df900a] fix(docker): replace --spider with -O /dev/null in healthcheck
 - [e640cdd] build: switch adapter to Node.js, add Docker + CI/CD pipeline
 
 ## 2026-05-20

@@ -22,6 +22,7 @@ Implement S-01 from the roadmap: an authenticated owner can add a vehicle (make,
 ## Desired End State
 
 After this plan is complete:
+
 - A `cars` table exists in Supabase with RLS enforcing per-owner isolation
 - An authenticated owner visiting `/dashboard/vehicles` sees their vehicle list (or an empty state with a call-to-action)
 - Clicking "Add vehicle" navigates to `/dashboard/vehicles/new` with a form
@@ -59,6 +60,7 @@ Create the `cars` table with RLS policies that enforce per-owner data isolation.
 **Intent**: Create the `cars` table with all columns needed for S-01 and schema-level preparation for downstream slices. Enable RLS with granular per-operation policies.
 
 **Contract**: Table `cars` with columns:
+
 - `id` UUID PK default `gen_random_uuid()`
 - `user_id` UUID NOT NULL references `auth.users(id)` on delete cascade
 - `make` TEXT NOT NULL
@@ -71,6 +73,7 @@ Create the `cars` table with RLS policies that enforce per-owner data isolation.
 - `updated_at` TIMESTAMPTZ NOT NULL default `now()`
 
 RLS policies:
+
 - `cars_select_own`: SELECT where `auth.uid() = user_id`
 - `cars_insert_own`: INSERT with check `auth.uid() = user_id`
 
@@ -122,6 +125,7 @@ Define the Vehicle type, zod validation schema, and the POST API endpoint for cr
 **Intent**: Zod schema for vehicle creation input with the agreed validation rules.
 
 **Contract**: Export `createVehicleSchema` — zod object with:
+
 - `make`: string, trimmed, min 1
 - `model`: string, trimmed, min 1
 - `year`: number, integer, min 1900, max current year
@@ -329,27 +333,27 @@ First migration creates `supabase/migrations/` directory. Migration timestamp sh
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly
-- [x] 1.2 Table visible in Supabase Studio
+- [x] 1.1 Migration applies cleanly — 0164bd1
+- [x] 1.2 Table visible in Supabase Studio — 0164bd1
 
 #### Manual
 
-- [x] 1.3 Insert with valid user_id succeeds
-- [x] 1.4 RLS blocks cross-user access
-- [x] 1.5 Select returns only authenticated user's rows
+- [x] 1.3 Insert with valid user_id succeeds — 0164bd1
+- [x] 1.4 RLS blocks cross-user access — 0164bd1
+- [x] 1.5 Select returns only authenticated user's rows — 0164bd1
 
 ### Phase 2: Types + Zod Schema + API Endpoint
 
 #### Automated
 
-- [ ] 2.1 TypeScript compiles
-- [ ] 2.2 Lint passes
+- [x] 2.1 TypeScript compiles
+- [x] 2.2 Lint passes
 
 #### Manual
 
-- [ ] 2.3 POST with valid data creates row
-- [ ] 2.4 POST with invalid data shows error
-- [ ] 2.5 POST without auth rejected
+- [x] 2.3 POST with valid data creates row
+- [x] 2.4 POST with invalid data shows error
+- [x] 2.5 POST without auth rejected
 
 ### Phase 3: Vehicle List Page
 

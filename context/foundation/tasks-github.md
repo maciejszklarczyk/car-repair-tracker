@@ -5,6 +5,7 @@
 ### 1. Roadmap analysis
 
 Reviewed `context/foundation/roadmap.md` which contained:
+
 - **4 delivery slices** (S-01 through S-04) ordered by dependency — S-01 is the north star, S-02/S-03/S-04 all depend on it
 - **4 open questions** requiring decisions before certain slices can proceed
 - **6 parked items** explicitly out of scope per PRD Non-Goals
@@ -29,15 +30,15 @@ Decided on the following structure:
 
 Created 7 issues via `gh issue create` in dependency order:
 
-| Issue | Title | Labels | Prerequisites |
-|-------|-------|--------|---------------|
-| #3 | [S-01] Vehicles, repairs, and cost/km | slice, north-star | — |
-| #4 | [S-02] AI repair classification | slice | #3 |
-| #5 | [S-03] Service thresholds and reminders | slice | #3 |
-| #6 | [S-04] Cost trend chart | slice | #3 |
-| #7 | Choose AI provider (Groq vs Gemini Flash) | question | — |
-| #8 | E2E testing strategy | question | — |
-| #9 | AI classification audit trail and accuracy threshold | question | — |
+| Issue | Title                                                | Labels            | Prerequisites |
+| ----- | ---------------------------------------------------- | ----------------- | ------------- |
+| #3    | [S-01] Vehicles, repairs, and cost/km                | slice, north-star | —             |
+| #4    | [S-02] AI repair classification                      | slice             | #3            |
+| #5    | [S-03] Service thresholds and reminders              | slice             | #3            |
+| #6    | [S-04] Cost trend chart                              | slice             | #3            |
+| #7    | Choose AI provider (Groq vs Gemini Flash)            | question          | —             |
+| #8    | E2E testing strategy                                 | question          | —             |
+| #9    | AI classification audit trail and accuracy threshold | question          | —             |
 
 S-01 was created first so its issue number (#3) could be cross-referenced in the prerequisite sections of S-02, S-03, and S-04.
 

@@ -6,12 +6,12 @@ Everything in this section must be in place **before** executing the plan. Group
 
 ### Local machine
 
-| Requirement | Check | Notes |
-|---|---|---|
-| Node.js 22.14.0 | `node -v` → `v22.14.0` | Use `.nvmrc`: `nvm use` |
-| Docker Desktop (or Docker Engine) | `docker --version` | Used for local build + run tests |
-| Docker Compose v2 | `docker compose version` | Bundled with Docker Desktop; separate install on Linux |
-| Supabase CLI (optional) | `npx supabase --version` | Only needed if running local Supabase stack |
+| Requirement                       | Check                    | Notes                                                  |
+| --------------------------------- | ------------------------ | ------------------------------------------------------ |
+| Node.js 22.14.0                   | `node -v` → `v22.14.0`   | Use `.nvmrc`: `nvm use`                                |
+| Docker Desktop (or Docker Engine) | `docker --version`       | Used for local build + run tests                       |
+| Docker Compose v2                 | `docker compose version` | Bundled with Docker Desktop; separate install on Linux |
+| Supabase CLI (optional)           | `npx supabase --version` | Only needed if running local Supabase stack            |
 
 ### Supabase Cloud
 
@@ -43,28 +43,29 @@ You need a **Cloudflare account with Zero Trust** (free plan covers this). The t
 
 ### GitHub repository
 
-| Requirement | Check | Notes |
-|---|---|---|
-| Repo exists on GitHub | Already done | Current remote must be on GitHub for GHCR |
-| GitHub Container Registry enabled | Automatic | GHCR is enabled for all GitHub accounts |
-| `SUPABASE_URL` secret set | Repo → Settings → Secrets → Actions | Used by the CI build step |
-| `SUPABASE_KEY` secret set | Same location | Used by the CI build step |
+| Requirement                       | Check                               | Notes                                     |
+| --------------------------------- | ----------------------------------- | ----------------------------------------- |
+| Repo exists on GitHub             | Already done                        | Current remote must be on GitHub for GHCR |
+| GitHub Container Registry enabled | Automatic                           | GHCR is enabled for all GitHub accounts   |
+| `SUPABASE_URL` secret set         | Repo → Settings → Secrets → Actions | Used by the CI build step                 |
+| `SUPABASE_KEY` secret set         | Same location                       | Used by the CI build step                 |
 
 GHCR image will be published at `ghcr.io/GITHUB_USERNAME/car-repair-tracker:latest`. Replace `GITHUB_USERNAME` with your actual GitHub username in `docker-compose.yml`.
 
 ### Homelab server
 
-| Requirement | Check | Notes |
-|---|---|---|
-| Linux server (x86_64 or ARM64) | — | The homelab machine |
-| Docker Engine installed | `docker --version` on homelab | [Install guide](https://docs.docker.com/engine/install/) |
-| Docker Compose v2 installed | `docker compose version` | Included with Docker Engine ≥ 23 |
-| Outbound HTTPS access | Can reach `github.com` and `registry.ghcr.io` | Needed to pull images |
-| `~/car-repair-tracker/` directory created | `mkdir -p ~/car-repair-tracker` | Working directory for compose stack |
-| `.env` file created in that directory | — | Contains `SUPABASE_URL`, `SUPABASE_KEY`, `CLOUDFLARE_TUNNEL_TOKEN` |
-| Self-hosted GitHub Actions runner installed | `systemctl status actions.runner.*` | See setup steps below |
+| Requirement                                 | Check                                         | Notes                                                              |
+| ------------------------------------------- | --------------------------------------------- | ------------------------------------------------------------------ |
+| Linux server (x86_64 or ARM64)              | —                                             | The homelab machine                                                |
+| Docker Engine installed                     | `docker --version` on homelab                 | [Install guide](https://docs.docker.com/engine/install/)           |
+| Docker Compose v2 installed                 | `docker compose version`                      | Included with Docker Engine ≥ 23                                   |
+| Outbound HTTPS access                       | Can reach `github.com` and `registry.ghcr.io` | Needed to pull images                                              |
+| `~/car-repair-tracker/` directory created   | `mkdir -p ~/car-repair-tracker`               | Working directory for compose stack                                |
+| `.env` file created in that directory       | —                                             | Contains `SUPABASE_URL`, `SUPABASE_KEY`, `CLOUDFLARE_TUNNEL_TOKEN` |
+| Self-hosted GitHub Actions runner installed | `systemctl status actions.runner.*`           | See setup steps below                                              |
 
 **Self-hosted runner setup (one-time):**
+
 1. Go to your GitHub repo → Settings → Actions → Runners → **New self-hosted runner**
 2. Select OS (Linux) and architecture (x64 or ARM64)
 3. Follow the download + configure commands shown in the UI
@@ -88,6 +89,7 @@ The project was bootstrapped with the `10x-astro-starter` which targets Cloudfla
 ## Files to Modify
 
 ### 1. `astro.config.mjs`
+
 Swap the adapter import and usage. Keep everything else (env schema, integrations).
 
 ```js
@@ -97,18 +99,20 @@ import cloudflare from "@astrojs/cloudflare";
 import node from "@astrojs/node";
 
 // Change:
-adapter: cloudflare()
+adapter: cloudflare();
 // To:
-adapter: node({ mode: "standalone" })
+adapter: node({ mode: "standalone" });
 ```
 
 ### 2. `package.json`
+
 - Remove `@astrojs/cloudflare` from dependencies
 - Remove `wrangler` from devDependencies
 - Add `@astrojs/node` to dependencies
 - Add `start` script: `"start": "node ./dist/server/entry.mjs"`
 
 ### 3. `.github/workflows/ci.yml`
+
 - Fix branch trigger: `master` → `main` (both `push` and `pull_request`)
 - Add a `docker` job that builds the image and pushes to GitHub Container Registry (GHCR) on push to `main`
 - Add a `deploy` job that runs on self-hosted runner and executes `docker compose pull && docker compose up -d`
@@ -118,9 +122,11 @@ CI jobs run in order: `ci` (lint + build) → `docker` (build + push image to GH
 The `deploy` job runs on `runs-on: self-hosted`. No inbound SSH required — the runner polls GitHub Actions and executes locally on the homelab.
 
 Required GitHub secrets:
+
 - `GITHUB_TOKEN` is automatic — used for GHCR push (no extra secret needed)
 
 One-time homelab setup (before first CI deploy):
+
 1. Go to repo → Settings → Actions → Runners → New self-hosted runner
 2. Follow the Linux/ARM64 install instructions on the homelab
 3. The runner service connects outbound to GitHub and picks up jobs tagged `self-hosted`
@@ -130,6 +136,7 @@ One-time homelab setup (before first CI deploy):
 ## Files to Create
 
 ### 4. `Dockerfile`
+
 Multi-stage build. Stage 1 installs deps and builds. Stage 2 is the runtime image (Node 22 Alpine). Port 4321.
 
 ```dockerfile
@@ -152,6 +159,7 @@ CMD ["node", "./dist/server/entry.mjs"]
 ```
 
 ### 5. `.dockerignore`
+
 Exclude build artifacts, secrets, and dev files from the Docker context.
 
 ```
@@ -164,6 +172,7 @@ dist
 ```
 
 ### 6. `docker-compose.yml`
+
 App container + cloudflared tunnel client. Traefik is omitted for the first deployment to keep the blast radius small — cloudflared can route directly to the app container.
 
 ```yaml
@@ -196,6 +205,7 @@ services:
 ```
 
 The `.env` file on the homelab (not committed to git) must contain:
+
 ```
 SUPABASE_URL=https://<project-ref>.supabase.co
 SUPABASE_KEY=<anon-key>
@@ -209,19 +219,20 @@ The Cloudflare Tunnel must be configured in the Zero Trust dashboard to route tr
 ## Files to Delete
 
 ### 7. `wrangler.jsonc`
+
 Obsolete after the adapter switch. Removing it avoids confusion and stale references.
 
 ---
 
 ## Critical Files
 
-| File | Role |
-|---|---|
-| `astro.config.mjs` | Adapter config — the core switch |
-| `src/lib/supabase.ts` | Auth client — no change, `astro:env/server` works |
-| `src/lib/config-status.ts` | Env check — no change |
-| `src/middleware.ts` | Auth middleware — no change, no CF-specific code |
-| `.github/workflows/ci.yml` | CI/CD — fix branch + add deploy jobs |
+| File                       | Role                                              |
+| -------------------------- | ------------------------------------------------- |
+| `astro.config.mjs`         | Adapter config — the core switch                  |
+| `src/lib/supabase.ts`      | Auth client — no change, `astro:env/server` works |
+| `src/lib/config-status.ts` | Env check — no change                             |
+| `src/middleware.ts`        | Auth middleware — no change, no CF-specific code  |
+| `.github/workflows/ci.yml` | CI/CD — fix branch + add deploy jobs              |
 
 ---
 

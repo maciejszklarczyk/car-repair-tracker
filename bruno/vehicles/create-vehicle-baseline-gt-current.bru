@@ -1,0 +1,23 @@
+meta {
+  name: Create Vehicle (baseline > current)
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:4321/api/vehicles
+  body: formUrlEncoded
+  auth: none
+}
+
+headers {
+  Origin: http://localhost:4321
+}
+
+body:form-urlencoded {
+  make: Skoda
+  model: Octavia
+  year: 2018
+  current_mileage: 100000
+  baseline_mileage: 150000
+}

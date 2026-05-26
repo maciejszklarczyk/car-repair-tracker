@@ -1,8 +1,8 @@
-# 10x Astro Starter
+# Car Repair Tracker
 
-![](./public/template.png)
+![Car Repair Tracker](./public/banner.svg)
 
-A modern, opinionated starter template for building fast, accessible web applications.
+Track repairs, know your cost/km, never miss a service deadline. A web app for individual car owners who want structured repair history, automatic cost aggregation, and maintenance reminders — without spreadsheets.
 
 ## Tech Stack
 
@@ -144,7 +144,7 @@ Users can then sign in immediately after sign-up without clicking a confirmation
 | `/auth/signin`        | Email/password sign-in form                                             |
 | `/auth/signup`        | Email/password sign-up form                                             |
 | `/auth/confirm-email` | Post-signup "check your inbox" page                                     |
-| `/dashboard`          | Example protected page (redirects to `/auth/signin` if unauthenticated) |
+| `/dashboard/vehicles` | Vehicle list (redirects to `/auth/signin` if unauthenticated)           |
 
 Route protection is handled in `src/middleware.ts`. Add paths to the `PROTECTED_ROUTES` array there to require authentication.
 

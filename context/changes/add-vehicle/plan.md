@@ -388,14 +388,14 @@ First migration creates `supabase/migrations/` directory. Migration timestamp sh
 
 #### Automated
 
-- [x] 5.1 TypeScript compiles
-- [x] 5.2 Lint passes
-- [x] 5.3 Build succeeds
+- [x] 5.1 TypeScript compiles — 8a5ee47
+- [x] 5.2 Lint passes — 8a5ee47
+- [x] 5.3 Build succeeds — 8a5ee47
 
 #### Manual
 
-- [x] 5.4 Dashboard redirects to vehicles
-- [x] 5.5 Topbar navigation works
-- [x] 5.6 Full end-to-end flow works
-- [x] 5.7 RLS isolation verified with two accounts
-- [x] 5.8 Sign out from topbar works
+- [x] 5.4 Dashboard redirects to vehicles — 8a5ee47
+- [x] 5.5 Topbar navigation works — 8a5ee47
+- [x] 5.6 Full end-to-end flow works — 8a5ee47
+- [x] 5.7 RLS isolation verified with two accounts — 8a5ee47
+- [x] 5.8 Sign out from topbar works — 8a5ee47

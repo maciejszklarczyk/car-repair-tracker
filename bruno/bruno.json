@@ -1,0 +1,6 @@
+{
+  "version": "1",
+  "name": "car-repair-tracker",
+  "type": "collection",
+  "ignore": ["node_modules", ".git"]
+}

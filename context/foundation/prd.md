@@ -53,6 +53,7 @@ The insight: a car owner does not need yet another generic notes app — they ne
 - **Then** the repair is saved, classified as `hamulce` within a few seconds (or saved as `pending` if classification cannot complete), the car's dashboard shows a cost-per-km figure computed from the repair list (excluding any cost-less entries), and any reminder whose threshold falls inside the configured warning margin is visible on the same dashboard.
 
 #### Acceptance Criteria
+
 - The owner does not have to wait for classification to finish before the repair appears in history.
 - The cost-per-km figure updates immediately after the new repair is added.
 - A repair recorded without a cost value is shown in history but excluded from cost-per-km.
@@ -64,6 +65,7 @@ The insight: a car owner does not need yet another generic notes app — they ne
 - **Then** the new category is persisted and used in every subsequent view and aggregation; the original assignment is not surfaced to the owner.
 
 #### Acceptance Criteria
+
 - The override persists across sessions.
 - Aggregations grouped by category reflect the owner's chosen value, not the original assignment.
 
@@ -74,6 +76,7 @@ The insight: a car owner does not need yet another generic notes app — they ne
 - **Then** a reminder is surfaced for "wymiana oleju" indicating the next expected event at 145 000 km, because 144 000 ≥ (130 000 + 15 000 − 1 000).
 
 #### Acceptance Criteria
+
 - The reminder disappears once the owner records a matching service event past the threshold.
 - A threshold using a date interval triggers analogously when today is within the margin of the next expected date.
 
@@ -92,12 +95,15 @@ The insight: a car owner does not need yet another generic notes app — they ne
 ### Repairs
 
 - FR-003: Owner can add a repair (data, opis tekstowy, koszt — may be left blank, przebieg w momencie naprawy, pojazd). Repairs without a koszt value (e.g. gwarancja, naprawa darmowa) are recorded but excluded from cost-per-km aggregation. Priority: must-have
+
   > Socratic: Counter-argument considered: "koszt opcjonalny — czasem naprawa darmowa/gwarancja." Resolution: accepted; koszt may be omitted and such entries are excluded from cost aggregation.
 
 - FR-004: System assigns each repair to exactly one of {silnik, hamulce, elektryka, ogumienie, przegląd, inne} based on the repair's opis text. Priority: must-have
+
   > Socratic: Counter-argument considered: "a manual dropdown is enough — six categories." Resolution: rejected; automatic classification is the domain rule that distinguishes the product from a spreadsheet (see Business Logic). Manual override is still available (FR-005).
 
 - FR-005: Owner can override the assigned repair category to any of the six categories. The override is persisted and is the value used downstream. Priority: must-have
+
   > Socratic: Counter-argument considered: "no override — classification should always be right." Resolution: rejected; classification accuracy is not guaranteed for the MVP and the owner must be able to correct mistakes.
 
 - FR-006: Owner can list, edit, and remove repairs for any of their active (non-archived) cars. Removal requires explicit confirmation and the affected car's cost-per-km is recomputed afterwards so totals stay correct. Priority: must-have
@@ -106,6 +112,7 @@ The insight: a car owner does not need yet another generic notes app — they ne
 ### Cost analytics
 
 - FR-007: System computes cost-per-km per car as `sum(koszt where koszt is recorded) / max(0, aktualny przebieg − baseline przebieg)` and surfaces it on the car's dashboard. Fuel and insurance are explicitly out of MVP scope (see Non-Goals). Priority: must-have
+
   > Socratic: Counter-argument considered: "the formula ignores paliwo and ubezpieczenie." Resolution: out of MVP; baseline przebieg makes the formula correct for used cars, and fuel/insurance are deferred to a later phase.
 
 - FR-010: System renders a visual trend of cost-per-km per car over time. Priority: nice-to-have
@@ -114,6 +121,7 @@ The insight: a car owner does not need yet another generic notes app — they ne
 ### Reminders
 
 - FR-008: Owner can define service thresholds per car (typ serwisu, interwał_km and/or interwał_dni, last_done_date, last_done_przebieg). Priority: must-have
+
   > Socratic: Counter-argument considered: "preset szablony per typ auta." Resolution: out of MVP; manual entry only. Catalog of standard intervals deferred to Non-Goals.
 
 - FR-009: Owner can configure a personal warning margin (e.g. 1 000 km / 14 days). A reminder is surfaced for a threshold when current przebieg ≥ (last_done_przebieg + interwał_km − margin_km) or today's date ≥ (last_done_date + interwał_dni − margin_dni). Priority: must-have

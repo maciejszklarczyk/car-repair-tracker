@@ -39,11 +39,11 @@ Użytkownik dodaje naprawę (tekst lub faktura) → AI klasyfikuje typ naprawy �
 
 ## Dane domenowe
 
-| Encja | Pola |
-|---|---|
-| Pojazd | marka, model, rok, aktualny przebieg |
+| Encja   | Pola                                          |
+| ------- | --------------------------------------------- |
+| Pojazd  | marka, model, rok, aktualny przebieg          |
 | Naprawa | data, opis, typ (AI), koszt, przebieg, pojazd |
-| Termin | typ serwisu, data, przebieg-próg, pojazd |
+| Termin  | typ serwisu, data, przebieg-próg, pojazd      |
 
 ## Decyzje
 

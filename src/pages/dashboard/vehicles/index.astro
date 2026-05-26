@@ -1,0 +1,68 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import VehicleCard from "@/components/vehicles/VehicleCard.astro";
+import { createClient } from "@/lib/supabase";
+import type { Vehicle } from "@/types";
+
+const error = Astro.url.searchParams.get("error");
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+let vehicles: Vehicle[] = [];
+
+if (supabase) {
+  const { data } = await supabase
+    .from("cars")
+    .select("*")
+    .is("archived_at", null)
+    .order("created_at", { ascending: false });
+
+  if (data) {
+    vehicles = data as Vehicle[];
+  }
+}
+---
+
+<Layout title="My Vehicles">
+  <div class="mx-auto max-w-4xl">
+    <div class="mb-8 flex items-center justify-between">
+      <h1 class="bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
+        My Vehicles
+      </h1>
+      <a
+        href="/dashboard/vehicles/new"
+        class="rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-500"
+      >
+        Add vehicle
+      </a>
+    </div>
+
+    {
+      error && (
+        <div class="mb-6 rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-200">
+          {decodeURIComponent(error)}
+        </div>
+      )
+    }
+
+    {
+      vehicles.length === 0 ? (
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-12 text-center backdrop-blur-xl">
+          <p class="text-lg text-blue-100/70">No vehicles yet.</p>
+          <p class="mt-2 text-sm text-blue-100/50">Add your first vehicle to start tracking repairs.</p>
+          <a
+            href="/dashboard/vehicles/new"
+            class="mt-6 inline-block rounded-lg bg-purple-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-purple-500"
+          >
+            Add your first vehicle
+          </a>
+        </div>
+      ) : (
+        <div class="grid gap-4">
+          {vehicles.map((vehicle) => (
+            <VehicleCard vehicle={vehicle} />
+          ))}
+        </div>
+      )
+    }
+  </div>
+</Layout>

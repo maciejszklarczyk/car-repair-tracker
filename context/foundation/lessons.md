@@ -8,3 +8,10 @@
 - **Problem**: Flags accumulate, become permanent, nobody knows if they're safe to remove.
 - **Rule**: Always attach a kill date or cleanup ticket to every feature flag at creation time.
 - **Applies to**: all
+
+## Write all GitHub issues in English
+
+- **Context**: GitHub issues — any create or edit via gh CLI or GitHub API
+- **Problem**: Issues created in Polish required a follow-up translation pass, adding noise and making the repo less accessible to contributors.
+- **Rule**: Every GitHub issue must be written in English — title, body, and comments — so it can be widely understood.
+- **Applies to**: implement, impl-review

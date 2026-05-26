@@ -38,10 +38,10 @@ hints:
 
 ## Pre-scaffold verification
 
-| Signal      | Value    | Severity | Notes                                                                            |
-| ----------- | -------- | -------- | -------------------------------------------------------------------------------- |
-| npm package | not run  | n/a      | cmd_template starts with `git clone` — npm package name not derivable; skipped  |
-| GitHub repo | not run  | n/a      | `gh` CLI not found in PATH; recency check unavailable                            |
+| Signal      | Value   | Severity | Notes                                                                          |
+| ----------- | ------- | -------- | ------------------------------------------------------------------------------ |
+| npm package | not run | n/a      | cmd_template starts with `git clone` — npm package name not derivable; skipped |
+| GitHub repo | not run | n/a      | `gh` CLI not found in PATH; recency check unavailable                          |
 
 ## Scaffold log
 
@@ -72,18 +72,18 @@ None.
 
 #### MODERATE findings
 
-| Package                  | Direct? | Via                              | Fix                                         |
-| ------------------------ | ------- | -------------------------------- | ------------------------------------------- |
-| `@astrojs/check`         | yes     | `@astrojs/language-server`       | `@astrojs/check@0.9.2` (major bump)         |
-| `@astrojs/cloudflare`    | yes     | `@cloudflare/vite-plugin`, `wrangler` | `@astrojs/cloudflare@12.6.13` (major)  |
-| `wrangler`               | yes     | `miniflare`                      | `wrangler@3.107.3` (major)                  |
-| `@astrojs/language-server` | no    | `volar-service-yaml`             | via `@astrojs/check` major bump             |
-| `@cloudflare/vite-plugin` | no     | `miniflare`, `wrangler`, `ws`    | via `@astrojs/cloudflare` major bump        |
-| `miniflare`              | no      | `ws`                             | via `@astrojs/cloudflare` major bump        |
-| `volar-service-yaml`     | no      | `yaml-language-server`           | via `@astrojs/check` major bump             |
-| `ws`                     | no      | upstream advisory (GHSA-58qx-3vcg-4xpx) | via `@astrojs/cloudflare` major bump |
-| `yaml`                   | no      | upstream advisory (GHSA-48c2-rrv3-qjmp) | via `@astrojs/check` major bump      |
-| `yaml-language-server`   | no      | `yaml`                           | via `@astrojs/check` major bump             |
+| Package                    | Direct? | Via                                     | Fix                                   |
+| -------------------------- | ------- | --------------------------------------- | ------------------------------------- |
+| `@astrojs/check`           | yes     | `@astrojs/language-server`              | `@astrojs/check@0.9.2` (major bump)   |
+| `@astrojs/cloudflare`      | yes     | `@cloudflare/vite-plugin`, `wrangler`   | `@astrojs/cloudflare@12.6.13` (major) |
+| `wrangler`                 | yes     | `miniflare`                             | `wrangler@3.107.3` (major)            |
+| `@astrojs/language-server` | no      | `volar-service-yaml`                    | via `@astrojs/check` major bump       |
+| `@cloudflare/vite-plugin`  | no      | `miniflare`, `wrangler`, `ws`           | via `@astrojs/cloudflare` major bump  |
+| `miniflare`                | no      | `ws`                                    | via `@astrojs/cloudflare` major bump  |
+| `volar-service-yaml`       | no      | `yaml-language-server`                  | via `@astrojs/check` major bump       |
+| `ws`                       | no      | upstream advisory (GHSA-58qx-3vcg-4xpx) | via `@astrojs/cloudflare` major bump  |
+| `yaml`                     | no      | upstream advisory (GHSA-48c2-rrv3-qjmp) | via `@astrojs/check` major bump       |
+| `yaml-language-server`     | no      | `yaml`                                  | via `@astrojs/check` major bump       |
 
 #### LOW / INFO findings
 
@@ -91,27 +91,28 @@ None.
 
 ## Hints recorded but not acted on
 
-| Hint                    | Value                 |
-| ----------------------- | --------------------- |
-| bootstrapper_confidence | first-class           |
-| quality_override        | false                 |
-| path_taken              | standard              |
-| self_check_answers      | null                  |
-| team_size               | solo                  |
-| deployment_target       | self-host             |
-| ci_provider             | github-actions        |
-| ci_default_flow         | auto-deploy-on-merge  |
-| has_auth                | true                  |
-| has_payments            | false                 |
-| has_realtime            | false                 |
-| has_ai                  | true                  |
-| has_background_jobs     | false                 |
+| Hint                    | Value                |
+| ----------------------- | -------------------- |
+| bootstrapper_confidence | first-class          |
+| quality_override        | false                |
+| path_taken              | standard             |
+| self_check_answers      | null                 |
+| team_size               | solo                 |
+| deployment_target       | self-host            |
+| ci_provider             | github-actions       |
+| ci_default_flow         | auto-deploy-on-merge |
+| has_auth                | true                 |
+| has_payments            | false                |
+| has_realtime            | false                |
+| has_ai                  | true                 |
+| has_background_jobs     | false                |
 
 ## Next steps
 
 Next: a future skill will set up agent context (CLAUDE.md, AGENTS.md). For now, your project is scaffolded and verified — happy hacking.
 
 Useful manual steps in the meantime:
+
 - Review `README.md.scaffold` (the conflict policy preserved your existing `README.md`; diff them to see what the starter shipped).
 - Address audit findings per your project's risk tolerance — the full breakdown is in this log.
 - The HIGH finding (`devalue`) is transitive and advisory only for a dev-time scaffold; run `npm audit fix` when you're ready.

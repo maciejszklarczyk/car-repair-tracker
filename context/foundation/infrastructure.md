@@ -19,11 +19,11 @@ The developer already runs homelab hardware with Cloudflare Tunnel and has hands
 
 ## Platform Comparison
 
-| Platform | CLI-first | Managed/Serverless | Agent-readable docs | Stable deploy API | MCP / Integration | Notes |
-|---|---|---|---|---|---|---|
-| **Self-hosted Docker + CF Tunnel** | ✅ Pass | ❌ Fail | 🟡 Partial | 🟡 Partial | ❌ Fail | Chosen. User familiarity, zero cost |
-| Cloudflare Workers (cloud) | ✅ Pass | ✅ Pass | ✅ Pass | ✅ Pass | ✅ Pass | Best agent tooling; 3 MB bundle cap risk |
-| Railway | ✅ Pass | ✅ Pass | ✅ Pass | 🟡 Partial | 🟡 Partial | $5/month minimum; rollback dashboard-only |
+| Platform                           | CLI-first | Managed/Serverless | Agent-readable docs | Stable deploy API | MCP / Integration | Notes                                     |
+| ---------------------------------- | --------- | ------------------ | ------------------- | ----------------- | ----------------- | ----------------------------------------- |
+| **Self-hosted Docker + CF Tunnel** | ✅ Pass   | ❌ Fail            | 🟡 Partial          | 🟡 Partial        | ❌ Fail           | Chosen. User familiarity, zero cost       |
+| Cloudflare Workers (cloud)         | ✅ Pass   | ✅ Pass            | ✅ Pass             | ✅ Pass           | ✅ Pass           | Best agent tooling; 3 MB bundle cap risk  |
+| Railway                            | ✅ Pass   | ✅ Pass            | ✅ Pass             | 🟡 Partial        | 🟡 Partial        | $5/month minimum; rollback dashboard-only |
 
 **Scoring notes:**
 
@@ -57,7 +57,7 @@ Excellent Node.js PaaS: Railpack auto-detects Astro, PR preview environments are
 
 ### Pre-Mortem — How This Could Fail
 
-*The Car Repair Tracker never launched. Here is the post-mortem:*
+_The Car Repair Tracker never launched. Here is the post-mortem:_
 
 After agreeing to self-host, the developer spent week 1 switching the Astro adapter. The env-var access pattern — `astro:env/server` using Workers bindings vs `process.env` in Node — broke the Supabase client initialization and the middleware. Three evenings debugging. Week 2: Docker Compose with Traefik and cloudflared came up locally but not on the homelab — a Docker socket permission issue blocked Traefik's service discovery. Week 3: the CI/CD pipeline needed a self-hosted Actions runner, which required firewall changes that also broke the Cloudflare Tunnel; the developer reset to a manual deploy workflow. Week 4: homelab SSD showed SMART warnings; the developer spent the weekend doing backups. Total features shipped by week 7: the auth pages (migrated from the starter). The repair tracker itself was never started. Root cause: self-hosting is the right long-term move but the infrastructure setup competed directly with feature-building on a fixed after-hours budget.
 
@@ -78,31 +78,36 @@ After agreeing to self-host, the developer spent week 1 switching the Astro adap
 
 ## Risk Register
 
-| Risk | Source | Likelihood | Impact | Mitigation |
-|---|---|---|---|---|
-| Adapter switch breaks Supabase auth flow (env var access pattern change) | Devil's advocate | High | High | Address first, before any feature work. Update `src/lib/supabase.ts` to use `process.env` instead of Workers bindings. Test sign-in/sign-up end-to-end locally before deploying. |
-| No CI/CD pipeline → manual deploys → slow iteration | Devil's advocate | High | Medium | Set up a simple GitHub Actions workflow in week 1 that SSHes into homelab and runs `docker compose pull && docker compose up -d`. Use `cloudflared access ssh` to avoid exposing port 22. |
-| Homelab hardware failure causes downtime | Devil's advocate | Low | Medium | Set `restart: unless-stopped` on all containers. Enable SMART monitoring (`smartmontools`) for early disk warning. Keep Cloudflare Workers as the escape hatch — the app can be deployed there quickly if homelab fails. |
-| `cloudflared` crash = silent outage | Devil's advocate | Medium | High | Add a Docker health check for the cloudflared container. Use `restart: unless-stopped`. Set up a simple uptime check (e.g. a free UptimeRobot ping on the public URL). |
-| Static assets 404 after Docker build (missing `dist/client/`) | Unknown unknowns | Medium | High | Verify Dockerfile copies both `dist/client/` and `dist/server/`. Test in CI before deploying. |
-| Supabase Cloud connection pool exhaustion under concurrent load | Unknown unknowns | Low | Medium | Use Supabase transaction-mode pooler. Keep a single Supabase client instance per request via `src/lib/supabase.ts`. Monitor via Supabase dashboard. |
-| Pre-mortem: infra setup consumes all MVP weeks | Pre-mortem | Medium | High | Time-box infra setup to week 1. If adapter switch + Docker setup + basic CI takes more than 3 evenings, switch to Cloudflare Workers (runner-up) and eliminate the ops overhead entirely. |
+| Risk                                                                     | Source           | Likelihood | Impact | Mitigation                                                                                                                                                                                                               |
+| ------------------------------------------------------------------------ | ---------------- | ---------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Adapter switch breaks Supabase auth flow (env var access pattern change) | Devil's advocate | High       | High   | Address first, before any feature work. Update `src/lib/supabase.ts` to use `process.env` instead of Workers bindings. Test sign-in/sign-up end-to-end locally before deploying.                                         |
+| No CI/CD pipeline → manual deploys → slow iteration                      | Devil's advocate | High       | Medium | Set up a simple GitHub Actions workflow in week 1 that SSHes into homelab and runs `docker compose pull && docker compose up -d`. Use `cloudflared access ssh` to avoid exposing port 22.                                |
+| Homelab hardware failure causes downtime                                 | Devil's advocate | Low        | Medium | Set `restart: unless-stopped` on all containers. Enable SMART monitoring (`smartmontools`) for early disk warning. Keep Cloudflare Workers as the escape hatch — the app can be deployed there quickly if homelab fails. |
+| `cloudflared` crash = silent outage                                      | Devil's advocate | Medium     | High   | Add a Docker health check for the cloudflared container. Use `restart: unless-stopped`. Set up a simple uptime check (e.g. a free UptimeRobot ping on the public URL).                                                   |
+| Static assets 404 after Docker build (missing `dist/client/`)            | Unknown unknowns | Medium     | High   | Verify Dockerfile copies both `dist/client/` and `dist/server/`. Test in CI before deploying.                                                                                                                            |
+| Supabase Cloud connection pool exhaustion under concurrent load          | Unknown unknowns | Low        | Medium | Use Supabase transaction-mode pooler. Keep a single Supabase client instance per request via `src/lib/supabase.ts`. Monitor via Supabase dashboard.                                                                      |
+| Pre-mortem: infra setup consumes all MVP weeks                           | Pre-mortem       | Medium     | High   | Time-box infra setup to week 1. If adapter switch + Docker setup + basic CI takes more than 3 evenings, switch to Cloudflare Workers (runner-up) and eliminate the ops overhead entirely.                                |
 
 ## Getting Started
 
 1. **Switch Astro adapter to Node.js standalone:**
+
    ```bash
    npm remove @astrojs/cloudflare
    npm install @astrojs/node
    ```
+
    Update `astro.config.mjs`:
+
    ```js
-   import node from '@astrojs/node';
+   import node from "@astrojs/node";
    // adapter: cloudflare({ ... })  →  adapter: node({ mode: 'standalone' })
    ```
+
    Update `src/lib/supabase.ts` to read `process.env.SUPABASE_URL` and `process.env.SUPABASE_KEY` instead of Workers bindings.
 
 2. **Write a minimal Dockerfile** (multi-stage build):
+
    ```dockerfile
    FROM node:lts-alpine AS build
    WORKDIR /app
@@ -133,6 +138,7 @@ After agreeing to self-host, the developer spent week 1 switching the Astro adap
 ## Out of Scope
 
 The following were not evaluated in this research:
+
 - Docker image configuration beyond the starter Dockerfile pattern
 - CI/CD pipeline implementation details
 - Production-scale architecture (multi-region, HA, DR)

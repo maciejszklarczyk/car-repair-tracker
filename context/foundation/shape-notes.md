@@ -23,6 +23,7 @@ checkpoint:
 Individual car owners have no single place to track repair history, running cost per km, and upcoming service/inspection deadlines. Today they rely on memory and hope: invoices vanish, deadlines slip, and when the mechanic asks "when did you last change X?" they can't answer. The product gives them one app where every repair is recorded once, classified automatically, costs are aggregated per km, and upcoming deadlines surface as alerts.
 
 **Pain triggers:**
+
 - Missed service/inspection deadline (no alert anywhere).
 - Mechanic asks "when was last X?" — owner doesn't remember.
 - Owner deciding whether to keep car — no cost/km figure to ground the decision.
@@ -72,12 +73,15 @@ Acknowledged on 2026-05-19: 7-week after-hours MVP requires sustained dedication
 ### Repairs
 
 - FR-003: Owner can add a repair (data, opis tekstowy, **koszt — optional/null allowed**, przebieg w momencie naprawy, pojazd). Repairs with `koszt = null` (e.g., gwarancja, naprawa darmowa) are recorded but excluded from cost/km aggregation. Priority: must-have
+
   > Socrates: Counter-argument considered: "koszt opcjonalny — czasem naprawa darmowa/gwarancja." Resolution: accepted; koszt is nullable and null entries are excluded from cost aggregation.
 
 - FR-004: System classifies each repair into exactly one of {silnik, hamulce, elektryka, ogumienie, przegląd, inne} via an LLM call against the opis text. Priority: must-have
+
   > Socrates: Counter-argument considered: "AI tags w hybrydzie — auto + user może zmienić." Resolution: confirmed; AI sets initial type, user override is FR-005. Hybrid behavior preserves AI as the differentiator while protecting UX.
 
 - FR-005: Owner can override the AI-assigned repair type to any of the six categories. The override is persisted and is the value used downstream. Priority: must-have
+
   > Socrates: Counter-argument considered: "bez override — AI ma być zawsze prawdą." Resolution: rejected; AI accuracy is not guaranteed in MVP and UX must allow correction.
 
 - FR-006: Owner can list, edit, and hard-delete repairs for any of their (non-archived) cars. Hard-delete requires explicit confirmation and triggers recomputation of the affected car's cost/km. Priority: must-have
@@ -86,6 +90,7 @@ Acknowledged on 2026-05-19: 7-week after-hours MVP requires sustained dedication
 ### Cost analytics
 
 - FR-007: System computes cost-per-km per car as `sum(koszt where koszt is not null) / max(0, aktualny_przebieg − baseline_przebieg)`, surfaced on the car dashboard. Fuel and insurance are explicitly out of MVP scope. Priority: must-have
+
   > Socrates: Counter-argument considered: "wzór ignoruje paliwo/ubezpieczenie." Resolution: out of MVP; baseline_przebieg added (FR-002) so the formula is correct for used cars. Fuel/insurance recorded as a v2 follow-up in Non-Goals.
 
 - FR-010: System renders a cost-over-time chart per car (cost on Y, repair date on X). Priority: nice-to-have
@@ -94,6 +99,7 @@ Acknowledged on 2026-05-19: 7-week after-hours MVP requires sustained dedication
 ### Reminders
 
 - FR-008: Owner can define service thresholds per car (typ serwisu, interwał_km OR interwał_dni OR both, ostatnie_wykonanie_data, ostatnie_wykonanie_przebieg). Priority: must-have
+
   > Socrates: Counter-argument considered: "preset szablony per typ auta." Resolution: out of MVP; manual entry only. Templates deferred to Non-Goals.
 
 - FR-009: Owner can configure a **per-user warning margin** (e.g., 1000 km / 14 days). A reminder is shown in-app when current_przebieg ≥ (ostatnie_wykonanie_przebieg + interwał_km − margin_km) OR today ≥ (ostatnie_wykonanie_data + interwał_dni − margin_dni). Priority: must-have

@@ -1,0 +1,20 @@
+---
+import type { Vehicle } from "@/types";
+
+interface Props {
+  vehicle: Vehicle;
+}
+
+const { vehicle } = Astro.props;
+---
+
+<div class="rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+  <h3 class="text-lg font-semibold text-white">
+    {vehicle.make}
+    {vehicle.model}
+  </h3>
+  <div class="mt-2 flex flex-wrap gap-4 text-sm text-blue-100/70">
+    <span>Year: {vehicle.year}</span>
+    <span>Mileage: {vehicle.current_mileage.toLocaleString()} km</span>
+  </div>
+</div>

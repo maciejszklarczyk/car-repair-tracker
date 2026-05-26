@@ -346,28 +346,28 @@ First migration creates `supabase/migrations/` directory. Migration timestamp sh
 
 #### Automated
 
-- [x] 2.1 TypeScript compiles
-- [x] 2.2 Lint passes
+- [x] 2.1 TypeScript compiles — 4e775c1
+- [x] 2.2 Lint passes — 4e775c1
 
 #### Manual
 
-- [x] 2.3 POST with valid data creates row
-- [x] 2.4 POST with invalid data shows error
-- [x] 2.5 POST without auth rejected
+- [x] 2.3 POST with valid data creates row — 4e775c1
+- [x] 2.4 POST with invalid data shows error — 4e775c1
+- [x] 2.5 POST without auth rejected — 4e775c1
 
 ### Phase 3: Vehicle List Page
 
 #### Automated
 
-- [ ] 3.1 TypeScript compiles
-- [ ] 3.2 Lint passes
-- [ ] 3.3 Page renders without error
+- [x] 3.1 TypeScript compiles
+- [x] 3.2 Lint passes
+- [x] 3.3 Page renders without error
 
 #### Manual
 
-- [ ] 3.4 Empty state shown when no vehicles
-- [ ] 3.5 Vehicles appear after adding via API
-- [ ] 3.6 Unauthenticated visit redirects to signin
+- [x] 3.4 Empty state shown when no vehicles
+- [x] 3.5 Vehicles appear after adding via API
+- [x] 3.6 Unauthenticated visit redirects to signin
 
 ### Phase 4: Add Vehicle Form
 

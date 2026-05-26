@@ -1,7 +1,7 @@
 ---
 change_id: add-vehicle
 title: Add vehicle — form, list, and DB migration
-status: implementing
+status: implemented
 created: 2026-05-26
 updated: 2026-05-26
 archived_at: null

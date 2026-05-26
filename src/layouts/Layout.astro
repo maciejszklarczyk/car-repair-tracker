@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import Banner from "@/components/Banner.astro";
+import Topbar from "@/components/Topbar.astro";
 import { missingConfigs } from "@/lib/config-status";
 
 interface Props {
@@ -8,6 +9,7 @@ interface Props {
 }
 
 const { title = "10x Astro Starter" } = Astro.props;
+const user = Astro.locals.user;
 ---
 
 <!doctype html>
@@ -35,7 +37,16 @@ const { title = "10x Astro Starter" } = Astro.props;
         </Banner>
       ))
     }
-    <slot />
+    {
+      user ? (
+        <div class="bg-cosmic min-h-screen p-4 sm:p-8">
+          <Topbar />
+          <slot />
+        </div>
+      ) : (
+        <slot />
+      )
+    }
   </body>
 </html>
 

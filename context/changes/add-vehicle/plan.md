@@ -373,29 +373,29 @@ First migration creates `supabase/migrations/` directory. Migration timestamp sh
 
 #### Automated
 
-- [x] 4.1 TypeScript compiles
-- [x] 4.2 Lint passes
+- [x] 4.1 TypeScript compiles — fa30772
+- [x] 4.2 Lint passes — fa30772
 
 #### Manual
 
-- [x] 4.3 Form renders all fields
-- [x] 4.4 Client-side validation works
-- [x] 4.5 Successful submit creates vehicle + redirects
-- [x] 4.6 Server error displays on form
-- [x] 4.7 Form works without JavaScript
+- [x] 4.3 Form renders all fields — fa30772
+- [x] 4.4 Client-side validation works — fa30772
+- [x] 4.5 Successful submit creates vehicle + redirects — fa30772
+- [x] 4.6 Server error displays on form — fa30772
+- [x] 4.7 Form works without JavaScript — fa30772
 
 ### Phase 5: Navigation + Polish
 
 #### Automated
 
-- [ ] 5.1 TypeScript compiles
-- [ ] 5.2 Lint passes
-- [ ] 5.3 Build succeeds
+- [x] 5.1 TypeScript compiles
+- [x] 5.2 Lint passes
+- [x] 5.3 Build succeeds
 
 #### Manual
 
-- [ ] 5.4 Dashboard redirects to vehicles
-- [ ] 5.5 Topbar navigation works
-- [ ] 5.6 Full end-to-end flow works
-- [ ] 5.7 RLS isolation verified with two accounts
-- [ ] 5.8 Sign out from topbar works
+- [x] 5.4 Dashboard redirects to vehicles
+- [x] 5.5 Topbar navigation works
+- [x] 5.6 Full end-to-end flow works
+- [x] 5.7 RLS isolation verified with two accounts
+- [x] 5.8 Sign out from topbar works

@@ -314,12 +314,12 @@ Migration filename uses timestamp `20260531120000` to sort after the cars migrat
 
 #### Automated
 
-- [x] 4.1 npm run build passes
-- [x] 4.2 npm run lint passes
+- [x] 4.1 npm run build passes — 557d72d
+- [x] 4.2 npm run lint passes — 557d72d
 
 #### Manual
 
-- [x] 4.3 VehicleCard shows "Add repair" link on vehicles list
-- [x] 4.4 Post-repair redirect lands on vehicle detail with success banner
-- [x] 4.5 Vehicle detail shows correct vehicle info
-- [x] 4.6 Nonexistent vehicle ID redirects to vehicles list
+- [x] 4.3 VehicleCard shows "Add repair" link on vehicles list — 557d72d
+- [x] 4.4 Post-repair redirect lands on vehicle detail with success banner — 557d72d
+- [x] 4.5 Vehicle detail shows correct vehicle info — 557d72d
+- [x] 4.6 Nonexistent vehicle ID redirects to vehicles list — 557d72d

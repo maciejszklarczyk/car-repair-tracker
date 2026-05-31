@@ -53,14 +53,17 @@ export function TextareaField({
           )}
         />
       </div>
-      {error ? (
+      {error && (
         <p className="mt-1 flex items-center gap-1 text-xs text-red-300">
           <CircleAlert className="size-3" />
           {error}
         </p>
-      ) : maxLength !== undefined ? (
-        <p className="mt-1 text-right text-xs text-white/40">{maxLength - value.length} chars remaining</p>
-      ) : null}
+      )}
+      {maxLength !== undefined && (
+        <p className={`mt-1 text-right text-xs ${maxLength - value.length < 0 ? "text-red-300" : "text-white/40"}`}>
+          {maxLength - value.length} chars remaining
+        </p>
+      )}
     </div>
   );
 }

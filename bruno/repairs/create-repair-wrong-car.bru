@@ -1,0 +1,23 @@
+meta {
+  name: Create Repair (invalid - car belongs to another user)
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:4321/api/repairs
+  body: formUrlEncoded
+  auth: none
+}
+
+headers {
+  Origin: http://localhost:4321
+}
+
+body:form-urlencoded {
+  car_id: ffffffff-ffff-ffff-ffff-ffffffffffff
+  repair_date: 2026-05-31
+  description: Test ownership check
+  cost: 100.00
+  mileage: 50000
+}

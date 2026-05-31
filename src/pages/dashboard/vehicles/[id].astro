@@ -1,0 +1,72 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { createClient } from "@/lib/supabase";
+import type { Vehicle } from "@/types";
+
+const user = Astro.locals.user;
+if (!user) return Astro.redirect("/auth/signin");
+
+const { id } = Astro.params;
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+
+let vehicle: Vehicle | null = null;
+if (id && supabase) {
+  const result = await supabase.from("cars").select("*").eq("id", id).single();
+  if (result.data) {
+    vehicle = result.data as Vehicle;
+  }
+}
+
+if (vehicle?.user_id !== user.id) {
+  return Astro.redirect("/dashboard/vehicles");
+}
+
+const success = Astro.url.searchParams.get("success");
+---
+
+<Layout title={`${vehicle.make} ${vehicle.model}`}>
+  <div class="mx-auto max-w-4xl">
+    <div class="mb-6 flex items-center gap-4">
+      <a href="/dashboard/vehicles" class="text-sm text-blue-100/50 transition-colors hover:text-blue-100/80">
+        ← Back to vehicles
+      </a>
+    </div>
+
+    {
+      success && (
+        <div class="mb-6 rounded-lg border border-green-500/20 bg-green-500/10 p-4 text-sm text-green-200">
+          Repair added successfully.
+        </div>
+      )
+    }
+
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
+      <div class="flex items-start justify-between">
+        <div>
+          <h1 class="bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
+            {vehicle.make}
+            {vehicle.model}
+          </h1>
+          <div class="mt-3 flex flex-wrap gap-6 text-sm text-blue-100/70">
+            <span>Year: {vehicle.year}</span>
+            <span>Mileage: {vehicle.current_mileage.toLocaleString()} km</span>
+          </div>
+        </div>
+        <a
+          href={`/dashboard/repairs/new?vehicle_id=${vehicle.id}`}
+          class="rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-500"
+        >
+          Add repair
+        </a>
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <h2 class="mb-4 text-xl font-semibold text-blue-100/80">Repair History</h2>
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-8 text-center backdrop-blur-xl">
+        <p class="text-blue-100/50">No repairs yet.</p>
+        <p class="mt-1 text-sm text-blue-100/30">Repairs will appear here once added.</p>
+      </div>
+    </div>
+  </div>
+</Layout>

@@ -300,26 +300,26 @@ Migration filename uses timestamp `20260531120000` to sort after the cars migrat
 
 #### Automated
 
-- [x] 3.1 npm run build passes
-- [x] 3.2 npm run lint passes
+- [x] 3.1 npm run build passes — 02eae33
+- [x] 3.2 npm run lint passes — 02eae33
 
 #### Manual
 
-- [x] 3.3 /dashboard/repairs/new?vehicle_id=<valid> renders form with vehicle name
-- [x] 3.4 Missing vehicle_id redirects to vehicles list
-- [x] 3.5 Client-side validation blocks invalid submit
-- [x] 3.6 Valid submit creates repair and redirects to vehicle detail page
+- [x] 3.3 /dashboard/repairs/new?vehicle_id=<valid> renders form with vehicle name — 02eae33
+- [x] 3.4 Missing vehicle_id redirects to vehicles list — 02eae33
+- [x] 3.5 Client-side validation blocks invalid submit — 02eae33
+- [x] 3.6 Valid submit creates repair and redirects to vehicle detail page — 02eae33
 
 ### Phase 4: Vehicle Detail Page + VehicleCard Entry Point
 
 #### Automated
 
-- [ ] 4.1 npm run build passes
-- [ ] 4.2 npm run lint passes
+- [x] 4.1 npm run build passes
+- [x] 4.2 npm run lint passes
 
 #### Manual
 
-- [ ] 4.3 VehicleCard shows "Add repair" link on vehicles list
-- [ ] 4.4 Post-repair redirect lands on vehicle detail with success banner
-- [ ] 4.5 Vehicle detail shows correct vehicle info
-- [ ] 4.6 Nonexistent vehicle ID redirects to vehicles list
+- [x] 4.3 VehicleCard shows "Add repair" link on vehicles list
+- [x] 4.4 Post-repair redirect lands on vehicle detail with success banner
+- [x] 4.5 Vehicle detail shows correct vehicle info
+- [x] 4.6 Nonexistent vehicle ID redirects to vehicles list

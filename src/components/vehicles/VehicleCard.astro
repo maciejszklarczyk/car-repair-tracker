@@ -17,4 +17,18 @@ const { vehicle } = Astro.props;
     <span>Year: {vehicle.year}</span>
     <span>Mileage: {vehicle.current_mileage.toLocaleString()} km</span>
   </div>
+  <div class="mt-4 flex gap-2">
+    <a
+      href={`/dashboard/vehicles/${vehicle.id}`}
+      class="rounded-lg border border-white/20 px-3 py-1.5 text-xs font-medium text-blue-100/70 transition-colors hover:border-white/40 hover:text-white"
+    >
+      View details
+    </a>
+    <a
+      href={`/dashboard/repairs/new?vehicle_id=${vehicle.id}`}
+      class="rounded-lg bg-purple-600/70 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-purple-500"
+    >
+      Add repair
+    </a>
+  </div>
 </div>

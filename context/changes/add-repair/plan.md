@@ -287,28 +287,28 @@ Migration filename uses timestamp `20260531120000` to sort after the cars migrat
 
 #### Automated
 
-- [x] 2.1 TypeScript compiles — npm run build
-- [x] 2.2 npm run lint passes
+- [x] 2.1 TypeScript compiles — npm run build — 4b229ca
+- [x] 2.2 npm run lint passes — 4b229ca
 
 #### Manual
 
-- [x] 2.3 POST with valid data creates repairs row
-- [x] 2.4 POST with another user's car_id returns error (ownership check)
-- [x] 2.5 POST with invalid fields returns validation error redirect
+- [x] 2.3 POST with valid data creates repairs row — 4b229ca
+- [x] 2.4 POST with another user's car_id returns error (ownership check) — 4b229ca
+- [x] 2.5 POST with invalid fields returns validation error redirect — 4b229ca
 
 ### Phase 3: Add Repair Form + Page
 
 #### Automated
 
-- [ ] 3.1 npm run build passes
-- [ ] 3.2 npm run lint passes
+- [x] 3.1 npm run build passes
+- [x] 3.2 npm run lint passes
 
 #### Manual
 
-- [ ] 3.3 /dashboard/repairs/new?vehicle_id=<valid> renders form with vehicle name
-- [ ] 3.4 Missing vehicle_id redirects to vehicles list
-- [ ] 3.5 Client-side validation blocks invalid submit
-- [ ] 3.6 Valid submit creates repair and redirects to vehicle detail page
+- [x] 3.3 /dashboard/repairs/new?vehicle_id=<valid> renders form with vehicle name
+- [x] 3.4 Missing vehicle_id redirects to vehicles list
+- [x] 3.5 Client-side validation blocks invalid submit
+- [x] 3.6 Valid submit creates repair and redirects to vehicle detail page
 
 ### Phase 4: Vehicle Detail Page + VehicleCard Entry Point
 

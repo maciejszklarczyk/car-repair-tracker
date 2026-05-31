@@ -275,26 +275,26 @@ Migration filename uses timestamp `20260531120000` to sort after the cars migrat
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly (npx supabase db reset)
-- [x] 1.2 TypeScript compiles — npm run build
+- [x] 1.1 Migration applies cleanly (npx supabase db reset) — 9006e28
+- [x] 1.2 TypeScript compiles — npm run build — 9006e28
 
 #### Manual
 
-- [x] 1.3 repairs table visible in Supabase Studio with correct columns and RLS
-- [x] 1.4 Insert with foreign car_id rejected by RLS
+- [x] 1.3 repairs table visible in Supabase Studio with correct columns and RLS — 9006e28
+- [x] 1.4 Insert with foreign car_id rejected by RLS — 9006e28
 
 ### Phase 2: Zod Schema + API Route
 
 #### Automated
 
-- [ ] 2.1 TypeScript compiles — npm run build
-- [ ] 2.2 npm run lint passes
+- [x] 2.1 TypeScript compiles — npm run build
+- [x] 2.2 npm run lint passes
 
 #### Manual
 
-- [ ] 2.3 POST with valid data creates repairs row
-- [ ] 2.4 POST with another user's car_id returns error (ownership check)
-- [ ] 2.5 POST with invalid fields returns validation error redirect
+- [x] 2.3 POST with valid data creates repairs row
+- [x] 2.4 POST with another user's car_id returns error (ownership check)
+- [x] 2.5 POST with invalid fields returns validation error redirect
 
 ### Phase 3: Add Repair Form + Page
 

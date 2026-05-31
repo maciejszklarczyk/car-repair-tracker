@@ -1,0 +1,23 @@
+meta {
+  name: Create Repair (invalid - missing description)
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:4321/api/repairs
+  body: formUrlEncoded
+  auth: none
+}
+
+headers {
+  Origin: http://localhost:4321
+}
+
+body:form-urlencoded {
+  car_id: b0000000-0000-0000-0000-000000000001
+  repair_date: 2026-05-31
+  description:
+  cost: 200.00
+  mileage: 121000
+}

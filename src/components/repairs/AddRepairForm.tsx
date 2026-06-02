@@ -61,7 +61,7 @@ export default function AddRepairForm({ carId, vehicleName, serverError, baselin
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
   }
 
-  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+  function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     if (!validate()) e.preventDefault();
   }
 

@@ -2,6 +2,7 @@
 
 ## 2026-06-02
 
+- [f17bd45] fix(validate-repair-mileage): impl-review fixes — event type, targeted select, report saved
 - [f82044c] ci(migrate): link project before db push, fix unknown flag error
 - [2242788] ci: add migrate job to apply Supabase migrations before deploy
 - [2ca8213] docs(roadmap): update statuses S-01–S-04 done, S-08 implemented

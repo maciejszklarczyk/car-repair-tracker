@@ -24,7 +24,11 @@ if (repair?.user_id !== user.id) {
 
 let vehicle: Vehicle | null = null;
 if (supabase) {
-  const result = await supabase.from("cars").select("*").eq("id", repair.car_id).single();
+  const result = await supabase
+    .from("cars")
+    .select("id, make, model, year, baseline_mileage")
+    .eq("id", repair.car_id)
+    .single();
   if (result.data) {
     vehicle = result.data as Vehicle;
   }

@@ -2,22 +2,24 @@
 import Layout from "@/layouts/Layout.astro";
 import VehicleCard from "@/components/vehicles/VehicleCard.astro";
 import { createClient } from "@/lib/supabase";
+import { computeCurrentMileage } from "@/lib/costPerKm";
 import type { Vehicle } from "@/types";
 
 const error = Astro.url.searchParams.get("error");
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
-let vehicles: Vehicle[] = [];
+type VehicleWithRepairs = Vehicle & { repairs: { mileage: number }[] };
+let vehicles: VehicleWithRepairs[] = [];
 
 if (supabase) {
   const { data } = await supabase
     .from("cars")
-    .select("*")
+    .select("*, repairs(mileage)")
     .is("archived_at", null)
     .order("created_at", { ascending: false });
 
   if (data) {
-    vehicles = data as Vehicle[];
+    vehicles = data as VehicleWithRepairs[];
   }
 }
 ---
@@ -58,8 +60,8 @@ if (supabase) {
         </div>
       ) : (
         <div class="grid gap-4">
-          {vehicles.map((vehicle) => (
-            <VehicleCard vehicle={vehicle} />
+          {vehicles.map((v) => (
+            <VehicleCard vehicle={v} currentMileage={computeCurrentMileage(v.repairs, v.baseline_mileage)} />
           ))}
         </div>
       )

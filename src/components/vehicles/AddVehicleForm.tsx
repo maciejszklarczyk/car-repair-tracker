@@ -12,7 +12,6 @@ interface FormErrors {
   make?: string;
   model?: string;
   year?: string;
-  current_mileage?: string;
   baseline_mileage?: string;
 }
 
@@ -20,7 +19,6 @@ export default function AddVehicleForm({ serverError }: Props) {
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
   const [year, setYear] = useState("");
-  const [currentMileage, setCurrentMileage] = useState("");
   const [baselineMileage, setBaselineMileage] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -37,22 +35,11 @@ export default function AddVehicleForm({ serverError }: Props) {
       next.year = `Year must be between 1900 and ${new Date().getFullYear()}`;
     }
 
-    const currentNum = Number(currentMileage);
-    if (!currentMileage.trim()) {
-      next.current_mileage = "Current mileage is required";
-    } else if (!Number.isInteger(currentNum) || currentNum < 0) {
-      next.current_mileage = "Mileage must be a non-negative integer";
-    }
-
     const baselineNum = Number(baselineMileage);
     if (!baselineMileage.trim()) {
       next.baseline_mileage = "Baseline mileage is required";
     } else if (!Number.isInteger(baselineNum) || baselineNum < 0) {
       next.baseline_mileage = "Mileage must be a non-negative integer";
-    }
-
-    if (!next.current_mileage && !next.baseline_mileage && currentNum < baselineNum) {
-      next.current_mileage = "Current mileage must be greater than or equal to baseline mileage";
     }
 
     setErrors(next);
@@ -109,20 +96,6 @@ export default function AddVehicleForm({ serverError }: Props) {
         placeholder="e.g. 2018"
         error={errors.year}
         icon={<Calendar className="size-4" />}
-      />
-
-      <FormField
-        id="current_mileage"
-        type="number"
-        label="Current Mileage (km)"
-        value={currentMileage}
-        onChange={(v) => {
-          setCurrentMileage(v);
-          clearError("current_mileage");
-        }}
-        placeholder="e.g. 145000"
-        error={errors.current_mileage}
-        icon={<Gauge className="size-4" />}
       />
 
       <FormField

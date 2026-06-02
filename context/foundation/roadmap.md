@@ -3,7 +3,7 @@ project: Car Repair Tracker
 version: 2
 status: draft
 created: 2026-05-25
-updated: 2026-05-26
+updated: 2026-06-02
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -29,13 +29,14 @@ Indywidualni właściciele aut nie mają jednego miejsca do śledzenia historii 
 
 | ID   | Change ID         | Outcome (user can …)                                                  | Prerequisites | PRD refs                             | Status   |
 | ---- | ----------------- | --------------------------------------------------------------------- | ------------- | ------------------------------------ | -------- |
-| S-01 | add-vehicle       | dodać auto (marka, model, rok, przebieg aktualny, przebieg bazowy)    | —             | FR-001, FR-002, US-01                | ready    |
-| S-02 | add-repair        | dodać naprawę (data, opis, koszt, przebieg) do wybranego auta         | S-01          | FR-003, US-01                        | proposed |
-| S-03 | repair-history    | przeglądać, edytować i usuwać naprawy na liście historii auta         | S-02          | FR-006, US-01                        | proposed |
-| S-04 | cost-per-km       | zobaczyć liczbę koszt/km na dashboardzie auta po dodaniu naprawy      | S-02          | FR-007, US-01                        | proposed |
+| S-01 | add-vehicle       | dodać auto (marka, model, rok, przebieg bazowy) i zobaczyć je na liście | —             | FR-001, FR-002, US-01                | done     |
+| S-02 | add-repair        | dodać naprawę (data, opis, koszt, przebieg) do wybranego auta           | S-01          | FR-003, US-01                        | done     |
+| S-03 | repair-history    | przeglądać, edytować i usuwać naprawy na liście historii auta           | S-02          | FR-006, US-01                        | done     |
+| S-04 | cost-per-km       | zobaczyć liczbę koszt/km na dashboardzie auta po dodaniu naprawy        | S-02          | FR-007, US-01                        | done     |
+| S-08 | fix-mileage-tracking    | widzieć poprawny aktualny przebieg (z napraw) i poprawny koszt/km | S-02          | FR-007                               | implemented |
 | S-05 | ai-classification | zobaczyć naprawę sklasyfikowaną przez AI i nadpisać kategorię ręcznie | S-02          | FR-004, FR-005, FR-011, US-01, US-02 | proposed |
 | S-06 | service-reminders | zdefiniować progi serwisowe i widzieć przypomnienia na dashboardzie   | S-01          | FR-008, FR-009, US-03                | proposed |
-| S-07 | cost-trend-chart  | zobaczyć wizualny wykres trendu kosztów/km per auto w czasie          | S-04          | FR-010                               | proposed |
+| S-07 | cost-trend-chart        | zobaczyć wizualny wykres trendu kosztów/km per auto w czasie          | S-04          | FR-010                               | proposed |
 
 ## Streams
 
@@ -43,7 +44,7 @@ Navigation aid — grupuje pozycje ze wspólnym łańcuchem zależności. Kanoni
 
 | Stream | Temat                    | Łańcuch                                    | Uwaga                                                   |
 | ------ | ------------------------ | ------------------------------------------ | ------------------------------------------------------- |
-| A      | Dane + analityka kosztów | `S-01` → `S-02` → `S-03` / `S-04` → `S-07` | Główny tor; zawiera gwiazdę przewodnią S-04.            |
+| A      | Dane + analityka kosztów | `S-01` → `S-02` → `S-03` / `S-04` / `S-08` → `S-07` | Główny tor; zawiera gwiazdę przewodnią S-04. S-08 naprawia obliczenia.  |
 | B      | Przypomnienia serwisowe  | `S-01` → `S-06`                            | Parallel z `S-02`; nie blokuje toru A ani C.            |
 | C      | Klasyfikacja AI          | `S-02` → `S-05`                            | Parallel z `S-03`, `S-04`; dołącza do toru A po `S-02`. |
 
@@ -66,7 +67,7 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 
 ### S-01: Dodawanie auta
 
-- **Outcome:** właściciel może dodać auto (marka, model, rok, aktualny przebieg, baseline przebieg) i zobaczyć je na liście swoich aut
+- **Outcome:** właściciel może dodać auto (marka, model, rok, przebieg bazowy) i zobaczyć je na liście swoich aut
 - **Change ID:** add-vehicle
 - **PRD refs:** FR-001, FR-002, US-01
 - **Prerequisites:** —
@@ -74,7 +75,7 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Schemat tabeli `cars` + RLS musi być projektowany z myślą o kolejnych slice'ach — błąd tu propaguje się dalej. Weryfikacja przez ręczne testy CRUD przed przejściem do S-02.
-- **Status:** ready
+- **Status:** done
 
 ### S-02: Dodawanie naprawy
 
@@ -86,7 +87,7 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Tabela `repairs` z FK do `cars` + RLS. Koszt opcjonalny (NULL) musi być obsłużony poprawnie — naprawa bez kosztu pojawia się w historii ale nie wchodzi do koszt/km.
-- **Status:** proposed
+- **Status:** done
 
 ### S-03: Historia napraw
 
@@ -98,7 +99,7 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Usunięcie naprawy musi wyzwalać przeliczenie koszt/km (S-04). Implementacja S-03 bez S-04 w tej samej sesji może prowadzić do niespójności — dobrze zaplanować kolejność w `/10x-plan`.
-- **Status:** proposed
+- **Status:** done
 
 ### S-04: Koszt/km na dashboardzie
 
@@ -110,7 +111,19 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Formula `sum(koszt) / (aktualny_przebieg − baseline_przebieg)` wymaga edge-case'ów: baseline = aktualny (dzielenie przez 0), brak napraw z kosztem. Oba muszą być obsłużone w warstwie serwisowej zanim UI to wyświetli.
-- **Status:** proposed
+- **Status:** done
+
+### S-08: Poprawne liczenie przebiegu i kosztu/km
+
+- **Outcome:** aktualny przebieg auta pochodzi z `MAX(repairs.mileage)` a nie z pola `cars.current_mileage`; koszt/km = `sum(koszt) / (MAX(mileage) − baseline_mileage)`; oba widoki (lista aut, dashboard auta) pokazują poprawne wartości
+- **Change ID:** fix-mileage-tracking
+- **PRD refs:** FR-007
+- **Prerequisites:** S-02
+- **Parallel with:** S-03, S-04, S-05
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** Brak napraw (pusty `MAX`) musi być obsłużony — fallback na `baseline_mileage` lub null; koszt/km = null gdy km = 0.
+- **Status:** implemented
 
 ### S-05: Klasyfikacja AI i nadpisanie kategorii
 
@@ -153,13 +166,14 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 
 | Roadmap ID | Change ID         | Suggested issue title                                         | Ready for `/10x-plan` | Notes                                    |
 | ---------- | ----------------- | ------------------------------------------------------------- | --------------------- | ---------------------------------------- |
-| S-01       | add-vehicle       | Dodawanie auta — formularz + lista + migracja DB              | yes                   | Run `/10x-plan add-vehicle`              |
-| S-02       | add-repair        | Dodawanie naprawy do auta — formularz + migracja DB           | no                    | Czeka na S-01                            |
-| S-03       | repair-history    | Historia napraw — lista + edycja + usunięcie z potwierdzeniem | no                    | Czeka na S-02; parallel z S-04           |
-| S-04       | cost-per-km       | Koszt/km na dashboardzie auta                                 | no                    | Czeka na S-02; gwiazda przewodnia        |
-| S-05       | ai-classification | Klasyfikacja AI napraw + nadpisanie kategorii                 | no                    | Czeka na S-02; wybór dostawcy AI otwarty |
-| S-06       | service-reminders | Progi serwisowe + przypomnienia na dashboardzie               | no                    | Czeka na S-01; parallel z S-02           |
-| S-07       | cost-trend-chart  | Wykres trendu kosztów/km w czasie                             | no                    | Czeka na S-04; nice-to-have              |
+| S-01       | add-vehicle           | Dodawanie auta — formularz + lista + migracja DB              | —   | done                                     |
+| S-02       | add-repair            | Dodawanie naprawy do auta — formularz + migracja DB           | —   | done                                     |
+| S-03       | repair-history        | Historia napraw — lista + edycja + usunięcie z potwierdzeniem | —   | done                                     |
+| S-04       | cost-per-km           | Koszt/km na dashboardzie auta                                 | —   | done                                     |
+| S-08       | fix-mileage-tracking  | Poprawne liczenie przebiegu i kosztu/km                       | —   | implemented; czeka na merge              |
+| S-05       | ai-classification     | Klasyfikacja AI napraw + nadpisanie kategorii                 | yes | Czeka na S-02; wybór dostawcy AI otwarty |
+| S-06       | service-reminders     | Progi serwisowe + przypomnienia na dashboardzie               | yes | Czeka na S-01; parallel z S-02           |
+| S-07       | cost-trend-chart      | Wykres trendu kosztów/km w czasie                             | no  | Czeka na S-04; nice-to-have              |
 
 ## Open Roadmap Questions
 
@@ -179,4 +193,10 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 
 ## Done
 
-(Empty on first generation. `/10x-archive` appends entries here when a change is archived.)
+| ID   | Change ID            | Merged | Notes                                    |
+| ---- | -------------------- | ------ | ---------------------------------------- |
+| S-01 | add-vehicle          | yes    | PR merged to main                        |
+| S-02 | add-repair           | yes    | PR #15 merged to main                    |
+| S-03 | repair-history       | yes    | PR #17 merged to main                    |
+| S-04 | cost-per-km          | yes    | PR #16 merged to main                    |
+| S-08 | fix-mileage-tracking | no     | Implemented on feature branch; not yet merged |

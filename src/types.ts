@@ -16,7 +16,6 @@ export interface Vehicle {
   make: string;
   model: string;
   year: number;
-  current_mileage: number;
   baseline_mileage: number;
   archived_at: string | null;
   created_at: string;

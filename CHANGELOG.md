@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-06-02
+
+- [382e558] fix(repair-history): impl-review fixes — null guard, dead prop, schema comments, generic errors
+
 ## 2026-05-21
 
 - [8df900a] fix(docker): replace --spider with -O /dev/null in healthcheck

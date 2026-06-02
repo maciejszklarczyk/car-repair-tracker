@@ -53,14 +53,13 @@ INSERT INTO auth.identities (
   now()
 );
 
--- Test vehicle
+-- Test vehicle and repairs
 INSERT INTO public.cars (
   id,
   user_id,
   make,
   model,
   year,
-  current_mileage,
   baseline_mileage
 ) VALUES (
   'b0000000-0000-0000-0000-000000000001',
@@ -68,6 +67,9 @@ INSERT INTO public.cars (
   'Skoda',
   'Octavia',
   2018,
-  120000,
-  100000
+  120000
 );
+
+INSERT INTO public.repairs (id, car_id, user_id, repair_date, description, cost, mileage) VALUES
+  ('c0000000-0000-0000-0000-000000000001', 'b0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', '2024-03-01', 'Oil change', 200, 120500),
+  ('c0000000-0000-0000-0000-000000000002', 'b0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', '2024-06-15', 'Rozrząd', 2000, 122300);

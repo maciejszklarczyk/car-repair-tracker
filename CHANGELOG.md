@@ -2,6 +2,7 @@
 
 ## 2026-06-02
 
+- [6389602] chore(seed): add oil change and rozrząd repairs, fix baseline_mileage
 - [3b532dd] fix(cost-per-km): review fixes — ownership guard, error handling, archived filter
 - [382e558] fix(repair-history): impl-review fixes — null guard, dead prop, schema comments, generic errors
 - [ce840cb] fix(repair-api): revert unnecessary !repair guard flagged by lint

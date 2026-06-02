@@ -215,7 +215,7 @@ export function computeCostPerKm(vehicle: Vehicle, repairs: Repair[]): number | 
 #### Automated
 
 - [x] 1.1 Migration applies cleanly (`npx supabase db reset` or `npx supabase migration up`) — 3ab1a96
-- [x] 1.2 Lint passes (`npm run lint`)
+- [x] 1.2 Lint passes (`npm run lint`) — 5c19d84
 
 #### Manual
 
@@ -227,8 +227,8 @@ export function computeCostPerKm(vehicle: Vehicle, repairs: Repair[]): number | 
 
 #### Automated
 
-- [x] 2.1 TypeScript build passes (`npm run build`)
-- [x] 2.2 Lint passes (`npm run lint`)
+- [x] 2.1 TypeScript build passes (`npm run build`) — 5c19d84
+- [x] 2.2 Lint passes (`npm run lint`) — 5c19d84
 
 #### Manual
 

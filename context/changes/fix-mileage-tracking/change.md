@@ -1,7 +1,7 @@
 ---
 change_id: fix-mileage-tracking
 title: Fix mileage tracking — derive current mileage from repairs, fix cost/km range
-status: implementing
+status: implemented
 created: 2026-06-02
 updated: 2026-06-02
 archived_at: null

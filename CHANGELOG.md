@@ -2,6 +2,7 @@
 
 ## 2026-06-02
 
+- [2242788] ci: add migrate job to apply Supabase migrations before deploy
 - [2ca8213] docs(roadmap): update statuses S-01–S-04 done, S-08 implemented
 - [6389602] chore(seed): add oil change and rozrząd repairs, fix baseline_mileage
 - [3b532dd] fix(cost-per-km): review fixes — ownership guard, error handling, archived filter

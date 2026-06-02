@@ -43,7 +43,12 @@ const vehicleName = `${vehicle.make} ${vehicle.model} (${vehicle.year})`;
       <h1 class="mb-6 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-2xl font-bold text-transparent">
         Edit Repair
       </h1>
-      <EditRepairForm client:load repair={repair} vehicleName={vehicleName} />
+      <EditRepairForm
+        client:load
+        repair={repair}
+        vehicleName={vehicleName}
+        baselineMileage={vehicle.baseline_mileage}
+      />
       <p class="mt-4 text-center text-sm text-blue-100/50">
         <a href={`/dashboard/vehicles/${vehicle.id}`} class="text-purple-300 hover:text-purple-200">
           Back to vehicle

@@ -9,6 +9,7 @@ interface CarRow {
   model: string;
   year: number;
   user_id: string;
+  baseline_mileage: number;
 }
 
 const user = Astro.locals.user;
@@ -19,7 +20,11 @@ const supabase = createClient(Astro.request.headers, Astro.cookies);
 
 let car: CarRow | null = null;
 if (vehicleId && supabase) {
-  const { data } = await supabase.from("cars").select("id, make, model, year, user_id").eq("id", vehicleId).single();
+  const { data } = await supabase
+    .from("cars")
+    .select("id, make, model, year, user_id, baseline_mileage")
+    .eq("id", vehicleId)
+    .single();
   if (data) {
     car = data;
   }
@@ -39,7 +44,13 @@ const error = Astro.url.searchParams.get("error");
       <h1 class="mb-6 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-2xl font-bold text-transparent">
         Add Repair
       </h1>
-      <AddRepairForm client:load carId={car.id} vehicleName={vehicleName} serverError={error} />
+      <AddRepairForm
+        client:load
+        carId={car.id}
+        vehicleName={vehicleName}
+        serverError={error}
+        baselineMileage={car.baseline_mileage}
+      />
       <p class="mt-4 text-center text-sm text-blue-100/50">
         <a href={`/dashboard/vehicles/${car.id}`} class="text-purple-300 hover:text-purple-200">Back to vehicle</a>
       </p>

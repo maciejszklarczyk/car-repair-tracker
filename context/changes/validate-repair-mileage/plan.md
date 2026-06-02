@@ -152,7 +152,7 @@ Pass `baselineMileage` to both forms and add an inline mileage check so the erro
 
 #### Automated
 
-- [x] 1.1 Lint passes (`npm run lint`)
+- [x] 1.1 Lint passes (`npm run lint`) — d266e96
 
 #### Manual
 
@@ -163,8 +163,8 @@ Pass `baselineMileage` to both forms and add an inline mileage check so the erro
 
 #### Automated
 
-- [ ] 2.1 TypeScript build passes (`npm run build`)
-- [ ] 2.2 Lint passes (`npm run lint`)
+- [x] 2.1 TypeScript build passes (`npm run build`)
+- [x] 2.2 Lint passes (`npm run lint`)
 
 #### Manual
 

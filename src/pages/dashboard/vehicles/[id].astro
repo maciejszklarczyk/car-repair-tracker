@@ -1,7 +1,8 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import { createClient } from "@/lib/supabase";
-import type { Vehicle } from "@/types";
+import RepairList from "@/components/repairs/RepairList";
+import type { Vehicle, Repair } from "@/types";
 
 const user = Astro.locals.user;
 if (!user) return Astro.redirect("/auth/signin");
@@ -21,7 +22,20 @@ if (vehicle?.user_id !== user.id) {
   return Astro.redirect("/dashboard/vehicles");
 }
 
+let repairs: Repair[] = [];
+if (supabase && id) {
+  const { data } = await supabase
+    .from("repairs")
+    .select("*")
+    .eq("car_id", id)
+    .order("repair_date", { ascending: false });
+  if (data) {
+    repairs = data as Repair[];
+  }
+}
+
 const success = Astro.url.searchParams.get("success");
+const successMessage = success === "1" ? "Repair added successfully." : success === "updated" ? "Repair saved." : null;
 ---
 
 <Layout title={`${vehicle.make} ${vehicle.model}`}>
@@ -33,9 +47,9 @@ const success = Astro.url.searchParams.get("success");
     </div>
 
     {
-      success && (
+      successMessage && (
         <div class="mb-6 rounded-lg border border-green-500/20 bg-green-500/10 p-4 text-sm text-green-200">
-          Repair added successfully.
+          {successMessage}
         </div>
       )
     }
@@ -63,10 +77,7 @@ const success = Astro.url.searchParams.get("success");
 
     <div class="mt-8">
       <h2 class="mb-4 text-xl font-semibold text-blue-100/80">Repair History</h2>
-      <div class="rounded-2xl border border-white/10 bg-white/5 p-8 text-center backdrop-blur-xl">
-        <p class="text-blue-100/50">No repairs yet.</p>
-        <p class="mt-1 text-sm text-blue-100/30">Repairs will appear here once added.</p>
-      </div>
+      <RepairList repairs={repairs} carId={vehicle.id} client:load />
     </div>
   </div>
 </Layout>

@@ -296,29 +296,29 @@ Migration timestamp `20260602120000` sorts after `20260531120000` (create repair
 
 #### Automated
 
-- [x] 3.1 npm run build passes
-- [x] 3.2 npm run lint passes
+- [x] 3.1 npm run build passes — 3576aeb
+- [x] 3.2 npm run lint passes — 3576aeb
 
 #### Manual
 
-- [x] 3.3 Edit page renders pre-filled form for valid repair ID
-- [x] 3.4 Unknown or other-user repair ID redirects to vehicles list
-- [x] 3.5 Saving valid edits updates the row and redirects with success
-- [x] 3.6 Client-side validation blocks invalid submit
-- [x] 3.7 Cost field empty string on save stores null in DB
+- [x] 3.3 Edit page renders pre-filled form for valid repair ID — 3576aeb
+- [x] 3.4 Unknown or other-user repair ID redirects to vehicles list — 3576aeb
+- [x] 3.5 Saving valid edits updates the row and redirects with success — 3576aeb
+- [x] 3.6 Client-side validation blocks invalid submit — 3576aeb
+- [x] 3.7 Cost field empty string on save stores null in DB — 3576aeb
 
 ### Phase 4: RepairList Island + Vehicle Detail Page Update
 
 #### Automated
 
-- [ ] 4.1 npm run build passes
-- [ ] 4.2 npm run lint passes
+- [x] 4.1 npm run build passes
+- [x] 4.2 npm run lint passes
 
 #### Manual
 
-- [ ] 4.3 Repair list renders in date-descending order with correct fields
-- [ ] 4.4 Edit link navigates to pre-filled edit page
-- [ ] 4.5 Delete AlertDialog opens on button click; cancel leaves row intact
-- [ ] 4.6 Confirming delete removes row and reloads page
-- [ ] 4.7 Zero-repair vehicle shows empty state
-- [ ] 4.8 Post-add and post-edit success banners show correct messages
+- [x] 4.3 Repair list renders in date-descending order with correct fields
+- [x] 4.4 Edit link navigates to pre-filled edit page
+- [x] 4.5 Delete AlertDialog opens on button click; cancel leaves row intact
+- [x] 4.6 Confirming delete removes row and reloads page
+- [x] 4.7 Zero-repair vehicle shows empty state
+- [x] 4.8 Post-add and post-edit success banners show correct messages

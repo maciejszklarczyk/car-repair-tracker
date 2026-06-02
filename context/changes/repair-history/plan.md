@@ -282,30 +282,30 @@ Migration timestamp `20260602120000` sorts after `20260531120000` (create repair
 
 #### Automated
 
-- [x] 2.1 npm run build passes
-- [x] 2.2 npm run lint passes
+- [x] 2.1 npm run build passes — 2f379ff
+- [x] 2.2 npm run lint passes — 2f379ff
 
 #### Manual
 
-- [x] 2.3 PUT with valid body updates repair row
-- [x] 2.4 PUT with another user's repair returns 403
-- [x] 2.5 DELETE removes the row
-- [x] 2.6 DELETE with another user's repair returns 403
+- [x] 2.3 PUT with valid body updates repair row — 2f379ff
+- [x] 2.4 PUT with another user's repair returns 403 — 2f379ff
+- [x] 2.5 DELETE removes the row — 2f379ff
+- [x] 2.6 DELETE with another user's repair returns 403 — 2f379ff
 
 ### Phase 3: Edit Form + Edit Page
 
 #### Automated
 
-- [ ] 3.1 npm run build passes
-- [ ] 3.2 npm run lint passes
+- [x] 3.1 npm run build passes
+- [x] 3.2 npm run lint passes
 
 #### Manual
 
-- [ ] 3.3 Edit page renders pre-filled form for valid repair ID
-- [ ] 3.4 Unknown or other-user repair ID redirects to vehicles list
-- [ ] 3.5 Saving valid edits updates the row and redirects with success
-- [ ] 3.6 Client-side validation blocks invalid submit
-- [ ] 3.7 Cost field empty string on save stores null in DB
+- [x] 3.3 Edit page renders pre-filled form for valid repair ID
+- [x] 3.4 Unknown or other-user repair ID redirects to vehicles list
+- [x] 3.5 Saving valid edits updates the row and redirects with success
+- [x] 3.6 Client-side validation blocks invalid submit
+- [x] 3.7 Cost field empty string on save stores null in DB
 
 ### Phase 4: RepairList Island + Vehicle Detail Page Update
 

@@ -1,7 +1,7 @@
 ---
 change_id: validate-repair-mileage
 title: Validate repair mileage >= vehicle baseline mileage
-status: implementing
+status: implemented
 created: 2026-06-02
 updated: 2026-06-02
 archived_at: null

@@ -156,18 +156,18 @@ Pass `baselineMileage` to both forms and add an inline mileage check so the erro
 
 #### Manual
 
-- [ ] 1.2 POST with mileage below baseline returns error on the form
-- [ ] 1.3 PUT with mileage below baseline returns inline error in Edit Repair form
+- [x] 1.2 POST with mileage below baseline returns error on the form
+- [x] 1.3 PUT with mileage below baseline returns inline error in Edit Repair form
 
 ### Phase 2: Client-side validation
 
 #### Automated
 
-- [x] 2.1 TypeScript build passes (`npm run build`)
-- [x] 2.2 Lint passes (`npm run lint`)
+- [x] 2.1 TypeScript build passes (`npm run build`) — 39d009e
+- [x] 2.2 Lint passes (`npm run lint`) — 39d009e
 
 #### Manual
 
-- [ ] 2.3 Add Repair form shows inline error for mileage below baseline without submitting
-- [ ] 2.4 Edit Repair form shows inline error for mileage below baseline without submitting
-- [ ] 2.5 Valid mileage (≥ baseline) submits successfully on both forms
+- [x] 2.3 Add Repair form shows inline error for mileage below baseline without submitting
+- [x] 2.4 Edit Repair form shows inline error for mileage below baseline without submitting
+- [x] 2.5 Valid mileage (≥ baseline) submits successfully on both forms

@@ -311,14 +311,14 @@ Migration timestamp `20260602120000` sorts after `20260531120000` (create repair
 
 #### Automated
 
-- [x] 4.1 npm run build passes
-- [x] 4.2 npm run lint passes
+- [x] 4.1 npm run build passes — d57d48d
+- [x] 4.2 npm run lint passes — d57d48d
 
 #### Manual
 
-- [x] 4.3 Repair list renders in date-descending order with correct fields
-- [x] 4.4 Edit link navigates to pre-filled edit page
-- [x] 4.5 Delete AlertDialog opens on button click; cancel leaves row intact
-- [x] 4.6 Confirming delete removes row and reloads page
-- [x] 4.7 Zero-repair vehicle shows empty state
-- [x] 4.8 Post-add and post-edit success banners show correct messages
+- [x] 4.3 Repair list renders in date-descending order with correct fields — d57d48d
+- [x] 4.4 Edit link navigates to pre-filled edit page — d57d48d
+- [x] 4.5 Delete AlertDialog opens on button click; cancel leaves row intact — d57d48d
+- [x] 4.6 Confirming delete removes row and reloads page — d57d48d
+- [x] 4.7 Zero-repair vehicle shows empty state — d57d48d
+- [x] 4.8 Post-add and post-edit success banners show correct messages — d57d48d

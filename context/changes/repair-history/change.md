@@ -1,7 +1,7 @@
 ---
 change_id: repair-history
 title: Repair history — browse, edit and delete repairs with confirmation
-status: implementing
+status: implemented
 created: 2026-06-02
 updated: 2026-06-02
 archived_at: null

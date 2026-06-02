@@ -26,7 +26,7 @@ export const PUT: APIRoute = async (context) => {
     .eq("id", repairId)
     .single();
 
-  if (repairError || repair.user_id !== user.id) {
+  if (repairError || !repair || repair.user_id !== user.id) {
     return Response.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -43,6 +43,7 @@ export const PUT: APIRoute = async (context) => {
     return Response.json({ error: message }, { status: 400 });
   }
 
+  // Ownership is also enforced by RLS UPDATE policy; app-layer check above is belt-and-suspenders.
   const { error } = await supabase
     .from("repairs")
     .update({
@@ -54,7 +55,7 @@ export const PUT: APIRoute = async (context) => {
     .eq("id", repairId);
 
   if (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ error: "Something went wrong" }, { status: 500 });
   }
 
   return Response.json({ success: true });
@@ -82,14 +83,15 @@ export const DELETE: APIRoute = async (context) => {
     .eq("id", repairId)
     .single();
 
-  if (repairError || repair.user_id !== user.id) {
+  if (repairError || !repair || repair.user_id !== user.id) {
     return Response.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  // Ownership is also enforced by RLS DELETE policy; app-layer check above is belt-and-suspenders.
   const { error } = await supabase.from("repairs").delete().eq("id", repairId);
 
   if (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ error: "Something went wrong" }, { status: 500 });
   }
 
   return Response.json({ success: true });

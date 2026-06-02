@@ -16,7 +16,6 @@ import type { Repair } from "@/types";
 
 interface Props {
   repairs: Repair[];
-  carId: string;
 }
 
 export default function RepairList({ repairs }: Props) {

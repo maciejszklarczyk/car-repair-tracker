@@ -1,7 +1,8 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import { createClient } from "@/lib/supabase";
-import type { Vehicle } from "@/types";
+import { computeCostPerKm } from "@/lib/costPerKm";
+import type { Repair, Vehicle } from "@/types";
 
 const user = Astro.locals.user;
 if (!user) return Astro.redirect("/auth/signin");
@@ -10,17 +11,21 @@ const { id } = Astro.params;
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 
 let vehicle: Vehicle | null = null;
+let repairs: Repair[] = [];
 if (id && supabase) {
   const result = await supabase.from("cars").select("*").eq("id", id).single();
   if (result.data) {
     vehicle = result.data as Vehicle;
   }
+  const { data: repairsData } = await supabase.from("repairs").select("*").eq("car_id", id);
+  repairs = (repairsData ?? []) as Repair[];
 }
 
 if (vehicle?.user_id !== user.id) {
   return Astro.redirect("/dashboard/vehicles");
 }
 
+const costPerKm = computeCostPerKm(vehicle, repairs);
 const success = Astro.url.searchParams.get("success");
 ---
 
@@ -50,6 +55,16 @@ const success = Astro.url.searchParams.get("success");
           <div class="mt-3 flex flex-wrap gap-6 text-sm text-blue-100/70">
             <span>Year: {vehicle.year}</span>
             <span>Mileage: {vehicle.current_mileage.toLocaleString()} km</span>
+            <span>
+              Cost/km:{" "}
+              {
+                costPerKm !== null ? (
+                  `${costPerKm.toFixed(2)} PLN/km`
+                ) : (
+                  <span class="text-xs text-blue-100/40">(— PLN/km — no cost data yet)</span>
+                )
+              }
+            </span>
           </div>
         </div>
         <a

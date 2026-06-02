@@ -179,26 +179,26 @@ Match the existing `text-sm text-blue-100/70` class on the outer span.
 
 #### Automated
 
-- [x] 1.1 npm run build passes
-- [x] 1.2 npm run lint passes
+- [x] 1.1 npm run build passes — 0d867b8
+- [x] 1.2 npm run lint passes — 0d867b8
 
 #### Manual
 
-- [x] 1.3 File exists at src/lib/costPerKm.ts with exported function
-- [x] 1.4 Returns null when current_mileage === baseline_mileage
-- [x] 1.5 Returns null when all repairs have cost: null
-- [x] 1.6 Returns correct decimal for sample inputs
+- [x] 1.3 File exists at src/lib/costPerKm.ts with exported function — 0d867b8
+- [x] 1.4 Returns null when current_mileage === baseline_mileage — 0d867b8
+- [x] 1.5 Returns null when all repairs have cost: null — 0d867b8
+- [x] 1.6 Returns correct decimal for sample inputs — 0d867b8
 
 ### Phase 2: Vehicle Detail Page Integration
 
 #### Automated
 
-- [ ] 2.1 npm run build passes
-- [ ] 2.2 npm run lint passes
+- [x] 2.1 npm run build passes
+- [x] 2.2 npm run lint passes
 
 #### Manual
 
-- [ ] 2.3 Vehicle detail shows X.XX PLN/km after costed repair added
-- [ ] 2.4 Vehicle detail shows — PLN/km when no costed repairs exist
-- [ ] 2.5 Vehicle detail shows — PLN/km when baseline_mileage === current_mileage
-- [ ] 2.6 Adding second costed repair updates the value on reload
+- [x] 2.3 Vehicle detail shows X.XX PLN/km after costed repair added
+- [x] 2.4 Vehicle detail shows — PLN/km when no costed repairs exist
+- [x] 2.5 Vehicle detail shows — PLN/km when baseline_mileage === current_mileage
+- [x] 2.6 Adding second costed repair updates the value on reload

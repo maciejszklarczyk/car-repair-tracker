@@ -12,6 +12,13 @@ export const createRepairSchema = z.object({
   mileage: z.number({ error: "Mileage must be a number" }).int().min(0, "Mileage cannot be negative"),
 });
 
+export const updateRepairSchema = z.object({
+  repair_date: z.string().trim().min(1, "Repair date is required"),
+  description: z.string().trim().min(1, "Description is required").max(500, "Description cannot exceed 500 characters"),
+  cost: z.number().positive("Cost must be positive").nullable().optional(),
+  mileage: z.number({ error: "Mileage must be a number" }).int().min(0, "Mileage cannot be negative"),
+});
+
 export const createVehicleSchema = z
   .object({
     make: z.string().trim().min(1, "Make is required"),

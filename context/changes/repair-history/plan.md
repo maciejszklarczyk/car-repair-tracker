@@ -272,25 +272,25 @@ Migration timestamp `20260602120000` sorts after `20260531120000` (create repair
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly (npx supabase migration up)
+- [x] 1.1 Migration applies cleanly (npx supabase migration up) — d16c10a
 
 #### Manual
 
-- [x] 1.2 Supabase Studio shows UPDATE + DELETE policies on repairs table
+- [x] 1.2 Supabase Studio shows UPDATE + DELETE policies on repairs table — d16c10a
 
 ### Phase 2: API Routes — PUT + DELETE
 
 #### Automated
 
-- [ ] 2.1 npm run build passes
-- [ ] 2.2 npm run lint passes
+- [x] 2.1 npm run build passes
+- [x] 2.2 npm run lint passes
 
 #### Manual
 
-- [ ] 2.3 PUT with valid body updates repair row
-- [ ] 2.4 PUT with another user's repair returns 403
-- [ ] 2.5 DELETE removes the row
-- [ ] 2.6 DELETE with another user's repair returns 403
+- [x] 2.3 PUT with valid body updates repair row
+- [x] 2.4 PUT with another user's repair returns 403
+- [x] 2.5 DELETE removes the row
+- [x] 2.6 DELETE with another user's repair returns 403
 
 ### Phase 3: Edit Form + Edit Page
 

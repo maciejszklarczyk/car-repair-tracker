@@ -18,7 +18,11 @@ export const POST: APIRoute = async (context) => {
   const form = await context.request.formData();
   const carId = form.get("car_id") as string;
 
-  const { data: car, error: carError } = await supabase.from("cars").select("id, user_id").eq("id", carId).single();
+  const { data: car, error: carError } = await supabase
+    .from("cars")
+    .select("id, user_id, baseline_mileage")
+    .eq("id", carId)
+    .single();
 
   if (carError || car.user_id !== user.id) {
     return context.redirect(`/dashboard/vehicles?error=${encodeURIComponent("Vehicle not found")}`);
@@ -36,6 +40,12 @@ export const POST: APIRoute = async (context) => {
   if (!result.success) {
     const message = result.error.issues.map((e) => e.message).join(". ");
     return context.redirect(`/dashboard/repairs/new?vehicle_id=${carId}&error=${encodeURIComponent(message)}`);
+  }
+
+  if (result.data.mileage < car.baseline_mileage) {
+    return context.redirect(
+      `/dashboard/repairs/new?vehicle_id=${carId}&error=${encodeURIComponent(`Mileage must be at or above baseline mileage (${car.baseline_mileage} km)`)}`,
+    );
   }
 
   const { error } = await supabase.from("repairs").insert({

@@ -22,12 +22,22 @@ export const PUT: APIRoute = async (context) => {
 
   const { data: repair, error: repairError } = await supabase
     .from("repairs")
-    .select("id, user_id")
+    .select("id, user_id, car_id")
     .eq("id", repairId)
     .single();
 
   if (repairError || repair.user_id !== user.id) {
     return Response.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  const { data: car, error: carError } = await supabase
+    .from("cars")
+    .select("baseline_mileage")
+    .eq("id", repair.car_id)
+    .single();
+
+  if (carError) {
+    return Response.json({ error: "Vehicle not found" }, { status: 404 });
   }
 
   let body: unknown;
@@ -41,6 +51,13 @@ export const PUT: APIRoute = async (context) => {
   if (!result.success) {
     const message = result.error.issues.map((e) => e.message).join(". ");
     return Response.json({ error: message }, { status: 400 });
+  }
+
+  if (result.data.mileage < car.baseline_mileage) {
+    return Response.json(
+      { error: `Mileage must be at or above baseline mileage (${car.baseline_mileage} km)` },
+      { status: 400 },
+    );
   }
 
   // Ownership is also enforced by RLS UPDATE policy; app-layer check above is belt-and-suspenders.

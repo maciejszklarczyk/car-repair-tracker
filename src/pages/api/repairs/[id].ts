@@ -26,7 +26,7 @@ export const PUT: APIRoute = async (context) => {
     .eq("id", repairId)
     .single();
 
-  if (repairError || !repair || repair.user_id !== user.id) {
+  if (repairError || repair.user_id !== user.id) {
     return Response.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -83,7 +83,7 @@ export const DELETE: APIRoute = async (context) => {
     .eq("id", repairId)
     .single();
 
-  if (repairError || !repair || repair.user_id !== user.id) {
+  if (repairError || repair.user_id !== user.id) {
     return Response.json({ error: "Forbidden" }, { status: 403 });
   }
 

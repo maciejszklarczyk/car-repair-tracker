@@ -193,12 +193,12 @@ Match the existing `text-sm text-blue-100/70` class on the outer span.
 
 #### Automated
 
-- [x] 2.1 npm run build passes
-- [x] 2.2 npm run lint passes
+- [x] 2.1 npm run build passes — ba49f7d
+- [x] 2.2 npm run lint passes — ba49f7d
 
 #### Manual
 
-- [x] 2.3 Vehicle detail shows X.XX PLN/km after costed repair added
-- [x] 2.4 Vehicle detail shows — PLN/km when no costed repairs exist
-- [x] 2.5 Vehicle detail shows — PLN/km when baseline_mileage === current_mileage
-- [x] 2.6 Adding second costed repair updates the value on reload
+- [x] 2.3 Vehicle detail shows X.XX PLN/km after costed repair added — ba49f7d
+- [x] 2.4 Vehicle detail shows — PLN/km when no costed repairs exist — ba49f7d
+- [x] 2.5 Vehicle detail shows — PLN/km when baseline_mileage === current_mileage — ba49f7d
+- [x] 2.6 Adding second costed repair updates the value on reload — ba49f7d

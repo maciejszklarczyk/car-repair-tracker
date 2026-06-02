@@ -9,6 +9,7 @@ interface Props {
   carId: string;
   vehicleName: string;
   serverError?: string | null;
+  baselineMileage: number;
 }
 
 interface FormErrors {
@@ -20,7 +21,7 @@ interface FormErrors {
 
 const today = new Date().toISOString().split("T")[0];
 
-export default function AddRepairForm({ carId, vehicleName, serverError }: Props) {
+export default function AddRepairForm({ carId, vehicleName, serverError, baselineMileage }: Props) {
   const [repairDate, setRepairDate] = useState(today);
   const [description, setDescription] = useState("");
   const [cost, setCost] = useState("");
@@ -48,6 +49,8 @@ export default function AddRepairForm({ carId, vehicleName, serverError }: Props
     } else {
       const mileageNum = Number(mileage);
       if (!Number.isInteger(mileageNum) || mileageNum < 0) next.mileage = "Mileage must be a non-negative integer";
+      else if (mileageNum < baselineMileage)
+        next.mileage = `Mileage must be at or above baseline mileage (${baselineMileage} km)`;
     }
 
     setErrors(next);
@@ -58,7 +61,7 @@ export default function AddRepairForm({ carId, vehicleName, serverError }: Props
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
   }
 
-  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+  function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     if (!validate()) e.preventDefault();
   }
 

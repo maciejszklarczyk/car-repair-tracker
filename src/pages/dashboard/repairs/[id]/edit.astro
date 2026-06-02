@@ -24,7 +24,11 @@ if (repair?.user_id !== user.id) {
 
 let vehicle: Vehicle | null = null;
 if (supabase) {
-  const result = await supabase.from("cars").select("*").eq("id", repair.car_id).single();
+  const result = await supabase
+    .from("cars")
+    .select("id, make, model, year, baseline_mileage")
+    .eq("id", repair.car_id)
+    .single();
   if (result.data) {
     vehicle = result.data as Vehicle;
   }
@@ -43,7 +47,12 @@ const vehicleName = `${vehicle.make} ${vehicle.model} (${vehicle.year})`;
       <h1 class="mb-6 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-2xl font-bold text-transparent">
         Edit Repair
       </h1>
-      <EditRepairForm client:load repair={repair} vehicleName={vehicleName} />
+      <EditRepairForm
+        client:load
+        repair={repair}
+        vehicleName={vehicleName}
+        baselineMileage={vehicle.baseline_mileage}
+      />
       <p class="mt-4 text-center text-sm text-blue-100/50">
         <a href={`/dashboard/vehicles/${vehicle.id}`} class="text-purple-300 hover:text-purple-200">
           Back to vehicle

@@ -9,6 +9,7 @@ import type { Repair } from "@/types";
 interface Props {
   repair: Repair;
   vehicleName: string;
+  baselineMileage: number;
 }
 
 interface FormErrors {
@@ -18,7 +19,7 @@ interface FormErrors {
   mileage?: string;
 }
 
-export default function EditRepairForm({ repair, vehicleName }: Props) {
+export default function EditRepairForm({ repair, vehicleName, baselineMileage }: Props) {
   const [repairDate, setRepairDate] = useState(repair.repair_date);
   const [description, setDescription] = useState(repair.description);
   const [cost, setCost] = useState(repair.cost != null ? String(repair.cost) : "");
@@ -48,6 +49,8 @@ export default function EditRepairForm({ repair, vehicleName }: Props) {
     } else {
       const mileageNum = Number(mileage);
       if (!Number.isInteger(mileageNum) || mileageNum < 0) next.mileage = "Mileage must be a non-negative integer";
+      else if (mileageNum < baselineMileage)
+        next.mileage = `Mileage must be at or above baseline mileage (${baselineMileage} km)`;
     }
 
     setErrors(next);

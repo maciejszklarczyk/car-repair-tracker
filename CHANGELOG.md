@@ -2,6 +2,7 @@
 
 ## 2026-06-02
 
+- [aa7a576] chore(context): add missing plan briefs and plan reviews
 - [f17bd45] fix(validate-repair-mileage): impl-review fixes — event type, targeted select, report saved
 - [f82044c] ci(migrate): link project before db push, fix unknown flag error
 - [2242788] ci: add migrate job to apply Supabase migrations before deploy

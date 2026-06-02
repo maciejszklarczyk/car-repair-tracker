@@ -3,9 +3,10 @@ import type { Vehicle } from "@/types";
 
 interface Props {
   vehicle: Vehicle;
+  currentMileage: number;
 }
 
-const { vehicle } = Astro.props;
+const { vehicle, currentMileage } = Astro.props;
 ---
 
 <div class="rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
@@ -15,7 +16,7 @@ const { vehicle } = Astro.props;
   </h3>
   <div class="mt-2 flex flex-wrap gap-4 text-sm text-blue-100/70">
     <span>Year: {vehicle.year}</span>
-    <span>Mileage: {vehicle.current_mileage.toLocaleString()} km</span>
+    <span>Mileage: {currentMileage.toLocaleString()} km</span>
   </div>
   <div class="mt-4 flex gap-2">
     <a

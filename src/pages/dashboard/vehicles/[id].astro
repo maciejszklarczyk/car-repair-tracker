@@ -10,20 +10,27 @@ if (!user) return Astro.redirect("/auth/signin");
 const { id } = Astro.params;
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 
-let vehicle: Vehicle | null = null;
-let repairs: Repair[] = [];
-if (id && supabase) {
-  const result = await supabase.from("cars").select("*").eq("id", id).single();
-  if (result.data) {
-    vehicle = result.data as Vehicle;
-  }
-  const { data: repairsData } = await supabase.from("repairs").select("*").eq("car_id", id);
-  repairs = (repairsData ?? []) as Repair[];
-}
-
-if (vehicle?.user_id !== user.id) {
+if (!id || !supabase) {
   return Astro.redirect("/dashboard/vehicles");
 }
+
+const result = await supabase
+  .from("cars")
+  .select("*")
+  .eq("id", id)
+  .eq("user_id", user.id)
+  .is("archived_at", null)
+  .single();
+if (result.error || !result.data) {
+  return Astro.redirect("/dashboard/vehicles");
+}
+const vehicle: Vehicle = result.data as Vehicle;
+
+const { data: repairsData, error: repairsError } = await supabase.from("repairs").select("*").eq("car_id", id);
+if (repairsError) {
+  return Astro.redirect("/dashboard/vehicles");
+}
+const repairs: Repair[] = repairsData as Repair[];
 
 const costPerKm = computeCostPerKm(vehicle, repairs);
 const success = Astro.url.searchParams.get("success");

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-06-02
+
+- [3b532dd] fix(cost-per-km): review fixes — ownership guard, error handling, archived filter
+
 ## 2026-05-21
 
 - [8df900a] fix(docker): replace --spider with -O /dev/null in healthcheck

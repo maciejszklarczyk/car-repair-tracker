@@ -18,7 +18,6 @@ export const POST: APIRoute = async (context) => {
     make: form.get("make") as string,
     model: form.get("model") as string,
     year: Number(form.get("year")),
-    current_mileage: Number(form.get("current_mileage")),
     baseline_mileage: Number(form.get("baseline_mileage")),
   };
 
@@ -33,7 +32,6 @@ export const POST: APIRoute = async (context) => {
     make: result.data.make,
     model: result.data.model,
     year: result.data.year,
-    current_mileage: result.data.current_mileage,
     baseline_mileage: result.data.baseline_mileage,
   });
 

@@ -52,10 +52,7 @@ export function computeReminderStatus(
   return status;
 }
 
-export function computeThresholdSummary(
-  thresholds: ServiceThreshold[],
-  currentMileage: number,
-): ThresholdWithStatus[] {
+export function computeThresholdSummary(thresholds: ServiceThreshold[], currentMileage: number): ThresholdWithStatus[] {
   const today = new Date();
   return thresholds.map((threshold) => {
     const { km_interval, days_interval, last_performed_mileage, last_performed_date } = threshold;

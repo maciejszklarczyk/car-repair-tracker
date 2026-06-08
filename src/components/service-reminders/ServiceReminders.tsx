@@ -11,13 +11,11 @@ export default function ServiceReminders({ thresholds }: Props) {
 
   return (
     <div className="mb-6 space-y-3">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-blue-100/50">Service Alerts</h2>
+      <h2 className="text-sm font-semibold tracking-wide text-blue-100/50 uppercase">Service Alerts</h2>
       <div className="grid gap-3 sm:grid-cols-2">
         {alerts.map(({ threshold, status, km_remaining, days_remaining }) => {
           const isOverdue = status === "overdue";
-          const cardClass = isOverdue
-            ? "border-red-500/30 bg-red-500/10"
-            : "border-yellow-500/30 bg-yellow-500/10";
+          const cardClass = isOverdue ? "border-red-500/30 bg-red-500/10" : "border-yellow-500/30 bg-yellow-500/10";
           const titleClass = isOverdue ? "text-red-200" : "text-yellow-200";
           const subClass = isOverdue ? "text-red-300/70" : "text-yellow-300/70";
 

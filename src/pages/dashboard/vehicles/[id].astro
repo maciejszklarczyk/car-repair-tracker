@@ -57,11 +57,15 @@ const thresholdSummary = computeThresholdSummary(thresholds, currentMileage);
 
 const success = Astro.url.searchParams.get("success");
 const successMessage =
-  success === "1" ? "Repair added successfully." :
-  success === "updated" ? "Repair saved." :
-  success === "threshold_added" ? "Service threshold added." :
-  success === "threshold_updated" ? "Service threshold updated." :
-  null;
+  success === "1"
+    ? "Repair added successfully."
+    : success === "updated"
+      ? "Repair saved."
+      : success === "threshold_added"
+        ? "Service threshold added."
+        : success === "threshold_updated"
+          ? "Service threshold updated."
+          : null;
 ---
 
 <Layout title={`${vehicle.make} ${vehicle.model}`}>

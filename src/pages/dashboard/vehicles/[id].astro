@@ -41,12 +41,15 @@ if (repairsError) {
 }
 const repairs: Repair[] = repairsData as Repair[];
 
-const { data: thresholdsData } = await supabase
+const { data: thresholdsData, error: thresholdsError } = await supabase
   .from("service_thresholds")
   .select("*")
   .eq("car_id", id)
   .order("created_at", { ascending: true });
-const thresholds: ServiceThreshold[] = (thresholdsData ?? []) as ServiceThreshold[];
+if (thresholdsError) {
+  return Astro.redirect("/dashboard/vehicles");
+}
+const thresholds: ServiceThreshold[] = thresholdsData as ServiceThreshold[];
 
 const currentMileage = computeCurrentMileage(repairs, vehicle.baseline_mileage);
 const costPerKm = computeCostPerKm(vehicle, repairs);

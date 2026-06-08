@@ -27,6 +27,21 @@ export const PUT: APIRoute = async (context) => {
     return Response.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
+  const { data: existing, error: fetchError } = await supabase
+    .from("service_thresholds")
+    .select("id, user_id")
+    .eq("id", thresholdId)
+    .single();
+
+  if (fetchError || !existing) {
+    return Response.json({ error: "Not found" }, { status: 404 });
+  }
+
+  // Ownership is also enforced by RLS UPDATE policy; app-layer check is belt-and-suspenders.
+  if (existing.user_id !== user.id) {
+    return Response.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const result = updateServiceThresholdSchema.safeParse(body);
   if (!result.success) {
     const message = result.error.issues.map((e) => e.message).join(". ");
@@ -72,11 +87,25 @@ export const DELETE: APIRoute = async (context) => {
     return Response.json({ error: "Not found" }, { status: 404 });
   }
 
+  const { data: existing, error: fetchError } = await supabase
+    .from("service_thresholds")
+    .select("id, user_id")
+    .eq("id", thresholdId)
+    .single();
+
+  if (fetchError || !existing) {
+    return Response.json({ error: "Not found" }, { status: 404 });
+  }
+
+  // Ownership is also enforced by RLS DELETE policy; app-layer check is belt-and-suspenders.
+  if (existing.user_id !== user.id) {
+    return Response.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const { error } = await supabase
     .from("service_thresholds")
     .delete()
-    .eq("id", thresholdId)
-    .eq("user_id", user.id);
+    .eq("id", thresholdId);
 
   if (error) {
     return Response.json({ error: "Something went wrong" }, { status: 500 });

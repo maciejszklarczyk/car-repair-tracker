@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-06-08
+
+- [235b3dc] fix(service-reminders): impl-review fixes — ownership checks, error handling, schema refine
+
 ## 2026-06-02
 
 - [aa7a576] chore(context): add missing plan briefs and plan reviews

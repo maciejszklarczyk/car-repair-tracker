@@ -2,6 +2,7 @@
 
 ## 2026-06-08
 
+- [94f47b6] feat(cost-trend-chart): add total cost and mileage chart tabs, update seed data and roadmap
 - [d2c8dbf] fix: resolve all ESLint/Prettier errors in service-reminders files
 - [8bf4e13] chore(seed): add two service_thresholds — oil change (ok) and air filter (approaching)
 - [b10d08b] fix: use en-GB locale for consistent dd/mm/yyyy date display

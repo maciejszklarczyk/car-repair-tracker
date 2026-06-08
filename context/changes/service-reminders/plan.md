@@ -398,30 +398,30 @@ Cztery komponenty React + aktualizacja strony Astro dashboardu. Banner przypomni
 
 #### Automated
 
-- [x] 3.1 `npm run build` without errors
+- [x] 3.1 `npm run build` without errors — caed3d3
 
 #### Manual
 
-- [x] 3.2 `computeReminderStatus` with null last_performed → `'overdue'`
-- [x] 3.3 km_remaining negative → `'overdue'`
-- [x] 3.4 km_remaining within 10% margin → `'approaching'`
-- [x] 3.5 days_remaining < 30 → `'approaching'`
+- [x] 3.2 `computeReminderStatus` with null last_performed → `'overdue'` — caed3d3
+- [x] 3.3 km_remaining negative → `'overdue'` — caed3d3
+- [x] 3.4 km_remaining within 10% margin → `'approaching'` — caed3d3
+- [x] 3.5 days_remaining < 30 → `'approaching'` — caed3d3
 
 ### Phase 4: UI Components + Dashboard Integration
 
 #### Automated
 
-- [ ] 4.1 `npm run build` without errors
-- [ ] 4.2 No hydration errors in browser console
+- [x] 4.1 `npm run build` without errors
+- [x] 4.2 No hydration errors in browser console
 
 #### Manual
 
-- [ ] 4.3 Add threshold (km only) → appears in list
-- [ ] 4.4 Add threshold (days only) → appears in list
-- [ ] 4.5 Threshold without last_performed → red banner card
-- [ ] 4.6 Threshold near limit → yellow banner card
-- [ ] 4.7 Threshold far from limit → no banner, green badge on list
-- [ ] 4.8 Edit threshold → data updated
-- [ ] 4.9 Delete with confirmation → removed from list and banner
-- [ ] 4.10 Dashboard without thresholds → banner hidden
-- [ ] 4.11 No regressions in repair history and cost/km
+- [x] 4.3 Add threshold (km only) → appears in list
+- [x] 4.4 Add threshold (days only) → appears in list
+- [x] 4.5 Threshold without last_performed → red banner card
+- [x] 4.6 Threshold near limit → yellow banner card
+- [x] 4.7 Threshold far from limit → no banner, green badge on list
+- [x] 4.8 Edit threshold → data updated
+- [x] 4.9 Delete with confirmation → removed from list and banner
+- [x] 4.10 Dashboard without thresholds → banner hidden
+- [x] 4.11 No regressions in repair history and cost/km

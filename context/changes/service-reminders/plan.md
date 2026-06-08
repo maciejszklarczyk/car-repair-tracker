@@ -383,29 +383,29 @@ Cztery komponenty React + aktualizacja strony Astro dashboardu. Banner przypomni
 
 #### Automated
 
-- [x] 2.1 `npm run build` without errors
-- [x] 2.2 POST valid body → 201
-- [x] 2.3 POST with both intervals null → 400
-- [x] 2.4 PUT/DELETE with foreign id → no rows affected
+- [x] 2.1 `npm run build` without errors — d1efde9
+- [x] 2.2 POST valid body → 201 — d1efde9
+- [x] 2.3 POST with both intervals null → 400 — d1efde9
+- [x] 2.4 PUT/DELETE with foreign id → no rows affected — d1efde9
 
 #### Manual
 
-- [x] 2.5 Create threshold via curl/Insomnia
-- [x] 2.6 Edit existing threshold
-- [x] 2.7 Delete foreign threshold fails
+- [x] 2.5 Create threshold via curl/Insomnia — d1efde9
+- [x] 2.6 Edit existing threshold — d1efde9
+- [x] 2.7 Delete foreign threshold fails — d1efde9
 
 ### Phase 3: Reminder Calculation Logic
 
 #### Automated
 
-- [ ] 3.1 `npm run build` without errors
+- [x] 3.1 `npm run build` without errors
 
 #### Manual
 
-- [ ] 3.2 `computeReminderStatus` with null last_performed → `'overdue'`
-- [ ] 3.3 km_remaining negative → `'overdue'`
-- [ ] 3.4 km_remaining within 10% margin → `'approaching'`
-- [ ] 3.5 days_remaining < 30 → `'approaching'`
+- [x] 3.2 `computeReminderStatus` with null last_performed → `'overdue'`
+- [x] 3.3 km_remaining negative → `'overdue'`
+- [x] 3.4 km_remaining within 10% margin → `'approaching'`
+- [x] 3.5 days_remaining < 30 → `'approaching'`
 
 ### Phase 4: UI Components + Dashboard Integration
 

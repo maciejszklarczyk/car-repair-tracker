@@ -19,14 +19,14 @@ export interface CostTrendPoint {
 }
 
 export function computeCostTrendData(vehicle: Vehicle, repairs: Repair[]): CostTrendPoint[] {
-  const costed = repairs.filter((r) => r.cost != null);
+  const costed = repairs.filter((r): r is Repair & { cost: number } => r.cost != null);
   const sorted = [...costed].sort((a, b) => a.repair_date.localeCompare(b.repair_date));
 
   const points: CostTrendPoint[] = [];
   let runningCost = 0;
 
   for (const repair of sorted) {
-    runningCost += repair.cost!;
+    runningCost += repair.cost;
     const kmDriven = repair.mileage - vehicle.baseline_mileage;
     if (kmDriven <= 0) continue;
     points.push({

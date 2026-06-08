@@ -58,14 +58,15 @@ Install Recharts and add `computeCostTrendData()` to `src/lib/costPerKm.ts`. Thi
 
 ```ts
 export interface CostTrendPoint {
-  date: string;       // repair_date ISO string, used as X-axis label
-  costPerKm: number;  // cumulative cost/km at this repair, rounded to 2 decimal places
+  date: string; // repair_date ISO string, used as X-axis label
+  costPerKm: number; // cumulative cost/km at this repair, rounded to 2 decimal places
 }
 
-export function computeCostTrendData(vehicle: Vehicle, repairs: Repair[]): CostTrendPoint[]
+export function computeCostTrendData(vehicle: Vehicle, repairs: Repair[]): CostTrendPoint[];
 ```
 
 Algorithm:
+
 1. Filter repairs to those with `cost != null`
 2. Sort by `repair_date` ASC
 3. Accumulate cost running total; at each repair compute `kmDriven = repair.mileage - vehicle.baseline_mileage`
@@ -114,6 +115,7 @@ interface Props {
 ```
 
 UI spec:
+
 - Recharts `<AreaChart>` with `<Area>` (type="monotone"), `<XAxis>`, `<YAxis>`, `<Tooltip>`, `<CartesianGrid>`
 - Dark theme: background transparent, grid lines `stroke="rgba(255,255,255,0.1)"`, area fill gradient in blue/purple matching the page palette
 - X-axis: format `date` as short date (e.g. `"Jan '25"`) — use `new Date(date).toLocaleDateString("en-GB", { month: "short", year: "2-digit" })`
@@ -155,10 +157,12 @@ Import `CostTrendChart` and `computeCostTrendData` into the vehicle detail Astro
 **Intent**: Import the new component and helper; compute `chartData` alongside existing `costPerKm` and `thresholdSummary`.
 
 **Contract**: Add to frontmatter imports:
+
 ```ts
 import CostTrendChart from "@/components/vehicles/CostTrendChart";
 import { computeCostTrendData } from "@/lib/costPerKm";
 ```
+
 And compute: `const chartData = computeCostTrendData(vehicle, repairs);`
 
 Note: `repairs` is already fetched sorted DESC — `computeCostTrendData` re-sorts ASC internally, so no change to the DB query needed.
@@ -172,14 +176,16 @@ Note: `repairs` is already fetched sorted DESC — `computeCostTrendData` re-sor
 **Contract**: Insert after the header card closing `</div>`:
 
 ```astro
-{chartData.length >= 2 && (
-  <div class="mt-6">
-    <h2 class="mb-4 text-xl font-semibold text-blue-100/80">Cost/km Trend</h2>
-    <div class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
-      <CostTrendChart chartData={chartData} client:load />
+{
+  chartData.length >= 2 && (
+    <div class="mt-6">
+      <h2 class="mb-4 text-xl font-semibold text-blue-100/80">Cost/km Trend</h2>
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+        <CostTrendChart chartData={chartData} client:load />
+      </div>
     </div>
-  </div>
-)}
+  )
+}
 ```
 
 ### Success Criteria:
@@ -226,22 +232,22 @@ Note: `repairs` is already fetched sorted DESC — `computeCostTrendData` re-sor
 
 #### Automated
 
-- [x] 1.1 TypeScript compiles without errors: `npm run build`
-- [x] 1.2 `computeCostTrendData` with 0 repairs returns `[]`
-- [x] 1.3 `computeCostTrendData` with all null-cost repairs returns `[]`
-- [x] 1.4 `computeCostTrendData` with 1 costed repair returns array of length 1
-- [x] 1.5 `computeCostTrendData` with 2+ costed repairs returns correct cumulative values
+- [x] 1.1 TypeScript compiles without errors: `npm run build` — b2633e0
+- [x] 1.2 `computeCostTrendData` with 0 repairs returns `[]` — b2633e0
+- [x] 1.3 `computeCostTrendData` with all null-cost repairs returns `[]` — b2633e0
+- [x] 1.4 `computeCostTrendData` with 1 costed repair returns array of length 1 — b2633e0
+- [x] 1.5 `computeCostTrendData` with 2+ costed repairs returns correct cumulative values — b2633e0
 
 #### Manual
 
-- [x] 1.6 Transform logic verified by eyeballing output
+- [x] 1.6 Transform logic verified by eyeballing output — b2633e0
 
 ### Phase 2: CostTrendChart Component
 
 #### Automated
 
-- [ ] 2.1 TypeScript compiles: `npm run build`
-- [ ] 2.2 Lint passes: `npm run lint`
+- [x] 2.1 TypeScript compiles: `npm run build`
+- [x] 2.2 Lint passes: `npm run lint`
 
 #### Manual
 

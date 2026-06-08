@@ -60,6 +60,7 @@ Remove `cars.current_mileage` from the Postgres table and from every layer that 
 **Intent**: Drop the `current_mileage` column from `cars`. After this migration the column no longer exists; Supabase select queries will simply not return it.
 
 **Contract**:
+
 ```sql
 ALTER TABLE public.cars DROP COLUMN current_mileage;
 ```
@@ -128,6 +129,7 @@ Extract `computeCurrentMileage` helper, update `computeCostPerKm` to use it, fix
 **Intent**: Extract `computeCurrentMileage` as a named export so both the detail page and list page can use it. Update `computeCostPerKm` to call it internally instead of reading the now-gone `vehicle.current_mileage`.
 
 **Contract**:
+
 ```ts
 export function computeCurrentMileage(repairs: Repair[], baselineMileage: number): number {
   if (repairs.length === 0) return baselineMileage;

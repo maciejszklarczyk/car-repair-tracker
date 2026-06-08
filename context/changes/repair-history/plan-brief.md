@@ -16,18 +16,19 @@ Vehicle detail page shows all repairs date-descending (date, description, cost, 
 
 ## Key Decisions Made
 
-| Decision | Choice | Why (1 sentence) |
-|---|---|---|
-| Edit UX | Separate page `/dashboard/repairs/[id]/edit` | Matches add-repair pattern exactly — no modal state management needed. |
-| Delete confirmation | shadcn AlertDialog in React island | Consistent with project UI system; cleaner than native `confirm()`. |
-| Post-delete behavior | `fetch()` + `window.location.reload()` | Keeps list in sync without optimistic state; consistent with SSR-first approach. |
-| List item fields | Date + description (2-line clamp) + cost + mileage | All meaningful data visible without an extra click. |
-| Edit scope | All fields (date, description, cost, mileage) | Full correction capability; `car_id` FK stays immutable. |
-| PUT/DELETE response | JSON (not redirect) | These handlers are called via `fetch()`, not form POST. |
+| Decision             | Choice                                             | Why (1 sentence)                                                                 |
+| -------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Edit UX              | Separate page `/dashboard/repairs/[id]/edit`       | Matches add-repair pattern exactly — no modal state management needed.           |
+| Delete confirmation  | shadcn AlertDialog in React island                 | Consistent with project UI system; cleaner than native `confirm()`.              |
+| Post-delete behavior | `fetch()` + `window.location.reload()`             | Keeps list in sync without optimistic state; consistent with SSR-first approach. |
+| List item fields     | Date + description (2-line clamp) + cost + mileage | All meaningful data visible without an extra click.                              |
+| Edit scope           | All fields (date, description, cost, mileage)      | Full correction capability; `car_id` FK stays immutable.                         |
+| PUT/DELETE response  | JSON (not redirect)                                | These handlers are called via `fetch()`, not form POST.                          |
 
 ## Scope
 
 **In scope:**
+
 - RLS policies for UPDATE + DELETE on `repairs`
 - `PUT /api/repairs/[id]` and `DELETE /api/repairs/[id]` handlers
 - `updateRepairSchema` (same as create, without `car_id`)
@@ -43,12 +44,12 @@ SSR Astro page fetches repairs server-side and passes them as props to the `Repa
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-|---|---|---|
-| 1. RLS Migration | UPDATE + DELETE policies on repairs table | Must apply before API routes are live |
-| 2. API Routes | PUT + DELETE handlers at `/api/repairs/[id]` | Ownership check must reject cross-user requests |
-| 3. Edit UI | Pre-filled edit form + edit page | `EditRepairForm` fetches via JSON — different from form-POST pattern |
-| 4. List UI | RepairList island + vehicle detail wired up | AlertDialog requires shadcn install first |
+| Phase            | What it delivers                             | Key risk                                                             |
+| ---------------- | -------------------------------------------- | -------------------------------------------------------------------- |
+| 1. RLS Migration | UPDATE + DELETE policies on repairs table    | Must apply before API routes are live                                |
+| 2. API Routes    | PUT + DELETE handlers at `/api/repairs/[id]` | Ownership check must reject cross-user requests                      |
+| 3. Edit UI       | Pre-filled edit form + edit page             | `EditRepairForm` fetches via JSON — different from form-POST pattern |
+| 4. List UI       | RepairList island + vehicle detail wired up  | AlertDialog requires shadcn install first                            |
 
 **Prerequisites:** S-02 merged (done). Local Supabase running.  
 **Estimated effort:** ~1 session across 4 phases.

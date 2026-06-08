@@ -16,11 +16,11 @@ Entering a repair mileage below the vehicle's baseline shows an inline error —
 
 ## Key Decisions Made
 
-| Decision | Choice | Why |
-| -------- | ------ | --- |
-| Scope | Both add and edit flows | Consistency — edit should not allow values add blocks |
-| Error placement | Inline on mileage field | Matches existing FormField error convention |
-| Error message | Includes baseline value | Actionable — user knows the exact minimum |
+| Decision        | Choice                  | Why                                                   |
+| --------------- | ----------------------- | ----------------------------------------------------- |
+| Scope           | Both add and edit flows | Consistency — edit should not allow values add blocks |
+| Error placement | Inline on mileage field | Matches existing FormField error convention           |
+| Error message   | Includes baseline value | Actionable — user knows the exact minimum             |
 
 ## Scope
 
@@ -34,9 +34,9 @@ Phase 1 hardens the server boundary first (no client changes). Phase 2 adds the 
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-| ----- | ---------------- | -------- |
-| 1. Server-side validation | API routes reject mileage < baseline | PUT route needs two selects (repair + car) |
+| Phase                     | What it delivers                     | Key risk                                           |
+| ------------------------- | ------------------------------------ | -------------------------------------------------- |
+| 1. Server-side validation | API routes reject mileage < baseline | PUT route needs two selects (repair + car)         |
 | 2. Client-side validation | Inline form errors before submission | new.astro CarRow interface + select need extending |
 
 **Prerequisites:** None — builds on existing repair forms and API routes  

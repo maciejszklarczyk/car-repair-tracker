@@ -1,4 +1,5 @@
 <!-- PLAN-REVIEW-REPORT -->
+
 # Plan Review: Cost per km (S-04) Implementation Plan
 
 - **Plan**: `context/changes/cost-per-km/plan.md`
@@ -9,13 +10,13 @@
 
 ## Verdicts
 
-| Dimension | Verdict |
-|-----------|---------|
-| End-State Alignment | PASS |
-| Lean Execution | PASS |
-| Architectural Fitness | PASS |
-| Blind Spots | WARNING |
-| Plan Completeness | PASS |
+| Dimension             | Verdict |
+| --------------------- | ------- |
+| End-State Alignment   | PASS    |
+| Lean Execution        | PASS    |
+| Architectural Fitness | PASS    |
+| Blind Spots           | WARNING |
+| Plan Completeness     | PASS    |
 
 ## Grounding
 

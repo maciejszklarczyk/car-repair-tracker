@@ -16,17 +16,18 @@ Both the list card and detail page show the highest mileage value across all rec
 
 ## Key Decisions Made
 
-| Decision | Choice | Why (1 sentence) | Source |
-| --- | --- | --- | --- |
-| How to derive current mileage | `MAX(repairs.mileage)` in-memory / in-query | Single source of truth, no sync bugs | Plan |
-| Fallback when no repairs | `baseline_mileage` | Always shows a meaningful number the user entered | Plan |
-| Drop or keep the column | Drop (`ALTER TABLE cars DROP COLUMN`) | Clean schema; stale column causes the bug | Plan |
-| List page strategy | PostgREST nested select `repairs(mileage)` | One round-trip, no DB view needed | Plan |
-| Tests | Manual only | User decision | Plan |
+| Decision                      | Choice                                      | Why (1 sentence)                                  | Source |
+| ----------------------------- | ------------------------------------------- | ------------------------------------------------- | ------ |
+| How to derive current mileage | `MAX(repairs.mileage)` in-memory / in-query | Single source of truth, no sync bugs              | Plan   |
+| Fallback when no repairs      | `baseline_mileage`                          | Always shows a meaningful number the user entered | Plan   |
+| Drop or keep the column       | Drop (`ALTER TABLE cars DROP COLUMN`)       | Clean schema; stale column causes the bug         | Plan   |
+| List page strategy            | PostgREST nested select `repairs(mileage)`  | One round-trip, no DB view needed                 | Plan   |
+| Tests                         | Manual only                                 | User decision                                     | Plan   |
 
 ## Scope
 
 **In scope:**
+
 - Drop `cars.current_mileage` DB column (migration)
 - Remove from `Vehicle` type, `createVehicleSchema`, API handler, and add-vehicle form
 - Extract `computeCurrentMileage` helper from `costPerKm.ts`
@@ -35,6 +36,7 @@ Both the list card and detail page show the highest mileage value across all rec
 - Update `VehicleCard.astro` to accept `currentMileage` prop
 
 **Out of scope:**
+
 - DB view or RPC
 - Unit/integration tests
 - Repair edit/delete flow changes
@@ -46,10 +48,10 @@ A pure helper `computeCurrentMileage(repairs, baselineMileage)` centralises the 
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-| --- | --- | --- |
-| 1. Drop `current_mileage` | DB migration + type/schema/API/form cleanup | TypeScript build fails until Phase 2 completes display fixes |
-| 2. Derive & display | `computeCurrentMileage` helper + detail + list + VehicleCard | PostgREST nested select must respect RLS — test with real auth |
+| Phase                     | What it delivers                                             | Key risk                                                       |
+| ------------------------- | ------------------------------------------------------------ | -------------------------------------------------------------- |
+| 1. Drop `current_mileage` | DB migration + type/schema/API/form cleanup                  | TypeScript build fails until Phase 2 completes display fixes   |
+| 2. Derive & display       | `computeCurrentMileage` helper + detail + list + VehicleCard | PostgREST nested select must respect RLS — test with real auth |
 
 **Prerequisites:** Local Supabase running (`npx supabase start`); repairs table populated with at least two repairs at different mileages for manual verification.
 **Estimated effort:** ~1 session across 2 phases (7 files touched, no new API routes or migrations beyond the DROP).

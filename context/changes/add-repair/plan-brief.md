@@ -16,19 +16,20 @@ Owner clicks "Add repair" on a vehicle card, fills in the form, submits, and lan
 
 ## Key Decisions Made
 
-| Decision | Choice | Why (1 sentence) | Source |
-|---|---|---|---|
-| Entry point | Button on VehicleCard → `?vehicle_id=<id>` | Natural UX — "this car needs a repair" matches how owners think | Plan |
-| Redirect target | Minimal `/dashboard/vehicles/[id].astro` | Sets up S-03 structure; gives user visible confirmation on the right car | Plan |
-| Date default | Today's date pre-filled (client-side) | 90% of repairs are recorded right after they happen | Plan |
-| Mileage validation | Non-negative only, no cross-check vs car mileage | Past repairs are valid; cross-check adds DB read with little gain | Plan |
-| Cost UX | Blank optional field, labelled "(optional)" | Matches FormField pattern; simple and sufficient | Plan |
-| Description limit | 500 chars, Zod + client counter | Prepares for AI classification input; prevents DB bloat | Plan |
-| vehicle_id ownership check | API fetches car before insert, confirms user_id | RLS alone isn't enough when car_id comes from a URL param | Plan |
+| Decision                   | Choice                                           | Why (1 sentence)                                                         | Source |
+| -------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------ | ------ |
+| Entry point                | Button on VehicleCard → `?vehicle_id=<id>`       | Natural UX — "this car needs a repair" matches how owners think          | Plan   |
+| Redirect target            | Minimal `/dashboard/vehicles/[id].astro`         | Sets up S-03 structure; gives user visible confirmation on the right car | Plan   |
+| Date default               | Today's date pre-filled (client-side)            | 90% of repairs are recorded right after they happen                      | Plan   |
+| Mileage validation         | Non-negative only, no cross-check vs car mileage | Past repairs are valid; cross-check adds DB read with little gain        | Plan   |
+| Cost UX                    | Blank optional field, labelled "(optional)"      | Matches FormField pattern; simple and sufficient                         | Plan   |
+| Description limit          | 500 chars, Zod + client counter                  | Prepares for AI classification input; prevents DB bloat                  | Plan   |
+| vehicle_id ownership check | API fetches car before insert, confirms user_id  | RLS alone isn't enough when car_id comes from a URL param                | Plan   |
 
 ## Scope
 
 **In scope:**
+
 - `repairs` table migration + RLS (select + insert)
 - `Repair` TypeScript interface
 - `createRepairSchema` Zod validation
@@ -39,6 +40,7 @@ Owner clicks "Add repair" on a vehicle card, fills in the form, submits, and lan
 - "Add repair" link on VehicleCard
 
 **Out of scope:**
+
 - AI category classification (S-05)
 - Cost-per-km display (S-04)
 - Repair list, edit, delete (S-03)
@@ -50,12 +52,12 @@ VehicleCard → `/dashboard/repairs/new?vehicle_id=<id>` → Astro page fetches 
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-|---|---|---|
-| 1. DB migration + type | `repairs` table, RLS, `Repair` interface | Schema must accommodate future S-03/S-04 queries without migration |
-| 2. Schema + API | Zod validation, POST endpoint with ownership check | Ownership check logic must run before insert, not rely on RLS alone |
-| 3. Form + page | AddRepairForm, /dashboard/repairs/new | Date default is client-side only — SSR renders blank field initially |
-| 4. Detail page + VehicleCard | Entry point, redirect target | VehicleCard change is Astro (SSR) — no hydration issues |
+| Phase                        | What it delivers                                   | Key risk                                                             |
+| ---------------------------- | -------------------------------------------------- | -------------------------------------------------------------------- |
+| 1. DB migration + type       | `repairs` table, RLS, `Repair` interface           | Schema must accommodate future S-03/S-04 queries without migration   |
+| 2. Schema + API              | Zod validation, POST endpoint with ownership check | Ownership check logic must run before insert, not rely on RLS alone  |
+| 3. Form + page               | AddRepairForm, /dashboard/repairs/new              | Date default is client-side only — SSR renders blank field initially |
+| 4. Detail page + VehicleCard | Entry point, redirect target                       | VehicleCard change is Astro (SSR) — no hydration issues              |
 
 **Prerequisites:** S-01 complete (cars table, Vehicle type, vehicles list page).
 **Estimated effort:** ~1 session across 4 phases.

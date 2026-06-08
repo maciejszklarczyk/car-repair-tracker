@@ -10,8 +10,8 @@ export default function ServiceReminders({ thresholds }: Props) {
   if (alerts.length === 0) return null;
 
   return (
-    <div className="mb-6 space-y-3">
-      <h2 className="text-sm font-semibold tracking-wide text-blue-100/50 uppercase">Service Alerts</h2>
+    <div className="mt-8 space-y-4">
+      <h2 className="text-xl font-semibold text-blue-100/80">Service Alerts</h2>
       <div className="grid gap-3 sm:grid-cols-2">
         {alerts.map(({ threshold, status, km_remaining, days_remaining }) => {
           const isOverdue = status === "overdue";

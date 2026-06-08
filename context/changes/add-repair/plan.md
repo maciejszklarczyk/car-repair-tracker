@@ -53,6 +53,7 @@ Create the `repairs` table with FK to `cars`, enable RLS with select and insert 
 **Intent**: Create `repairs` table, index it by car, enable RLS, add select-own and insert-own policies mirroring the cars table pattern.
 
 **Contract**:
+
 ```sql
 create table public.repairs (
   id uuid primary key default gen_random_uuid(),
@@ -66,7 +67,9 @@ create table public.repairs (
   updated_at timestamptz not null default now()
 );
 ```
+
 RLS policies:
+
 - `repairs_select_own`: `for select using (auth.uid() = user_id)`
 - `repairs_insert_own`: `for insert with check (auth.uid() = user_id AND EXISTS (SELECT 1 FROM public.cars WHERE id = car_id AND user_id = auth.uid()))`
 
@@ -80,12 +83,13 @@ Index on `car_id` for future list queries.
 **Intent**: Add `Repair` interface alongside `Vehicle`.
 
 **Contract**:
+
 ```typescript
 export interface Repair {
   id: string;
   car_id: string;
   user_id: string;
-  repair_date: string;       // ISO date string "YYYY-MM-DD"
+  repair_date: string; // ISO date string "YYYY-MM-DD"
   description: string;
   cost: number | null;
   mileage: number;
@@ -166,13 +170,15 @@ Create the React form component and the Astro page that hosts it. The page reads
 **Intent**: Client-side validated form for a repair. Same structure as `AddVehicleForm.tsx`: local state per field, `validate()`, `clearError()`, `handleSubmit()`. Includes a hidden `car_id` field. Date field defaults to today's date (`new Date().toISOString().split("T")[0]`). Cost field labelled "Cost (PLN) — optional". Opis textarea (not input) with character counter showing remaining chars out of 500.
 
 **Contract**:
+
 ```typescript
 interface Props {
   carId: string;
-  vehicleName: string;   // e.g. "Skoda Octavia (2018)" — displayed above form
+  vehicleName: string; // e.g. "Skoda Octavia (2018)" — displayed above form
   serverError?: string | null;
 }
 ```
+
 Form `action="/api/repairs"`, method POST. Fields: `car_id` (hidden), `repair_date` (date), `description` (textarea, maxLength=500), `cost` (number, optional), `mileage` (number).
 
 Use `FormField` for date, cost, mileage. For `description`, create `src/components/ui/TextareaField.tsx` — same label/error/icon visual structure as `FormField` but renders `<textarea>` instead of `<input>`, with a char counter (`{500 - description.length} chars remaining`) below the textarea. Import and use `TextareaField` in `AddRepairForm` for the description field.

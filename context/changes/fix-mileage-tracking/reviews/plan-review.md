@@ -1,4 +1,5 @@
 <!-- PLAN-REVIEW-REPORT -->
+
 # Plan Review: Fix Mileage Tracking
 
 - **Plan**: `context/changes/fix-mileage-tracking/plan.md`
@@ -9,13 +10,13 @@
 
 ## Verdicts
 
-| Dimension | Verdict |
-|-----------|---------|
-| End-State Alignment | PASS |
-| Lean Execution | PASS |
-| Architectural Fitness | PASS |
-| Blind Spots | WARNING → FIXED |
-| Plan Completeness | FAIL → FIXED |
+| Dimension             | Verdict         |
+| --------------------- | --------------- |
+| End-State Alignment   | PASS            |
+| Lean Execution        | PASS            |
+| Architectural Fitness | PASS            |
+| Blind Spots           | WARNING → FIXED |
+| Plan Completeness     | FAIL → FIXED    |
 
 ## Grounding
 

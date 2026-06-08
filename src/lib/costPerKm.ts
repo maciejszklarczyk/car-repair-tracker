@@ -12,3 +12,28 @@ export function computeCostPerKm(vehicle: Vehicle, repairs: Repair[]): number | 
   if (totalCost === 0) return null;
   return totalCost / km;
 }
+
+export interface CostTrendPoint {
+  date: string;
+  costPerKm: number;
+}
+
+export function computeCostTrendData(vehicle: Vehicle, repairs: Repair[]): CostTrendPoint[] {
+  const costed = repairs.filter((r) => r.cost != null);
+  const sorted = [...costed].sort((a, b) => a.repair_date.localeCompare(b.repair_date));
+
+  const points: CostTrendPoint[] = [];
+  let runningCost = 0;
+
+  for (const repair of sorted) {
+    runningCost += repair.cost!;
+    const kmDriven = repair.mileage - vehicle.baseline_mileage;
+    if (kmDriven <= 0) continue;
+    points.push({
+      date: repair.repair_date,
+      costPerKm: parseFloat((runningCost / kmDriven).toFixed(2)),
+    });
+  }
+
+  return points;
+}

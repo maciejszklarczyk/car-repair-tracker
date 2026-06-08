@@ -3,6 +3,7 @@
 ## 2026-06-08
 
 - [235b3dc] fix(service-reminders): impl-review fixes — ownership checks, error handling, schema refine
+- [6467187] fix(service-reminders): relax car_id validation to accept non-v4 UUIDs
 
 ## 2026-06-02
 

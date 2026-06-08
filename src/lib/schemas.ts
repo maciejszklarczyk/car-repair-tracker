@@ -23,7 +23,7 @@ export const updateRepairSchema = z.object({
 
 export const createServiceThresholdSchema = z
   .object({
-    car_id: z.string().uuid("Invalid car ID"),
+    car_id: z.string().min(1, "Car ID is required"),
     name: z.string().trim().min(1, "Name is required"),
     km_interval: z.number().int().positive("km_interval must be positive").optional(),
     days_interval: z.number().int().positive("days_interval must be positive").optional(),

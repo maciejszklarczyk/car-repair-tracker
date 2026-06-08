@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 import { createServiceThresholdSchema } from "@/lib/schemas";
+import type { ServiceThreshold } from "@/types";
 
 export const prerender = false;
 
@@ -28,18 +29,18 @@ export const POST: APIRoute = async (context) => {
     return Response.json({ error: message }, { status: 400 });
   }
 
-  const { data: car, error: carError } = await supabase
+  const { error: carError } = await supabase
     .from("cars")
     .select("id")
     .eq("id", result.data.car_id)
     .eq("user_id", user.id)
     .single();
 
-  if (carError || !car) {
+  if (carError) {
     return Response.json({ error: "Vehicle not found" }, { status: 404 });
   }
 
-  const { data: threshold, error } = await supabase
+  const { data: threshold, error } = (await supabase
     .from("service_thresholds")
     .insert({
       car_id: result.data.car_id,
@@ -51,7 +52,7 @@ export const POST: APIRoute = async (context) => {
       last_performed_mileage: result.data.last_performed_mileage ?? null,
     })
     .select()
-    .single();
+    .single()) as { data: ServiceThreshold | null; error: { message: string } | null };
 
   if (error) {
     return Response.json({ error: error.message }, { status: 500 });

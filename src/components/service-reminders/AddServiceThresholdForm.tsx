@@ -10,7 +10,7 @@ export default function AddServiceThresholdForm({ carId }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
 
@@ -27,7 +27,7 @@ export default function AddServiceThresholdForm({ carId }: Props) {
 
     const body: Record<string, unknown> = {
       car_id: carId,
-      name: data.get("name") as string,
+      name: data.get("name"),
     };
     if (kmInterval) body.km_interval = Number(kmInterval);
     if (daysInterval) body.days_interval = Number(daysInterval);
@@ -60,7 +60,9 @@ export default function AddServiceThresholdForm({ carId }: Props) {
   if (!open) {
     return (
       <Button
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setOpen(true);
+        }}
         className="mt-4 bg-purple-600 text-white hover:bg-purple-500"
       >
         + Add Service Threshold
@@ -72,9 +74,7 @@ export default function AddServiceThresholdForm({ carId }: Props) {
     <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
       <h3 className="mb-4 text-sm font-semibold text-blue-100/80">New Service Threshold</h3>
       {error && (
-        <p className="mb-4 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
-          {error}
-        </p>
+        <p className="mb-4 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">{error}</p>
       )}
       <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
         <div>

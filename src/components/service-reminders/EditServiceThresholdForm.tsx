@@ -11,7 +11,7 @@ export default function EditServiceThresholdForm({ threshold, onCancel }: Props)
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
 
@@ -27,7 +27,7 @@ export default function EditServiceThresholdForm({ threshold, onCancel }: Props)
     }
 
     const body: Record<string, unknown> = {
-      name: data.get("name") as string,
+      name: data.get("name"),
     };
     body.km_interval = kmInterval ? Number(kmInterval) : null;
     body.days_interval = daysInterval ? Number(daysInterval) : null;
@@ -60,9 +60,7 @@ export default function EditServiceThresholdForm({ threshold, onCancel }: Props)
   return (
     <div className="mt-3 rounded-xl border border-white/10 bg-white/5 p-4">
       {error && (
-        <p className="mb-3 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-2 text-sm text-red-300">
-          {error}
-        </p>
+        <p className="mb-3 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-2 text-sm text-red-300">{error}</p>
       )}
       <form onSubmit={(e) => void handleSubmit(e)} className="space-y-3">
         <div>

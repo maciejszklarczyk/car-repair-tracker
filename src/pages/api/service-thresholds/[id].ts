@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 import { updateServiceThresholdSchema } from "@/lib/schemas";
+import type { ServiceThreshold } from "@/types";
 
 export const prerender = false;
 
@@ -33,7 +34,7 @@ export const PUT: APIRoute = async (context) => {
     .eq("id", thresholdId)
     .single();
 
-  if (fetchError || !existing) {
+  if (fetchError) {
     return Response.json({ error: "Not found" }, { status: 404 });
   }
 
@@ -56,15 +57,15 @@ export const PUT: APIRoute = async (context) => {
   if (result.data.last_performed_mileage !== undefined)
     updateData.last_performed_mileage = result.data.last_performed_mileage;
 
-  const { data: threshold, error } = await supabase
+  const { data: threshold, error } = (await supabase
     .from("service_thresholds")
     .update(updateData)
     .eq("id", thresholdId)
     .eq("user_id", user.id)
     .select()
-    .single();
+    .single()) as { data: ServiceThreshold | null; error: { message: string } | null };
 
-  if (error || !threshold) {
+  if (error) {
     return Response.json({ error: "Not found or forbidden" }, { status: 404 });
   }
 
@@ -93,7 +94,7 @@ export const DELETE: APIRoute = async (context) => {
     .eq("id", thresholdId)
     .single();
 
-  if (fetchError || !existing) {
+  if (fetchError) {
     return Response.json({ error: "Not found" }, { status: 404 });
   }
 
@@ -102,10 +103,7 @@ export const DELETE: APIRoute = async (context) => {
     return Response.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const { error } = await supabase
-    .from("service_thresholds")
-    .delete()
-    .eq("id", thresholdId);
+  const { error } = await supabase.from("service_thresholds").delete().eq("id", thresholdId);
 
   if (error) {
     return Response.json({ error: "Something went wrong" }, { status: 500 });

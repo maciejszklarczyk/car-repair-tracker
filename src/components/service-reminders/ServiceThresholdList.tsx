@@ -66,9 +66,7 @@ export default function ServiceThresholdList({ thresholds }: Props) {
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-3">
                 <span className="font-medium text-blue-100/90">{threshold.name}</span>
-                <span
-                  className={`rounded-full border px-2 py-0.5 text-xs font-medium ${statusBadge[status]}`}
-                >
+                <span className={`rounded-full border px-2 py-0.5 text-xs font-medium ${statusBadge[status]}`}>
                   {status}
                 </span>
               </div>
@@ -77,8 +75,13 @@ export default function ServiceThresholdList({ thresholds }: Props) {
                   <span>
                     Every {threshold.km_interval.toLocaleString()} km
                     {km_remaining !== null && (
-                      <span className={km_remaining < 0 ? " text-red-400" : ""}>
-                        {" "}({km_remaining < 0 ? `${Math.abs(km_remaining).toLocaleString()} km overdue` : `${km_remaining.toLocaleString()} km left`})
+                      <span className={km_remaining < 0 ? "text-red-400" : ""}>
+                        {" "}
+                        (
+                        {km_remaining < 0
+                          ? `${Math.abs(km_remaining).toLocaleString()} km overdue`
+                          : `${km_remaining.toLocaleString()} km left`}
+                        )
                       </span>
                     )}
                   </span>
@@ -87,14 +90,19 @@ export default function ServiceThresholdList({ thresholds }: Props) {
                   <span>
                     Every {threshold.days_interval} days
                     {days_remaining !== null && (
-                      <span className={days_remaining < 0 ? " text-red-400" : ""}>
-                        {" "}({days_remaining < 0 ? `${Math.abs(days_remaining)} days overdue` : `${days_remaining} days left`})
+                      <span className={days_remaining < 0 ? "text-red-400" : ""}>
+                        {" "}
+                        (
+                        {days_remaining < 0
+                          ? `${Math.abs(days_remaining)} days overdue`
+                          : `${days_remaining} days left`}
+                        )
                       </span>
                     )}
                   </span>
                 )}
                 {threshold.last_performed_date && (
-                  <span>Last: {new Date(threshold.last_performed_date).toLocaleDateString('en-GB')}</span>
+                  <span>Last: {new Date(threshold.last_performed_date).toLocaleDateString("en-GB")}</span>
                 )}
                 {threshold.last_performed_mileage !== null && (
                   <span>@ {threshold.last_performed_mileage.toLocaleString()} km</span>
@@ -105,7 +113,9 @@ export default function ServiceThresholdList({ thresholds }: Props) {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setEditingId(editingId === threshold.id ? null : threshold.id)}
+                onClick={() => {
+                  setEditingId(editingId === threshold.id ? null : threshold.id);
+                }}
                 className="h-auto rounded-lg border border-white/10 px-3 py-1.5 text-xs text-blue-100/70 hover:border-white/20 hover:text-blue-100"
               >
                 <Pencil className="size-3" />
@@ -126,7 +136,7 @@ export default function ServiceThresholdList({ thresholds }: Props) {
                   <AlertDialogHeader>
                     <AlertDialogTitle className="text-white">Delete threshold?</AlertDialogTitle>
                     <AlertDialogDescription className="text-blue-100/60">
-                      This will permanently remove "{threshold.name}".
+                      This will permanently remove &quot;{threshold.name}&quot;.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
@@ -147,7 +157,9 @@ export default function ServiceThresholdList({ thresholds }: Props) {
           {editingId === threshold.id && (
             <EditServiceThresholdForm
               threshold={threshold}
-              onCancel={() => setEditingId(null)}
+              onCancel={() => {
+                setEditingId(null);
+              }}
             />
           )}
         </div>

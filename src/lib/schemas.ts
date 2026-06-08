@@ -42,7 +42,7 @@ export const updateServiceThresholdSchema = z
     last_performed_date: z.string().trim().nullable().optional(),
     last_performed_mileage: z.number().int().min(0, "Mileage cannot be negative").nullable().optional(),
   })
-  .refine((d) => Object.values(d).some((v) => v !== undefined), {
+  .refine((d) => Object.values(d as Record<string, unknown>).some((v) => v !== undefined), {
     message: "At least one field must be provided",
   });
 

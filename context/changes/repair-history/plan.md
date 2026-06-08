@@ -50,6 +50,7 @@ Add UPDATE and DELETE RLS policies to the `repairs` table so the new API routes 
 **Intent**: Add `repairs_update_own` and `repairs_delete_own` policies, mirroring the existing select/insert ownership pattern.
 
 **Contract**:
+
 ```sql
 create policy "repairs_update_own"
   on public.repairs for update
@@ -98,6 +99,7 @@ Add `src/pages/api/repairs/[id].ts` with PUT (update) and DELETE handlers. Both 
 **Intent**: PUT handler validates and updates the repair; DELETE handler removes it. Both verify ownership before acting.
 
 **Contract**:
+
 - `export const prerender = false`
 - Ownership check shared by both: `supabase.from("repairs").select("id, user_id").eq("id", repairId).single()` — if not found or `user_id !== user.id`, return `Response.json({ error: "Forbidden" }, { status: 403 })`.
 - `PUT`: parse `context.params.id`, check ownership, parse `await context.request.json()`, validate with `updateRepairSchema`, run `supabase.from("repairs").update({...}).eq("id", repairId)`, return `Response.json({ success: true })` on success or `Response.json({ error: message }, { status: 400 })` on validation/DB error.
@@ -136,12 +138,14 @@ Create `EditRepairForm.tsx` (pre-filled variant of `AddRepairForm.tsx`) and the 
 **Intent**: Pre-filled form for editing an existing repair. Mirrors `AddRepairForm.tsx` structure exactly — same fields, same `validate()` / `clearError()` pattern. On submit, calls `fetch('/api/repairs/${repair.id}', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({...}) })`. On success (`response.ok`), sets `window.location.href = /dashboard/vehicles/${repair.car_id}?success=updated`. On API error, sets local `serverError` state from the response JSON.
 
 **Contract**:
+
 ```typescript
 interface Props {
   repair: Repair;
   vehicleName: string;
 }
 ```
+
 Initial state for each field sourced from `repair` prop: `repairDate = repair.repair_date`, `description = repair.description`, `cost = repair.cost != null ? String(repair.cost) : ""`, `mileage = String(repair.mileage)`. SubmitButton label: "Save changes". No hidden `car_id` field needed — the repair ID in the URL owns the identity.
 
 #### 2. Edit page
@@ -190,12 +194,14 @@ Build the `RepairList.tsx` React island for rendering the history list with edit
 **Intent**: Renders the repair list with edit link and delete button per row. Delete opens AlertDialog; on confirm calls `fetch('/api/repairs/${repair.id}', { method: 'DELETE' })` then `window.location.reload()`. Empty state renders "No repairs yet." paragraph when `repairs.length === 0`.
 
 **Contract**:
+
 ```typescript
 interface Props {
   repairs: Repair[];
   carId: string;
 }
 ```
+
 Repairs are pre-sorted date-descending by the caller. Each row layout: `repair_date` (formatted as locale date string), description (`line-clamp-2` CSS class), cost (`cost != null ? ${cost.toLocaleString()} PLN : "—"`), mileage (`${mileage.toLocaleString()} km`). Edit link: `href={/dashboard/repairs/${repair.id}/edit}`. AlertDialog trigger: "Delete" button. AlertDialog title: "Delete repair?", description: "This action cannot be undone.", confirm button: "Delete" (destructive variant). On delete API error, show inline error message via local `deleteError` state.
 
 #### 3. Vehicle detail page update
@@ -205,6 +211,7 @@ Repairs are pre-sorted date-descending by the caller. Each row layout: `repair_d
 **Intent**: Fetch all repairs for the vehicle and pass them to the RepairList island, replacing the static placeholder.
 
 **Contract**: After the existing `vehicle` fetch, add:
+
 ```ts
 const { data: repairs } = await supabase
   .from("repairs")
@@ -212,10 +219,13 @@ const { data: repairs } = await supabase
   .eq("car_id", id)
   .order("repair_date", { ascending: false });
 ```
+
 Import `RepairList` from `@/components/repairs/RepairList`. Replace lines 64–70 (the static placeholder `<div>`) with:
+
 ```astro
 <RepairList repairs={repairs ?? []} carId={vehicle.id} client:load />
 ```
+
 Keep the `<h2>Repair History</h2>` heading outside the island. Also update the success banner to distinguish `?success=1` ("Repair added successfully.") from `?success=updated` ("Repair saved.").
 
 ### Success Criteria

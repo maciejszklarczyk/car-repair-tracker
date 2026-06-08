@@ -7,6 +7,7 @@ Implementujemy progi serwisowe per pojazd: użytkownik definiuje nazwę serwisu,
 ## Current State Analysis
 
 Brak jakiejkolwiek logiki przypomnień. Codebase dostarcza:
+
 - Tabele `cars` i `repairs` z RLS (wzorzec do powielenia)
 - `computeCurrentMileage()` w `src/lib/costPerKm.ts` — aktualne km z `MAX(repairs.mileage)`
 - Dashboard pojazdu: `src/pages/dashboard/vehicles/[id].astro` — punkt integracji
@@ -16,6 +17,7 @@ Brak jakiejkolwiek logiki przypomnień. Codebase dostarcza:
 ## Desired End State
 
 Użytkownik wchodzi na dashboard pojazdu (`/dashboard/vehicles/[id]`) i widzi:
+
 1. Banner z czerwonymi/żółtymi kartami dla serwisów wymagających uwagi (nad historią napraw)
 2. Sekcję "Service Thresholds" z listą progów + przycisk dodania nowego
 3. Pełny CRUD progów (dodaj, edytuj, usuń z potwierdzeniem)
@@ -64,6 +66,7 @@ Tworzy tabelę `service_thresholds` z RLS i dodaje `ServiceThreshold` interface 
 **Intent:** Nowa tabela przechowująca progi serwisowe per pojazd z RLS identycznym jak tabela `repairs`.
 
 **Contract:**
+
 ```sql
 CREATE TABLE public.service_thresholds (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -81,7 +84,9 @@ CREATE TABLE public.service_thresholds (
   )
 );
 ```
+
 RLS policies (4) — wzorzec z `20260531120000_create_repairs_table.sql:20-26`:
+
 ```sql
 -- select_own
 create policy service_thresholds_select_own on public.service_thresholds
@@ -112,6 +117,7 @@ create policy service_thresholds_delete_own on public.service_thresholds
 **Intent:** Dodać `ServiceThreshold` interface równoległy do `Vehicle` i `Repair`.
 
 **Contract:**
+
 ```typescript
 export interface ServiceThreshold {
   id: string;
@@ -120,7 +126,7 @@ export interface ServiceThreshold {
   name: string;
   km_interval: number | null;
   days_interval: number | null;
-  last_performed_date: string | null;  // ISO date string
+  last_performed_date: string | null; // ISO date string
   last_performed_mileage: number | null;
   created_at: string;
   updated_at: string;
@@ -159,6 +165,7 @@ Nowe endpointy CRUD dla progów serwisowych: POST create, PUT update, DELETE del
 **Intent:** Dodać `createServiceThresholdSchema` i `updateServiceThresholdSchema` do istniejącego pliku.
 
 **Contract:**
+
 - `createServiceThresholdSchema`: pola `car_id` (uuid), `name` (string, min 1), `km_interval` (int positive, optional), `days_interval` (int positive, optional), `last_performed_date` (ISO date string, optional), `last_performed_mileage` (int non-negative, optional). Refinement: co najmniej jedno z `km_interval`/`days_interval` musi być podane.
 - `updateServiceThresholdSchema`: te same pola co create, wszystkie optional (partial update).
 
@@ -215,28 +222,22 @@ Moduł kalkulujący status przypomnienia dla pojedynczego progu. Czysty TypeScri
 **Contract:**
 
 ```typescript
-export type ReminderStatus = 'overdue' | 'approaching' | 'ok';
+export type ReminderStatus = "overdue" | "approaching" | "ok";
 
 export interface ThresholdWithStatus {
   threshold: ServiceThreshold;
   status: ReminderStatus;
-  km_remaining: number | null;   // null gdy brak danych km
+  km_remaining: number | null; // null gdy brak danych km
   days_remaining: number | null; // null gdy brak danych dni
 }
 
-export function computeReminderStatus(
-  threshold: ServiceThreshold,
-  currentMileage: number,
-  today: Date
-): ReminderStatus
+export function computeReminderStatus(threshold: ServiceThreshold, currentMileage: number, today: Date): ReminderStatus;
 
-export function computeThresholdSummary(
-  thresholds: ServiceThreshold[],
-  currentMileage: number
-): ThresholdWithStatus[]
+export function computeThresholdSummary(thresholds: ServiceThreshold[], currentMileage: number): ThresholdWithStatus[];
 ```
 
 Logika `computeReminderStatus`:
+
 1. Brak `last_performed_date` I brak `last_performed_mileage` → `'overdue'`
 2. Kalkulacja km (gdy `km_interval` i `last_performed_mileage` niepuste): `km_remaining = (last_performed_mileage + km_interval) - currentMileage`; jeśli ≤ 0 → overdue; jeśli ≤ `km_interval * 0.10` → approaching
 3. Kalkulacja dni (gdy `days_interval` i `last_performed_date` niepuste): `days_remaining = days_interval - daysBetween(last_performed_date, today)`; jeśli ≤ 0 → overdue; jeśli ≤ 30 → approaching
@@ -309,6 +310,7 @@ Cztery komponenty React + aktualizacja strony Astro dashboardu. Banner przypomni
 **Intent:** Dociągnąć `service_thresholds` dla pojazdu, skalkulować statusy, przekazać do bannerowego i listowego komponentu.
 
 **Contract:**
+
 - W sekcji fetch danych (obok zapytań o `cars` i `repairs`): dodać query `SELECT * FROM service_thresholds WHERE car_id = vehicleId ORDER BY created_at ASC`
 - Kalkulacja: `const thresholdSummary = computeThresholdSummary(thresholds, currentMileage)` (import z `@/lib/serviceReminders`)
 - Layout:

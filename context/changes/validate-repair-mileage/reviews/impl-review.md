@@ -1,30 +1,31 @@
 <!-- IMPL-REVIEW-REPORT -->
+
 # Implementation Review: Validate Repair Mileage
 
 - **Plan**: context/changes/validate-repair-mileage/plan.md
 - **Scope**: All phases (Phase 1 + Phase 2)
 - **Date**: 2026-06-02
 - **Verdict**: APPROVED
-- **Findings**: 0 critical  0 warnings  2 observations
+- **Findings**: 0 critical 0 warnings 2 observations
 
 ## Verdicts
 
-| Dimension | Verdict |
-|-----------|---------|
-| Plan Adherence | PASS |
-| Scope Discipline | PASS |
-| Safety & Quality | PASS |
-| Architecture | PASS |
+| Dimension           | Verdict |
+| ------------------- | ------- |
+| Plan Adherence      | PASS    |
+| Scope Discipline    | PASS    |
+| Safety & Quality    | PASS    |
+| Architecture        | PASS    |
 | Pattern Consistency | WARNING |
-| Success Criteria | PASS |
+| Success Criteria    | PASS    |
 
 ## Automated Verification
 
-| Check | Result |
-|-------|--------|
-| 1.1 `npm run lint` | ✅ PASS |
+| Check               | Result  |
+| ------------------- | ------- |
+| 1.1 `npm run lint`  | ✅ PASS |
 | 2.1 `npm run build` | ✅ PASS |
-| 2.2 `npm run lint` | ✅ PASS |
+| 2.2 `npm run lint`  | ✅ PASS |
 
 Manual items (1.2, 1.3, 2.3, 2.4, 2.5): not yet confirmed by user.
 
@@ -40,7 +41,7 @@ Manual items (1.2, 1.3, 2.3, 2.4, 2.5): not yet confirmed by user.
 - **Fix**: Change to `React.SyntheticEvent<HTMLFormElement>`.
 - **Decision**: FIXED
 
-### F2 — edit.astro uses select("*") for cars fetch
+### F2 — edit.astro uses select("\*") for cars fetch
 
 - **Severity**: OBSERVATION
 - **Impact**: 🏃 LOW — quick decision; fix is obvious and narrowly scoped

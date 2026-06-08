@@ -1,4 +1,5 @@
 <!-- IMPL-REVIEW-REPORT -->
+
 # Implementation Review: Cost per km (S-04)
 
 - **Plan**: context/changes/cost-per-km/plan.md
@@ -9,14 +10,14 @@
 
 ## Verdicts
 
-| Dimension | Verdict |
-|---|---|
-| Plan Adherence | PASS |
-| Scope Discipline | PASS |
-| Safety & Quality | PASS (after fixes) |
-| Architecture | PASS |
+| Dimension           | Verdict            |
+| ------------------- | ------------------ |
+| Plan Adherence      | PASS               |
+| Scope Discipline    | PASS               |
+| Safety & Quality    | PASS (after fixes) |
+| Architecture        | PASS               |
 | Pattern Consistency | PASS (after fixes) |
-| Success Criteria | PASS |
+| Success Criteria    | PASS               |
 
 ## Findings
 

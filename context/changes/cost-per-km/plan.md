@@ -106,10 +106,7 @@ Fetch the car's repairs in `[id].astro`, call `computeCostPerKm`, and render the
 **Contract**: Declare `let repairs: Repair[] = []` before the guard block. Inside the existing `if (id && supabase)` block, after the car query, add:
 
 ```typescript
-const { data: repairsData } = await supabase
-  .from("repairs")
-  .select("*")
-  .eq("car_id", id);
+const { data: repairsData } = await supabase.from("repairs").select("*").eq("car_id", id);
 repairs = (repairsData ?? []) as Repair[];
 ```
 
@@ -128,9 +125,13 @@ Import `Repair` from `@/types` and `computeCostPerKm` from `@/lib/costPerKm`.
 ```astro
 <span>
   Cost/km:{" "}
-  {costPerKm !== null
-    ? `${costPerKm.toFixed(2)} PLN/km`
-    : <span class="text-blue-100/40 text-xs">(— PLN/km — no cost data yet)</span>}
+  {
+    costPerKm !== null ? (
+      `${costPerKm.toFixed(2)} PLN/km`
+    ) : (
+      <span class="text-xs text-blue-100/40">(— PLN/km — no cost data yet)</span>
+    )
+  }
 </span>
 ```
 

@@ -370,29 +370,29 @@ Cztery komponenty React + aktualizacja strony Astro dashboardu. Banner przypomni
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly (`npx supabase db reset`)
-- [x] 1.2 `npm run build` without TypeScript errors
+- [x] 1.1 Migration applies cleanly (`npx supabase db reset`) — de2bc2f
+- [x] 1.2 `npm run build` without TypeScript errors — de2bc2f
 
 #### Manual
 
-- [x] 1.3 Table `service_thresholds` visible in Supabase Studio
-- [x] 1.4 RLS blocks cross-user access
-- [x] 1.5 Constraint rejects both-null interval
+- [x] 1.3 Table `service_thresholds` visible in Supabase Studio — de2bc2f
+- [x] 1.4 RLS blocks cross-user access — de2bc2f
+- [x] 1.5 Constraint rejects both-null interval — de2bc2f
 
 ### Phase 2: API Endpoints
 
 #### Automated
 
-- [ ] 2.1 `npm run build` without errors
-- [ ] 2.2 POST valid body → 201
-- [ ] 2.3 POST with both intervals null → 400
-- [ ] 2.4 PUT/DELETE with foreign id → no rows affected
+- [x] 2.1 `npm run build` without errors
+- [x] 2.2 POST valid body → 201
+- [x] 2.3 POST with both intervals null → 400
+- [x] 2.4 PUT/DELETE with foreign id → no rows affected
 
 #### Manual
 
-- [ ] 2.5 Create threshold via curl/Insomnia
-- [ ] 2.6 Edit existing threshold
-- [ ] 2.7 Delete foreign threshold fails
+- [x] 2.5 Create threshold via curl/Insomnia
+- [x] 2.6 Edit existing threshold
+- [x] 2.7 Delete foreign threshold fails
 
 ### Phase 3: Reminder Calculation Logic
 

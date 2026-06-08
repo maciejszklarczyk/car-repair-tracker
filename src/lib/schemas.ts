@@ -21,6 +21,27 @@ export const updateRepairSchema = z.object({
   mileage: z.number({ error: "Mileage must be a number" }).int().min(0, "Mileage cannot be negative"),
 });
 
+export const createServiceThresholdSchema = z
+  .object({
+    car_id: z.string().uuid("Invalid car ID"),
+    name: z.string().trim().min(1, "Name is required"),
+    km_interval: z.number().int().positive("km_interval must be positive").optional(),
+    days_interval: z.number().int().positive("days_interval must be positive").optional(),
+    last_performed_date: z.string().trim().optional(),
+    last_performed_mileage: z.number().int().min(0, "Mileage cannot be negative").optional(),
+  })
+  .refine((d) => d.km_interval !== undefined || d.days_interval !== undefined, {
+    message: "At least one of km_interval or days_interval must be provided",
+  });
+
+export const updateServiceThresholdSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").optional(),
+  km_interval: z.number().int().positive("km_interval must be positive").optional(),
+  days_interval: z.number().int().positive("days_interval must be positive").optional(),
+  last_performed_date: z.string().trim().nullable().optional(),
+  last_performed_mileage: z.number().int().min(0, "Mileage cannot be negative").nullable().optional(),
+});
+
 export const createVehicleSchema = z.object({
   make: z.string().trim().min(1, "Make is required"),
   model: z.string().trim().min(1, "Model is required"),

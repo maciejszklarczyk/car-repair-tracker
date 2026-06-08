@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-06-08
+
+- [d2c8dbf] fix: resolve all ESLint/Prettier errors in service-reminders files
+- [8bf4e13] chore(seed): add two service_thresholds — oil change (ok) and air filter (approaching)
+- [b10d08b] fix: use en-GB locale for consistent dd/mm/yyyy date display
+- [235b3dc] fix(service-reminders): impl-review fixes — ownership checks, error handling, schema refine
+- [6467187] fix(service-reminders): relax car_id validation to accept non-v4 UUIDs
+
 ## 2026-06-02
 
 - [aa7a576] chore(context): add missing plan briefs and plan reviews

@@ -2,8 +2,12 @@
 import Layout from "@/layouts/Layout.astro";
 import { createClient } from "@/lib/supabase";
 import { computeCostPerKm, computeCurrentMileage } from "@/lib/costPerKm";
+import { computeThresholdSummary } from "@/lib/serviceReminders";
 import RepairList from "@/components/repairs/RepairList";
-import type { Vehicle, Repair } from "@/types";
+import ServiceReminders from "@/components/service-reminders/ServiceReminders";
+import ServiceThresholdList from "@/components/service-reminders/ServiceThresholdList";
+import AddServiceThresholdForm from "@/components/service-reminders/AddServiceThresholdForm";
+import type { Vehicle, Repair, ServiceThreshold } from "@/types";
 
 const user = Astro.locals.user;
 if (!user) return Astro.redirect("/auth/signin");
@@ -37,10 +41,31 @@ if (repairsError) {
 }
 const repairs: Repair[] = repairsData as Repair[];
 
+const { data: thresholdsData, error: thresholdsError } = await supabase
+  .from("service_thresholds")
+  .select("*")
+  .eq("car_id", id)
+  .order("created_at", { ascending: true });
+if (thresholdsError) {
+  return Astro.redirect("/dashboard/vehicles");
+}
+const thresholds: ServiceThreshold[] = thresholdsData as ServiceThreshold[];
+
 const currentMileage = computeCurrentMileage(repairs, vehicle.baseline_mileage);
 const costPerKm = computeCostPerKm(vehicle, repairs);
+const thresholdSummary = computeThresholdSummary(thresholds, currentMileage);
+
 const success = Astro.url.searchParams.get("success");
-const successMessage = success === "1" ? "Repair added successfully." : success === "updated" ? "Repair saved." : null;
+const successMessage =
+  success === "1"
+    ? "Repair added successfully."
+    : success === "updated"
+      ? "Repair saved."
+      : success === "threshold_added"
+        ? "Service threshold added."
+        : success === "threshold_updated"
+          ? "Service threshold updated."
+          : null;
 ---
 
 <Layout title={`${vehicle.make} ${vehicle.model}`}>
@@ -88,6 +113,14 @@ const successMessage = success === "1" ? "Repair added successfully." : success 
           Add repair
         </a>
       </div>
+    </div>
+
+    <ServiceReminders thresholds={thresholdSummary} client:load />
+
+    <div class="mt-8">
+      <h2 class="mb-4 text-xl font-semibold text-blue-100/80">Service Thresholds</h2>
+      <ServiceThresholdList thresholds={thresholdSummary} client:load />
+      <AddServiceThresholdForm carId={vehicle.id} client:load />
     </div>
 
     <div class="mt-8">

@@ -10,6 +10,19 @@ export interface Repair {
   updated_at: string;
 }
 
+export interface ServiceThreshold {
+  id: string;
+  car_id: string;
+  user_id: string;
+  name: string;
+  km_interval: number | null;
+  days_interval: number | null;
+  last_performed_date: string | null;
+  last_performed_mileage: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Vehicle {
   id: string;
   user_id: string;

@@ -246,28 +246,28 @@ Note: `repairs` is already fetched sorted DESC — `computeCostTrendData` re-sor
 
 #### Automated
 
-- [x] 2.1 TypeScript compiles: `npm run build`
-- [x] 2.2 Lint passes: `npm run lint`
+- [x] 2.1 TypeScript compiles: `npm run build` — 654f12e
+- [x] 2.2 Lint passes: `npm run lint` — 654f12e
 
 #### Manual
 
-- [ ] 2.3 Chart renders correctly on vehicle with 2+ costed repairs
-- [ ] 2.4 Chart absent on vehicle with < 2 costed repairs
-- [ ] 2.5 Tooltip shows correct date and value
-- [ ] 2.6 Chart is responsive on window resize
-- [ ] 2.7 Visual style consistent with page (dark glass-morphism)
+- [x] 2.3 Chart renders correctly on vehicle with 2+ costed repairs
+- [x] 2.4 Chart absent on vehicle with < 2 costed repairs
+- [x] 2.5 Tooltip shows correct date and value
+- [x] 2.6 Chart is responsive on window resize
+- [x] 2.7 Visual style consistent with page (dark glass-morphism)
 
 ### Phase 3: Page Integration
 
 #### Automated
 
-- [ ] 3.1 Build passes: `npm run build`
-- [ ] 3.2 Lint passes: `npm run lint`
+- [x] 3.1 Build passes: `npm run build`
+- [x] 3.2 Lint passes: `npm run lint`
 
 #### Manual
 
-- [ ] 3.3 Chart section visible on data-rich vehicle
-- [ ] 3.4 No chart section on data-sparse vehicle
-- [ ] 3.5 Chart between header and Service Reminders
-- [ ] 3.6 No visual regressions in other page sections
-- [ ] 3.7 No hydration errors in browser console
+- [x] 3.3 Chart section visible on data-rich vehicle
+- [x] 3.4 No chart section on data-sparse vehicle
+- [x] 3.5 Chart between header and Service Reminders
+- [x] 3.6 No visual regressions in other page sections
+- [x] 3.7 No hydration errors in browser console

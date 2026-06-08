@@ -1,7 +1,8 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import { createClient } from "@/lib/supabase";
-import { computeCostPerKm, computeCurrentMileage } from "@/lib/costPerKm";
+import { computeCostPerKm, computeCurrentMileage, computeCostTrendData } from "@/lib/costPerKm";
+import CostTrendChart from "@/components/vehicles/CostTrendChart";
 import { computeThresholdSummary } from "@/lib/serviceReminders";
 import RepairList from "@/components/repairs/RepairList";
 import ServiceReminders from "@/components/service-reminders/ServiceReminders";
@@ -53,6 +54,7 @@ const thresholds: ServiceThreshold[] = thresholdsData as ServiceThreshold[];
 
 const currentMileage = computeCurrentMileage(repairs, vehicle.baseline_mileage);
 const costPerKm = computeCostPerKm(vehicle, repairs);
+const chartData = computeCostTrendData(vehicle, repairs);
 const thresholdSummary = computeThresholdSummary(thresholds, currentMileage);
 
 const success = Astro.url.searchParams.get("success");
@@ -114,6 +116,17 @@ const successMessage =
         </a>
       </div>
     </div>
+
+    {
+      chartData.length >= 2 && (
+        <div class="mt-6">
+          <h2 class="mb-4 text-xl font-semibold text-blue-100/80">Cost/km Trend</h2>
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+            <CostTrendChart chartData={chartData} client:load />
+          </div>
+        </div>
+      )
+    }
 
     <ServiceReminders thresholds={thresholdSummary} client:load />
 

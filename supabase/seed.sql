@@ -73,3 +73,8 @@ INSERT INTO public.cars (
 INSERT INTO public.repairs (id, car_id, user_id, repair_date, description, cost, mileage) VALUES
   ('c0000000-0000-0000-0000-000000000001', 'b0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', '2024-03-01', 'Oil change', 200, 120500),
   ('c0000000-0000-0000-0000-000000000002', 'b0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', '2024-06-15', 'Rozrząd', 2000, 122300);
+
+-- Service thresholds: one ok, one approaching (700 km left of 10000 km interval = within 10% margin)
+INSERT INTO public.service_thresholds (id, car_id, user_id, name, km_interval, last_performed_mileage, last_performed_date) VALUES
+  ('d0000000-0000-0000-0000-000000000001', 'b0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'Oil Change', 10000, 122300, '2024-06-15'),
+  ('d0000000-0000-0000-0000-000000000002', 'b0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'Air Filter', 10000, 113000, '2022-05-01');

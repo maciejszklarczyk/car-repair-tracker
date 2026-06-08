@@ -57,7 +57,7 @@ export default function RepairList({ repairs }: Props) {
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
               <div className="mb-2 flex flex-wrap gap-4 text-sm text-blue-100/60">
-                <span>{new Date(repair.repair_date).toLocaleDateString()}</span>
+                <span>{new Date(repair.repair_date).toLocaleDateString('en-GB')}</span>
                 <span>{repair.cost != null ? `${repair.cost.toLocaleString()} PLN` : "—"}</span>
                 <span>{repair.mileage.toLocaleString()} km</span>
               </div>

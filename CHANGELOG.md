@@ -2,6 +2,7 @@
 
 ## 2026-06-08
 
+- [b10d08b] fix: use en-GB locale for consistent dd/mm/yyyy date display
 - [235b3dc] fix(service-reminders): impl-review fixes — ownership checks, error handling, schema refine
 - [6467187] fix(service-reminders): relax car_id validation to accept non-v4 UUIDs
 

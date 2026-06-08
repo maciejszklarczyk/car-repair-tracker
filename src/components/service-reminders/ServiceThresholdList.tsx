@@ -94,7 +94,7 @@ export default function ServiceThresholdList({ thresholds }: Props) {
                   </span>
                 )}
                 {threshold.last_performed_date && (
-                  <span>Last: {new Date(threshold.last_performed_date).toLocaleDateString()}</span>
+                  <span>Last: {new Date(threshold.last_performed_date).toLocaleDateString('en-GB')}</span>
                 )}
                 {threshold.last_performed_mileage !== null && (
                   <span>@ {threshold.last_performed_mileage.toLocaleString()} km</span>

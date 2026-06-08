@@ -251,23 +251,23 @@ Note: `repairs` is already fetched sorted DESC — `computeCostTrendData` re-sor
 
 #### Manual
 
-- [x] 2.3 Chart renders correctly on vehicle with 2+ costed repairs
-- [x] 2.4 Chart absent on vehicle with < 2 costed repairs
-- [x] 2.5 Tooltip shows correct date and value
-- [x] 2.6 Chart is responsive on window resize
-- [x] 2.7 Visual style consistent with page (dark glass-morphism)
+- [x] 2.3 Chart renders correctly on vehicle with 2+ costed repairs — 778d12e
+- [x] 2.4 Chart absent on vehicle with < 2 costed repairs — 778d12e
+- [x] 2.5 Tooltip shows correct date and value — 778d12e
+- [x] 2.6 Chart is responsive on window resize — 778d12e
+- [x] 2.7 Visual style consistent with page (dark glass-morphism) — 778d12e
 
 ### Phase 3: Page Integration
 
 #### Automated
 
-- [x] 3.1 Build passes: `npm run build`
-- [x] 3.2 Lint passes: `npm run lint`
+- [x] 3.1 Build passes: `npm run build` — 778d12e
+- [x] 3.2 Lint passes: `npm run lint` — 778d12e
 
 #### Manual
 
-- [x] 3.3 Chart section visible on data-rich vehicle
-- [x] 3.4 No chart section on data-sparse vehicle
-- [x] 3.5 Chart between header and Service Reminders
-- [x] 3.6 No visual regressions in other page sections
-- [x] 3.7 No hydration errors in browser console
+- [x] 3.3 Chart section visible on data-rich vehicle — 778d12e
+- [x] 3.4 No chart section on data-sparse vehicle — 778d12e
+- [x] 3.5 Chart between header and Service Reminders — 778d12e
+- [x] 3.6 No visual regressions in other page sections — 778d12e
+- [x] 3.7 No hydration errors in browser console — 778d12e

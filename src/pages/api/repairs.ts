@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 import { createRepairSchema } from "@/lib/schemas";
+import { classifyRepair } from "@/lib/classifyRepair";
 
 export const prerender = false;
 
@@ -48,6 +49,10 @@ export const POST: APIRoute = async (context) => {
     );
   }
 
+  const classified = await classifyRepair(result.data.description);
+  const category = classified ?? "pending";
+  const categorySource = classified ? "ai" : "pending";
+
   const { error } = await supabase.from("repairs").insert({
     car_id: result.data.car_id,
     user_id: user.id,
@@ -55,6 +60,9 @@ export const POST: APIRoute = async (context) => {
     description: result.data.description,
     cost: result.data.cost,
     mileage: result.data.mileage,
+    category,
+    category_source: categorySource,
+    original_category: category,
   });
 
   if (error) {

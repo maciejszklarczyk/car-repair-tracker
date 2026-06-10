@@ -11,6 +11,7 @@ Track repairs, know your cost/km, never miss a service deadline. A web app for i
 - [TypeScript](https://www.typescriptlang.org/) v5 - Type-safe JavaScript
 - [Tailwind CSS](https://tailwindcss.com/) v4 - Utility-first CSS framework
 - [Supabase](https://supabase.com/) - Authentication and backend-as-a-service
+- [Google Gemini](https://ai.google.dev/) - AI-powered repair classification (Gemini 2.5 Flash-Lite)
 - [Cloudflare Workers](https://workers.cloudflare.com/) - Edge deployment runtime
 
 ## Prerequisites
@@ -117,10 +118,11 @@ No database tables or migrations are required — this project uses Supabase Aut
 
 If you prefer to use a hosted Supabase project, add these variables to your `.env` and `.dev.vars` files:
 
-| Variable       | Description                                                |
-| -------------- | ---------------------------------------------------------- |
-| `SUPABASE_URL` | Project URL from Supabase dashboard → Settings → API       |
-| `SUPABASE_KEY` | `anon` public key from Supabase dashboard → Settings → API |
+| Variable         | Description                                                |
+| ---------------- | ---------------------------------------------------------- |
+| `SUPABASE_URL`   | Project URL from Supabase dashboard → Settings → API       |
+| `SUPABASE_KEY`   | `anon` public key from Supabase dashboard → Settings → API |
+| `GEMINI_API_KEY` | Optional — API key from [Google AI Studio](https://aistudio.google.com/apikey) for repair classification |
 
 ```
 SUPABASE_URL=https://<project-ref>.supabase.co
@@ -148,6 +150,26 @@ Users can then sign in immediately after sign-up without clicking a confirmation
 
 Route protection is handled in `src/middleware.ts`. Add paths to the `PROTECTED_ROUTES` array there to require authentication.
 
+## Gemini AI Classification
+
+New repairs are automatically classified into one of six categories (silnik, hamulce, elektryka, ogumienie, przegląd, inne) using Google Gemini 2.5 Flash-Lite. Classification is optional — the app works without it (repairs get a `pending` category that the user can override manually).
+
+### Setup
+
+1. Get a free API key from [Google AI Studio](https://aistudio.google.com/apikey)
+2. Add it to your `.env` and `.dev.vars`:
+
+```
+GEMINI_API_KEY=<your-api-key>
+```
+
+The key is declared as an optional server-only secret in `astro.config.mjs`. If unset, classification silently degrades — repairs save with `pending` status and users pick the category via dropdown.
+
+### Free tier limits
+
+- 30 requests per minute, 1,500 requests per day
+- Classification adds ~1–2s to repair creation (3s timeout)
+
 ## Deployment
 
 This project deploys to [Cloudflare Workers](https://workers.cloudflare.com/).
@@ -164,7 +186,7 @@ npm run build
 npx wrangler deploy
 ```
 
-Set `SUPABASE_URL` and `SUPABASE_KEY` as secrets in your Cloudflare dashboard or via `npx wrangler secret put`.
+Set `SUPABASE_URL`, `SUPABASE_KEY`, and `GEMINI_API_KEY` as secrets in your Cloudflare dashboard or via `npx wrangler secret put`.
 
 ## CI
 

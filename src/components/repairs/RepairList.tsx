@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
+import CategoryBadge from "@/components/repairs/CategoryBadge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -60,6 +61,9 @@ export default function RepairList({ repairs }: Props) {
                 <span>{new Date(repair.repair_date).toLocaleDateString("en-GB")}</span>
                 <span>{repair.cost != null ? `${repair.cost.toLocaleString()} PLN` : "—"}</span>
                 <span>{repair.mileage.toLocaleString()} km</span>
+              </div>
+              <div className="mb-2">
+                <CategoryBadge category={repair.category} />
               </div>
               <p className="line-clamp-2 text-sm text-blue-100/90">{repair.description}</p>
             </div>

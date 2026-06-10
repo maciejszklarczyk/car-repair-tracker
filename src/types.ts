@@ -6,6 +6,9 @@ export interface Repair {
   description: string;
   cost: number | null;
   mileage: number;
+  category: string | null;
+  category_source: string | null;
+  original_category: string | null;
   created_at: string;
   updated_at: string;
 }

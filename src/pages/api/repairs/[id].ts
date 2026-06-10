@@ -69,8 +69,7 @@ export const PUT: APIRoute = async (context) => {
   };
 
   const descriptionChanged = result.data.description !== repair.description;
-  const needsClassification =
-    repair.category == null || (descriptionChanged && repair.category_source !== "manual");
+  const needsClassification = repair.category == null || (descriptionChanged && repair.category_source !== "manual");
 
   if (needsClassification) {
     const classified = await classifyRepair(result.data.description);

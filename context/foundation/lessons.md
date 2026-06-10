@@ -15,3 +15,10 @@
 - **Problem**: Issues created in Polish required a follow-up translation pass, adding noise and making the repo less accessible to contributors.
 - **Rule**: Every GitHub issue must be written in English — title, body, and comments — so it can be widely understood.
 - **Applies to**: implement, impl-review
+
+## Never reference Cloudflare Workers, wrangler, or .dev.vars
+
+- **Context**: Any file touching env vars or deployment (README, .env, deploy configs, CI workflows)
+- **Problem**: Stale starter-template artifacts leak in — README, docs, and configs reference Cloudflare/wrangler/.dev.vars that don't exist in this project. The project uses @astrojs/node standalone adapter with Docker deployment.
+- **Rule**: Never reference .dev.vars, wrangler, or Cloudflare Workers — this project uses @astrojs/node standalone adapter with Docker deployment.
+- **Applies to**: all

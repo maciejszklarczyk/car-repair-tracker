@@ -2,7 +2,7 @@
 
 ## Architecture
 
-**Astro 6 SSR app** with React 19 islands, Tailwind 4, Supabase auth, and shadcn/ui components. Deployed to Cloudflare Workers.
+**Astro 6 SSR app** with React 19 islands, Tailwind 4, Supabase auth, and shadcn/ui components. Uses `@astrojs/node` standalone adapter, deployed via Docker.
 
 ### Rendering mode
 
@@ -34,4 +34,4 @@ See @README.md for setup, commands, env vars, and deployment.
 
 ## CI
 
-GitHub Actions workflow (`.github/workflows/ci.yml`) runs lint + build on every push and PR to master. Requires `SUPABASE_URL` and `SUPABASE_KEY` repository secrets for the build step.
+GitHub Actions workflow (`.github/workflows/ci.yml`) runs lint + build on every push and PR to `main`. Also builds and pushes a Docker image on pushes to `main`. Requires `SUPABASE_URL` and `SUPABASE_KEY` repository secrets for the build step.

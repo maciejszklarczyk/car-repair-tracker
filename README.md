@@ -4,28 +4,38 @@
 
 Track repairs, know your cost/km, never miss a service deadline. A web app for individual car owners who want structured repair history, automatic cost aggregation, and maintenance reminders — without spreadsheets.
 
+## Features
+
+- **Vehicle management** — add cars with make, model, year, and baseline mileage
+- **Repair tracking** — log repairs with date, description, cost, and odometer reading; edit or delete with confirmation
+- **Cost/km dashboard** — automatic cost-per-kilometer calculation updated after every repair
+- **AI classification** — repairs auto-categorized into six categories (silnik, hamulce, elektryka, ogumienie, przegląd, inne) via Google Gemini; manual override available
+- **Service reminders** — define maintenance thresholds (km or time interval) per vehicle and see alerts on the dashboard
+- **Cost trend charts** — visual cost/km, total cost, and mileage trends over time (Recharts)
+
 ## Tech Stack
 
-- [Astro](https://astro.build/) v6 - Modern web framework with server-first rendering
-- [React](https://react.dev/) v19 - UI library for interactive components
-- [TypeScript](https://www.typescriptlang.org/) v5 - Type-safe JavaScript
-- [Tailwind CSS](https://tailwindcss.com/) v4 - Utility-first CSS framework
-- [Supabase](https://supabase.com/) - Authentication and backend-as-a-service
-- [Google Gemini](https://ai.google.dev/) - AI-powered repair classification (Gemini 2.5 Flash-Lite)
-- [Cloudflare Workers](https://workers.cloudflare.com/) - Edge deployment runtime
-
+- [Astro](https://astro.build/) v6 — server-first rendering (SSR via Node.js standalone adapter)
+- [React](https://react.dev/) v19 — interactive islands
+- [TypeScript](https://www.typescriptlang.org/) v5 — type safety
+- [Tailwind CSS](https://tailwindcss.com/) v4 — utility-first styling
+- [shadcn/ui](https://ui.shadcn.com/) — component library (new-york style)
+- [Supabase](https://supabase.com/) — auth + Postgres database with RLS
+- [Google Gemini](https://ai.google.dev/) — AI repair classification (Gemini 2.5 Flash-Lite)
+- [Recharts](https://recharts.org/) — cost trend charts
 ## Prerequisites
 
 - Node.js v22.14.0 (as specified in `.nvmrc`)
 - npm (comes with Node.js)
+- [Docker](https://www.docker.com/) (for local Supabase — ~7 GB RAM)
 
 ## Getting Started
 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/przeprogramowani/10x-astro-starter.git
-cd 10x-astro-starter
+git clone git@github.com:maciejszklarczyk/car-repair-tracker.git
+cd car-repair-tracker
 ```
 
 2. Install dependencies:
@@ -34,12 +44,24 @@ cd 10x-astro-starter
 npm install
 ```
 
-3. Set up Supabase and configure environment variables — see [Supabase Configuration](#supabase-configuration) below.
-
-4. Create a `.dev.vars` file for local Cloudflare dev secrets:
+3. Set up environment variables:
 
 ```bash
-cp .env.example .dev.vars
+cp .env.example .env
+```
+
+4. Start local Supabase and apply migrations:
+
+```bash
+npx supabase start
+npx supabase db reset
+```
+
+Copy the credentials printed by `supabase start` into `.env`:
+
+```
+SUPABASE_URL=http://127.0.0.1:54321
+SUPABASE_KEY=<anon key from CLI output>
 ```
 
 5. Run the development server:
@@ -50,120 +72,113 @@ npm run dev
 
 ## Available Scripts
 
-- `npm run dev` - Start development server (Cloudflare workerd runtime)
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint with type-checked rules
-- `npm run lint:fix` - Auto-fix ESLint issues
-- `npm run format` - Run Prettier
+- `npm run dev` — start development server
+- `npm run build` — build for production
+- `npm run preview` — preview production build
+- `npm run lint` — run ESLint with type-checked rules
+- `npm run lint:fix` — auto-fix ESLint issues
+- `npm run format` — run Prettier
 
 ## Project Structure
 
-```md
+```
 .
 ├── src/
-│ ├── layouts/ # Astro layouts
-│ ├── pages/ # Astro pages
-│ │ └── api/ # API endpoints
-│ ├── components/ # UI components (Astro & React)
-│ └── assets/ # Static assets
-├── public/ # Public assets
-├── wrangler.jsonc # Cloudflare Workers config
+│   ├── components/
+│   │   ├── ui/              # shadcn/ui primitives
+│   │   ├── vehicles/        # vehicle-specific components (forms, cards, charts)
+│   │   └── hooks/           # React hooks
+│   ├── layouts/             # Astro layouts
+│   ├── lib/                 # Services & helpers (Supabase client, cost calculations, AI classification, schemas)
+│   ├── pages/
+│   │   ├── api/
+│   │   │   ├── auth/        # signin, signup, signout
+│   │   │   ├── repairs/     # CRUD endpoints
+│   │   │   └── service-thresholds/  # CRUD endpoints
+│   │   ├── auth/            # signin, signup, confirm-email pages
+│   │   └── dashboard/
+│   │       ├── vehicles/    # vehicle list, detail, add
+│   │       └── repairs/     # add repair, edit repair
+│   └── types.ts             # Shared entity types and DTOs
+├── supabase/
+│   └── migrations/          # Postgres migrations (cars, repairs, service_thresholds, categories)
+├── public/                  # Static assets
+└── Dockerfile               # Production container build
 ```
 
 ## Supabase Configuration
 
-This project uses [Supabase](https://supabase.com/) for authentication. Environment variables are declared via Astro's `astro:env` schema and are treated as **server-only secrets** — they are never exposed to the client.
+Supabase provides auth and Postgres database. Environment variables are declared via Astro's `astro:env` schema as **server-only secrets**.
 
-### First-time setup (local, no cloud project needed)
+### Local development
 
-Requires [Docker](https://www.docker.com/) and ~7 GB RAM.
-
-1. Create your `.env` file:
-
-```bash
-cp .env.example .env
-```
-
-2. Initialize the local Supabase project (creates a `supabase/` config folder):
-
-```bash
-npx supabase init
-```
-
-3. Start the local stack (downloads Docker images on first run):
+1. Start local Supabase stack:
 
 ```bash
 npx supabase start
 ```
 
-4. Copy the credentials printed by the CLI into your `.env` and `.dev.vars`:
+2. Apply database migrations (creates `cars`, `repairs`, `service_thresholds` tables with RLS):
 
-```
-SUPABASE_URL=http://127.0.0.1:54321
-SUPABASE_KEY=<anon key from CLI output>
+```bash
+npx supabase db reset
 ```
 
-5. To stop the stack when done:
+3. Copy credentials from CLI output into `.env`.
+
+The local Studio UI is available at `http://localhost:54323`.
+
+To stop the stack:
 
 ```bash
 npx supabase stop
 ```
 
-The local Studio UI is available at `http://localhost:54323`.
+### Cloud Supabase project
 
-No database tables or migrations are required — this project uses Supabase Auth's built-in `auth.users` table only.
+Add these variables to `.env`:
 
-### Using a cloud Supabase project instead
-
-If you prefer to use a hosted Supabase project, add these variables to your `.env` and `.dev.vars` files:
-
-| Variable         | Description                                                |
-| ---------------- | ---------------------------------------------------------- |
-| `SUPABASE_URL`   | Project URL from Supabase dashboard → Settings → API       |
-| `SUPABASE_KEY`   | `anon` public key from Supabase dashboard → Settings → API |
+| Variable         | Description                                                                                             |
+| ---------------- | ------------------------------------------------------------------------------------------------------- |
+| `SUPABASE_URL`   | Project URL from Supabase dashboard → Settings → API                                                    |
+| `SUPABASE_KEY`   | `anon` public key from Supabase dashboard → Settings → API                                              |
 | `GEMINI_API_KEY` | Optional — API key from [Google AI Studio](https://aistudio.google.com/apikey) for repair classification |
-
-```
-SUPABASE_URL=https://<project-ref>.supabase.co
-SUPABASE_KEY=<anon-key>
-```
 
 ### Email confirmation in local development
 
-By default Supabase requires email confirmation before a user can sign in. To skip this during local development:
+To skip email confirmation during local development:
 
-1. Open the Supabase dashboard for your project
-2. Go to **Authentication → Email → Confirm email**
-3. Toggle it **off**
+1. Open Supabase dashboard → **Authentication → Email → Confirm email**
+2. Toggle it **off**
 
-Users can then sign in immediately after sign-up without clicking a confirmation link.
+### Routes
 
-### Auth routes
+| Route                          | Description                              |
+| ------------------------------ | ---------------------------------------- |
+| `/auth/signin`                 | Email/password sign-in                   |
+| `/auth/signup`                 | Email/password sign-up                   |
+| `/auth/confirm-email`          | Post-signup confirmation page            |
+| `/dashboard/vehicles`          | Vehicle list                             |
+| `/dashboard/vehicles/new`      | Add vehicle form                         |
+| `/dashboard/vehicles/[id]`     | Vehicle detail (cost/km, repairs, charts, reminders) |
+| `/dashboard/repairs/new`       | Add repair form                          |
+| `/dashboard/repairs/[id]/edit` | Edit repair form                         |
 
-| Route                 | Description                                                   |
-| --------------------- | ------------------------------------------------------------- |
-| `/auth/signin`        | Email/password sign-in form                                   |
-| `/auth/signup`        | Email/password sign-up form                                   |
-| `/auth/confirm-email` | Post-signup "check your inbox" page                           |
-| `/dashboard/vehicles` | Vehicle list (redirects to `/auth/signin` if unauthenticated) |
-
-Route protection is handled in `src/middleware.ts`. Add paths to the `PROTECTED_ROUTES` array there to require authentication.
+All `/dashboard/*` routes redirect to `/auth/signin` if unauthenticated. Protection handled in `src/middleware.ts`.
 
 ## Gemini AI Classification
 
-New repairs are automatically classified into one of six categories (silnik, hamulce, elektryka, ogumienie, przegląd, inne) using Google Gemini 2.5 Flash-Lite. Classification is optional — the app works without it (repairs get a `pending` category that the user can override manually).
+New repairs are automatically classified into one of six categories (silnik, hamulce, elektryka, ogumienie, przegląd, inne) using Google Gemini 2.5 Flash-Lite. Classification is optional — without `GEMINI_API_KEY`, repairs save with `pending` status and users pick the category via dropdown.
 
 ### Setup
 
-1. Get a free API key from [Google AI Studio](https://aistudio.google.com/apikey)
-2. Add it to your `.env` and `.dev.vars`:
+Add to `.env`:
 
 ```
 GEMINI_API_KEY=<your-api-key>
 ```
 
-The key is declared as an optional server-only secret in `astro.config.mjs`. If unset, classification silently degrades — repairs save with `pending` status and users pick the category via dropdown.
+Get a free key from [Google AI Studio](https://aistudio.google.com/apikey). The key is declared as an optional server-only secret in `astro.config.mjs`.
 
 ### Free tier limits
 
@@ -172,25 +187,15 @@ The key is declared as an optional server-only secret in `astro.config.mjs`. If 
 
 ## Deployment
 
-This project deploys to [Cloudflare Workers](https://workers.cloudflare.com/).
-
-1. Build the project:
+A `Dockerfile` and `docker-compose.prod.yml` are included for deployment.
 
 ```bash
-npm run build
+docker compose -f docker-compose.prod.yml up -d
 ```
-
-2. Deploy with Wrangler:
-
-```bash
-npx wrangler deploy
-```
-
-Set `SUPABASE_URL`, `SUPABASE_KEY`, and `GEMINI_API_KEY` as secrets in your Cloudflare dashboard or via `npx wrangler secret put`.
 
 ## CI
 
-GitHub Actions runs lint + build on every push and PR to `master`. Configure `SUPABASE_URL` and `SUPABASE_KEY` as repository secrets in GitHub for the build step.
+GitHub Actions (`.github/workflows/ci.yml`) runs lint + build on every push and PR to `main`. The workflow also builds and pushes a Docker image on pushes to `main`. Configure `SUPABASE_URL` and `SUPABASE_KEY` as repository secrets in GitHub.
 
 ## License
 

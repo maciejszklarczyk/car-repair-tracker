@@ -336,27 +336,27 @@ Show category badge on each repair in the list. Add inline dropdown for category
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly
-- [x] 1.2 TypeScript compiles
-- [x] 1.3 Existing repair queries still work
+- [x] 1.1 Migration applies cleanly — d94fcd6
+- [x] 1.2 TypeScript compiles — d94fcd6
+- [x] 1.3 Existing repair queries still work — d94fcd6
 
 #### Manual
 
-- [x] 1.4 Verify three new columns in Supabase Studio
-- [x] 1.5 Existing repairs show NULL for new columns
+- [x] 1.4 Verify three new columns in Supabase Studio — d94fcd6
+- [x] 1.5 Existing repairs show NULL for new columns — d94fcd6
 
 ### Phase 2: Classification Service + Environment Setup
 
 #### Automated
 
-- [ ] 2.1 TypeScript compiles with new module
-- [ ] 2.2 Lint passes
+- [x] 2.1 TypeScript compiles with new module
+- [x] 2.2 Lint passes
 
 #### Manual
 
-- [ ] 2.3 classifyRepair returns correct category for Polish repair descriptions
-- [ ] 2.4 classifyRepair returns null when API key unset
-- [ ] 2.5 classifyRepair handles gibberish/edge cases gracefully
+- [x] 2.3 classifyRepair returns correct category for Polish repair descriptions
+- [x] 2.4 classifyRepair returns null when API key unset
+- [x] 2.5 classifyRepair handles gibberish/edge cases gracefully
 
 ### Phase 3: API Integration
 

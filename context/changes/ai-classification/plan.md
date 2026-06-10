@@ -377,12 +377,12 @@ Show category badge on each repair in the list. Add inline dropdown for category
 
 #### Automated
 
-- [x] 4.1 TypeScript compiles
-- [x] 4.2 Lint passes
+- [x] 4.1 TypeScript compiles — ab17150
+- [x] 4.2 Lint passes — ab17150
 
 #### Manual
 
-- [x] 4.3 Category badge displays on each repair
-- [x] 4.4 Dropdown override works and saves
-- [x] 4.5 Pending/null states handled gracefully
-- [x] 4.6 Page reload preserves overridden category
+- [x] 4.3 Category badge displays on each repair — ab17150
+- [x] 4.4 Dropdown override works and saves — ab17150
+- [x] 4.5 Pending/null states handled gracefully — ab17150
+- [x] 4.6 Page reload preserves overridden category — ab17150

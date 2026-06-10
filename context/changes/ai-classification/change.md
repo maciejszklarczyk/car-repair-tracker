@@ -1,7 +1,7 @@
 ---
 change_id: ai-classification
 title: AI repair classification with manual category override
-status: implementing
+status: implemented
 created: 2026-06-10
 updated: 2026-06-10
 archived_at: null

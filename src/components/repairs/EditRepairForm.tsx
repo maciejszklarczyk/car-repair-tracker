@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Calendar, Gauge, DollarSign, FileText, Save } from "lucide-react";
+import CategorySelect from "@/components/repairs/CategorySelect";
 import { FormField } from "@/components/auth/FormField";
 import { TextareaField } from "@/components/ui/TextareaField";
 import { ServerError } from "@/components/auth/ServerError";
@@ -25,8 +26,13 @@ export default function EditRepairForm({ repair, vehicleName, baselineMileage }:
   const [cost, setCost] = useState(repair.cost != null ? String(repair.cost) : "");
   const [mileage, setMileage] = useState(String(repair.mileage));
   const [errors, setErrors] = useState<FormErrors>({});
+  const [category, setCategory] = useState<string | null>(repair.category);
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleCategoryChange = useCallback((cat: string | null) => {
+    setCategory(cat);
+  }, []);
 
   function validate(): boolean {
     const next: FormErrors = {};
@@ -96,6 +102,11 @@ export default function EditRepairForm({ repair, vehicleName, baselineMileage }:
   return (
     <form className="space-y-4" onSubmit={handleSubmit} noValidate>
       <p className="text-sm text-blue-100/60">{vehicleName}</p>
+
+      <div className="flex items-center gap-2">
+        <span className="text-sm text-blue-100/60">Category</span>
+        <CategorySelect repairId={repair.id} currentCategory={category} onCategoryChange={handleCategoryChange} />
+      </div>
 
       <FormField
         id="repair_date"

@@ -23,7 +23,7 @@ export const PUT: APIRoute = async (context) => {
 
   const { data: repair, error: repairError } = await supabase
     .from("repairs")
-    .select("id, user_id, car_id, description, category_source")
+    .select("id, user_id, car_id, description, category, category_source")
     .eq("id", repairId)
     .single();
 
@@ -69,7 +69,10 @@ export const PUT: APIRoute = async (context) => {
   };
 
   const descriptionChanged = result.data.description !== repair.description;
-  if (descriptionChanged && repair.category_source === "ai") {
+  const needsClassification =
+    repair.category == null || (descriptionChanged && repair.category_source !== "manual");
+
+  if (needsClassification) {
     const classified = await classifyRepair(result.data.description);
     updateData.category = classified ?? "pending";
     updateData.category_source = classified ? "ai" : "pending";

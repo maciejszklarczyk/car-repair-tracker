@@ -1,7 +1,6 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import CategoryBadge from "@/components/repairs/CategoryBadge";
-import CategorySelect from "@/components/repairs/CategorySelect";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,13 +21,6 @@ interface Props {
 
 export default function RepairList({ repairs }: Props) {
   const [deleteError, setDeleteError] = useState<string | null>(null);
-  const [categories, setCategories] = useState<Record<string, string | null>>(() =>
-    Object.fromEntries(repairs.map((r) => [r.id, r.category])),
-  );
-
-  const handleCategoryChange = useCallback((repairId: string, category: string | null) => {
-    setCategories((prev) => ({ ...prev, [repairId]: category }));
-  }, []);
 
   async function handleDelete(repairId: string) {
     setDeleteError(null);
@@ -70,15 +62,8 @@ export default function RepairList({ repairs }: Props) {
                 <span>{repair.cost != null ? `${repair.cost.toLocaleString()} PLN` : "—"}</span>
                 <span>{repair.mileage.toLocaleString()} km</span>
               </div>
-              <div className="mb-2 flex items-center gap-2">
-                <CategoryBadge category={categories[repair.id] ?? null} />
-                <CategorySelect
-                  repairId={repair.id}
-                  currentCategory={categories[repair.id] ?? null}
-                  onCategoryChange={(cat) => {
-                    handleCategoryChange(repair.id, cat);
-                  }}
-                />
+              <div className="mb-2">
+                <CategoryBadge category={repair.category} />
               </div>
               <p className="line-clamp-2 text-sm text-blue-100/90">{repair.description}</p>
             </div>

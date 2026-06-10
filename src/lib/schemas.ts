@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { REPAIR_CATEGORIES } from "@/lib/classifyRepair";
 
 // For FormData input (POST) — cost is a string that gets transformed to number | null.
 export const createRepairSchema = z.object({
@@ -45,6 +46,10 @@ export const updateServiceThresholdSchema = z
   .refine((d) => Object.values(d as Record<string, unknown>).some((v) => v !== undefined), {
     message: "At least one field must be provided",
   });
+
+export const categoryOverrideSchema = z.object({
+  category: z.enum(REPAIR_CATEGORIES),
+});
 
 export const createVehicleSchema = z.object({
   make: z.string().trim().min(1, "Make is required"),

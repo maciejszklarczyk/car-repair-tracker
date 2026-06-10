@@ -1,8 +1,8 @@
 import { GoogleGenAI } from "@google/genai";
 import { GEMINI_API_KEY } from "astro:env/server";
+import { REPAIR_CATEGORIES, type RepairCategory } from "@/lib/repairCategories";
 
-export const REPAIR_CATEGORIES = ["silnik", "hamulce", "elektryka", "ogumienie", "przegląd", "inne"] as const;
-export type RepairCategory = (typeof REPAIR_CATEGORIES)[number];
+export { REPAIR_CATEGORIES, type RepairCategory } from "@/lib/repairCategories";
 
 const PROMPT = `Klasyfikuj opis naprawy samochodu do dokładnie jednej kategorii.
 Kategorie: silnik, hamulce, elektryka, ogumienie, przegląd, inne.

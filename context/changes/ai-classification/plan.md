@@ -362,27 +362,27 @@ Show category badge on each repair in the list. Add inline dropdown for category
 
 #### Automated
 
-- [x] 3.1 TypeScript compiles
-- [x] 3.2 Lint passes
+- [x] 3.1 TypeScript compiles — ae74bf8
+- [x] 3.2 Lint passes — ae74bf8
 
 #### Manual
 
-- [x] 3.3 POST new repair → category assigned by AI
-- [x] 3.4 POST without Gemini key → pending fallback
-- [x] 3.5 PUT with changed description (AI source) → re-classified
-- [x] 3.6 PUT with changed description (manual source) → unchanged
-- [x] 3.7 PATCH category override works
+- [x] 3.3 POST new repair → category assigned by AI — ae74bf8
+- [x] 3.4 POST without Gemini key → pending fallback — ae74bf8
+- [x] 3.5 PUT with changed description (AI source) → re-classified — ae74bf8
+- [x] 3.6 PUT with changed description (manual source) → unchanged — ae74bf8
+- [x] 3.7 PATCH category override works — ae74bf8
 
 ### Phase 4: UI — Category Display + Override
 
 #### Automated
 
-- [ ] 4.1 TypeScript compiles
-- [ ] 4.2 Lint passes
+- [x] 4.1 TypeScript compiles
+- [x] 4.2 Lint passes
 
 #### Manual
 
-- [ ] 4.3 Category badge displays on each repair
-- [ ] 4.4 Dropdown override works and saves
-- [ ] 4.5 Pending/null states handled gracefully
-- [ ] 4.6 Page reload preserves overridden category
+- [x] 4.3 Category badge displays on each repair
+- [x] 4.4 Dropdown override works and saves
+- [x] 4.5 Pending/null states handled gracefully
+- [x] 4.6 Page reload preserves overridden category

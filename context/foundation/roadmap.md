@@ -34,7 +34,7 @@ Indywidualni właściciele aut nie mają jednego miejsca do śledzenia historii 
 | S-03 | repair-history       | przeglądać, edytować i usuwać naprawy na liście historii auta           | S-02          | FR-006, US-01                        | done     |
 | S-04 | cost-per-km          | zobaczyć liczbę koszt/km na dashboardzie auta po dodaniu naprawy        | S-02          | FR-007, US-01                        | done     |
 | S-08 | fix-mileage-tracking | widzieć poprawny aktualny przebieg (z napraw) i poprawny koszt/km       | S-02          | FR-007                               | done     |
-| S-05 | ai-classification    | zobaczyć naprawę sklasyfikowaną przez AI i nadpisać kategorię ręcznie   | S-02          | FR-004, FR-005, FR-011, US-01, US-02 | proposed |
+| S-05 | ai-classification    | zobaczyć naprawę sklasyfikowaną przez AI i nadpisać kategorię ręcznie   | S-02          | FR-004, FR-005, FR-011, US-01, US-02 | done     |
 | S-06 | service-reminders    | zdefiniować progi serwisowe i widzieć przypomnienia na dashboardzie     | S-01          | FR-008, FR-009, US-03                | done     |
 | S-07 | cost-trend-chart     | zobaczyć wizualny wykres trendu kosztów/km per auto w czasie            | S-04          | FR-010                               | done     |
 
@@ -136,7 +136,7 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 - **Unknowns:**
   - Który dostawca AI (Groq vs Gemini Flash)? Oba free-tier. Różnią się SDK, limitami, jakością klasyfikacji w języku polskim. — Owner: user. Block: no.
 - **Risk:** Integracja z zewnętrznym API + obsługa timeout/fallback (3 s per FR-011). Jakość klasyfikacji po polsku nieznana do momentu pierwszych testów manualnych.
-- **Status:** proposed
+- **Status:** done
 
 ### S-06: Progi serwisowe i przypomnienia
 
@@ -172,7 +172,7 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 | S-03       | repair-history       | Historia napraw — lista + edycja + usunięcie z potwierdzeniem | —                     | done                                     |
 | S-04       | cost-per-km          | Koszt/km na dashboardzie auta                                 | —                     | done                                     |
 | S-08       | fix-mileage-tracking | Poprawne liczenie przebiegu i kosztu/km                       | —                     | done                                     |
-| S-05       | ai-classification    | Klasyfikacja AI napraw + nadpisanie kategorii                 | yes                   | Czeka na S-02; wybór dostawcy AI otwarty |
+| S-05       | ai-classification    | Klasyfikacja AI napraw + nadpisanie kategorii                 | —                     | done                                     |
 | S-06       | service-reminders    | Progi serwisowe + przypomnienia na dashboardzie               | —                     | done                                     |
 | S-07       | cost-trend-chart     | Wykres trendu kosztów/km w czasie                             | —                     | done                                     |
 
@@ -201,4 +201,6 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 | S-03 | repair-history       | yes    | PR #17 merged to main |
 | S-04 | cost-per-km          | yes    | PR #16 merged to main |
 | S-08 | fix-mileage-tracking | yes    | PR #20 merged to main |
+| S-05 | ai-classification    | yes    | PR #28 merged to main |
 | S-06 | service-reminders    | yes    | PR #26 merged to main |
+| S-07 | cost-trend-chart     | yes    | Implemented on main   |

@@ -26,7 +26,7 @@ export default function RepairList({ repairs }: Props) {
     Object.fromEntries(repairs.map((r) => [r.id, r.category])),
   );
 
-  const handleCategoryChange = useCallback((repairId: string, category: string) => {
+  const handleCategoryChange = useCallback((repairId: string, category: string | null) => {
     setCategories((prev) => ({ ...prev, [repairId]: category }));
   }, []);
 

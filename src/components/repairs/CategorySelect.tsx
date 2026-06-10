@@ -5,7 +5,7 @@ import { REPAIR_CATEGORIES } from "@/lib/repairCategories";
 interface Props {
   repairId: string;
   currentCategory: string | null;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange: (category: string | null) => void;
 }
 
 export default function CategorySelect({ repairId, currentCategory, onCategoryChange }: Props) {
@@ -22,10 +22,10 @@ export default function CategorySelect({ repairId, currentCategory, onCategoryCh
         body: JSON.stringify({ category: value }),
       });
       if (!response.ok) {
-        if (previous) onCategoryChange(previous);
+        onCategoryChange(previous);
       }
     } catch {
-      if (previous) onCategoryChange(previous);
+      onCategoryChange(previous);
     } finally {
       setSaving(false);
     }

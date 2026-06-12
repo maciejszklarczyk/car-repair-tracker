@@ -9,7 +9,7 @@ export interface ThresholdWithStatus {
   days_remaining: number | null;
 }
 
-function daysBetween(dateStr: string, today: Date): number {
+export function daysBetween(dateStr: string, today: Date): number {
   const past = new Date(dateStr);
   const diff = today.getTime() - past.getTime();
   return Math.floor(diff / (1000 * 60 * 60 * 24));

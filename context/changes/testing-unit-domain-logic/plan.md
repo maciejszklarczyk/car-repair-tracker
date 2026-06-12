@@ -263,16 +263,16 @@ Write unit tests for `daysBetween`, `computeReminderStatus` (primary target — 
 
 #### Automated
 
-- [x] 1.1 `npx vitest run` exits 0 with 1 passing test
-- [x] 1.2 Path alias `@/lib/costPerKm` resolves correctly in test
-- [x] 1.3 `npm run test` script works
+- [x] 1.1 `npx vitest run` exits 0 with 1 passing test — c2697f2
+- [x] 1.2 Path alias `@/lib/costPerKm` resolves correctly in test — c2697f2
+- [x] 1.3 `npm run test` script works — c2697f2
 
 ### Phase 2: Cost/km + Mileage Tests
 
 #### Automated
 
-- [ ] 2.1 `npx vitest run` exits 0 with all cost/km tests passing
-- [ ] 2.2 TypeScript types resolve correctly (Vehicle, Repair from `@/types`)
+- [x] 2.1 `npx vitest run` exits 0 with all cost/km tests passing
+- [x] 2.2 TypeScript types resolve correctly (Vehicle, Repair from `@/types`)
 
 ### Phase 3: Service Reminder Tests + Cookbook Update
 

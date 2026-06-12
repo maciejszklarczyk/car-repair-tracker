@@ -271,15 +271,15 @@ Write unit tests for `daysBetween`, `computeReminderStatus` (primary target — 
 
 #### Automated
 
-- [x] 2.1 `npx vitest run` exits 0 with all cost/km tests passing
-- [x] 2.2 TypeScript types resolve correctly (Vehicle, Repair from `@/types`)
+- [x] 2.1 `npx vitest run` exits 0 with all cost/km tests passing — 26fd796
+- [x] 2.2 TypeScript types resolve correctly (Vehicle, Repair from `@/types`) — 26fd796
 
 ### Phase 3: Service Reminder Tests + Cookbook Update
 
 #### Automated
 
-- [ ] 3.1 `npx vitest run` exits 0 with all tests passing (cost/km + reminders)
-- [ ] 3.2 No TypeScript errors in test files
+- [x] 3.1 `npx vitest run` exits 0 with all tests passing (cost/km + reminders)
+- [x] 3.2 No TypeScript errors in test files
 
 #### Manual
 

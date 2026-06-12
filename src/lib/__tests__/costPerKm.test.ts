@@ -137,6 +137,15 @@ describe("computeCostTrendData", () => {
     const repairs = [makeRepair({ cost: 500, mileage: 10000 })];
     expect(computeCostTrendData(vehicle, repairs)).toEqual([]);
   });
+
+  it("non-round cost/km is rounded to 2 decimal places", () => {
+    const vehicle = makeVehicle({ baseline_mileage: 10000 });
+    const repairs = [makeRepair({ cost: 100, mileage: 10300 })];
+    // runningCost=100, kmDriven=300, 100/300=0.3333... → toFixed(2) → 0.33
+    expect(computeCostTrendData(vehicle, repairs)).toEqual([
+      { date: "2024-06-01", costPerKm: 0.33 },
+    ]);
+  });
 });
 
 describe("computeMileageTrendData", () => {

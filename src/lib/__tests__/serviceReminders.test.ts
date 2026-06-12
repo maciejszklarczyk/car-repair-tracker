@@ -163,6 +163,7 @@ describe("computeThresholdSummary", () => {
     expect(result[0].km_remaining).toBe(0);
   });
 
+  // days_remaining uses real time internally — don't assert it without injecting `today`
   it("km_remaining null when km_interval null", () => {
     const threshold = makeThreshold({
       km_interval: null,

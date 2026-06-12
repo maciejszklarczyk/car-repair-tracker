@@ -283,4 +283,4 @@ Write unit tests for `daysBetween`, `computeReminderStatus` (primary target — 
 
 #### Manual
 
-- [ ] 3.3 §6.1 in test-plan.md accurately describes the test pattern
+- [x] 3.3 §6.1 in test-plan.md accurately describes the test pattern

@@ -1,4 +1,5 @@
 <!-- IMPL-REVIEW-REPORT -->
+
 # Implementation Review: Unit Tests on Domain Logic
 
 - **Plan**: context/changes/testing-unit-domain-logic/plan.md
@@ -9,14 +10,14 @@
 
 ## Verdicts
 
-| Dimension | Verdict |
-|-----------|---------|
-| Plan Adherence | PASS |
-| Scope Discipline | PASS |
-| Safety & Quality | PASS |
-| Architecture | PASS |
-| Pattern Consistency | PASS |
-| Success Criteria | PASS |
+| Dimension           | Verdict |
+| ------------------- | ------- |
+| Plan Adherence      | PASS    |
+| Scope Discipline    | PASS    |
+| Safety & Quality    | PASS    |
+| Architecture        | PASS    |
+| Pattern Consistency | PASS    |
+| Success Criteria    | PASS    |
 
 ## Findings
 
@@ -25,7 +26,7 @@
 - **Severity**: ⚠️ WARNING
 - **Impact**: 🏃 LOW — quick decision; fix is obvious and narrowly scoped
 - **Dimension**: Safety & Quality
-- **Location**: src/lib/__tests__/costPerKm.test.ts:126–132
+- **Location**: src/lib/**tests**/costPerKm.test.ts:126–132
 - **Detail**: computeCostTrendData applies parseFloat(toFixed(2)) in production, but all test cases used round numbers. Rounding behavior was never exercised.
 - **Fix**: Added one test with non-round ratio (cost=100, km=300 → expected 0.33).
 - **Decision**: FIXED
@@ -35,7 +36,7 @@
 - **Severity**: ⚠️ WARNING
 - **Impact**: 🏃 LOW — quick decision; fix is obvious and narrowly scoped
 - **Dimension**: Safety & Quality
-- **Location**: src/lib/__tests__/serviceReminders.test.ts:166–175
+- **Location**: src/lib/**tests**/serviceReminders.test.ts:166–175
 - **Detail**: computeThresholdSummary creates new Date() internally. Current tests avoid asserting days_remaining, but a future contributor adding a toEqual on the full shape gets a flaky test.
 - **Fix**: Added warning comment on the test noting days_remaining uses real time.
 - **Decision**: FIXED

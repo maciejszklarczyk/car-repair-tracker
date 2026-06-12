@@ -47,10 +47,7 @@ describe("computeCurrentMileage", () => {
   });
 
   it("returns baseline when all repairs below baseline", () => {
-    const repairs = [
-      makeRepair({ mileage: 8000 }),
-      makeRepair({ mileage: 9000 }),
-    ];
+    const repairs = [makeRepair({ mileage: 8000 }), makeRepair({ mileage: 9000 })];
     expect(computeCurrentMileage(repairs, 10000)).toBe(10000);
   });
 
@@ -60,11 +57,7 @@ describe("computeCurrentMileage", () => {
   });
 
   it("returns max mileage from multiple repairs", () => {
-    const repairs = [
-      makeRepair({ mileage: 11000 }),
-      makeRepair({ mileage: 15000 }),
-      makeRepair({ mileage: 12000 }),
-    ];
+    const repairs = [makeRepair({ mileage: 11000 }), makeRepair({ mileage: 15000 }), makeRepair({ mileage: 12000 })];
     expect(computeCurrentMileage(repairs, 10000)).toBe(15000);
   });
 });
@@ -77,10 +70,7 @@ describe("computeCostPerKm", () => {
 
   it("returns null when all repairs have null cost (totalCost = 0)", () => {
     const vehicle = makeVehicle();
-    const repairs = [
-      makeRepair({ cost: null, mileage: 11000 }),
-      makeRepair({ cost: null, mileage: 12000 }),
-    ];
+    const repairs = [makeRepair({ cost: null, mileage: 11000 }), makeRepair({ cost: null, mileage: 12000 })];
     expect(computeCostPerKm(vehicle, repairs)).toBeNull();
   });
 
@@ -92,10 +82,7 @@ describe("computeCostPerKm", () => {
 
   it("null cost treated as zero, not excluded from sum", () => {
     const vehicle = makeVehicle({ baseline_mileage: 10000 });
-    const repairs = [
-      makeRepair({ cost: 500, mileage: 11000 }),
-      makeRepair({ cost: null, mileage: 11000 }),
-    ];
+    const repairs = [makeRepair({ cost: 500, mileage: 11000 }), makeRepair({ cost: null, mileage: 11000 })];
     // totalCost = 500 + 0 = 500, km = 11000 - 10000 = 1000
     expect(computeCostPerKm(vehicle, repairs)).toBe(0.5);
   });
@@ -108,10 +95,7 @@ describe("computeCostPerKm", () => {
 
   it("multiple repairs: hand-calculated cumulative result", () => {
     const vehicle = makeVehicle({ baseline_mileage: 10000 });
-    const repairs = [
-      makeRepair({ cost: 300, mileage: 11000 }),
-      makeRepair({ cost: 200, mileage: 12000 }),
-    ];
+    const repairs = [makeRepair({ cost: 300, mileage: 11000 }), makeRepair({ cost: 200, mileage: 12000 })];
     // totalCost = 300 + 200 = 500, km = max(11000,12000) - 10000 = 2000
     expect(computeCostPerKm(vehicle, repairs)).toBe(0.25);
   });
@@ -127,9 +111,7 @@ describe("computeCostTrendData", () => {
     const vehicle = makeVehicle({ baseline_mileage: 10000 });
     const repairs = [makeRepair({ cost: 500, mileage: 10500 })];
     // runningCost=500, kmDriven=500, costPerKm=1.0
-    expect(computeCostTrendData(vehicle, repairs)).toEqual([
-      { date: "2024-06-01", costPerKm: 1.0 },
-    ]);
+    expect(computeCostTrendData(vehicle, repairs)).toEqual([{ date: "2024-06-01", costPerKm: 1.0 }]);
   });
 
   it("repair at baseline (kmDriven = 0) is skipped", () => {
@@ -142,9 +124,7 @@ describe("computeCostTrendData", () => {
     const vehicle = makeVehicle({ baseline_mileage: 10000 });
     const repairs = [makeRepair({ cost: 100, mileage: 10300 })];
     // runningCost=100, kmDriven=300, 100/300=0.3333... → toFixed(2) → 0.33
-    expect(computeCostTrendData(vehicle, repairs)).toEqual([
-      { date: "2024-06-01", costPerKm: 0.33 },
-    ]);
+    expect(computeCostTrendData(vehicle, repairs)).toEqual([{ date: "2024-06-01", costPerKm: 0.33 }]);
   });
 });
 

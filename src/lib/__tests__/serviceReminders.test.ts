@@ -1,9 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  daysBetween,
-  computeReminderStatus,
-  computeThresholdSummary,
-} from "@/lib/serviceReminders";
+import { daysBetween, computeReminderStatus, computeThresholdSummary } from "@/lib/serviceReminders";
 import type { ServiceThreshold } from "@/types";
 
 function makeThreshold(overrides: Partial<ServiceThreshold> = {}): ServiceThreshold {

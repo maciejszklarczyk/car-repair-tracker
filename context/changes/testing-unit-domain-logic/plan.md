@@ -107,12 +107,14 @@ Write unit tests for `computeCurrentMileage`, `computeCostPerKm`, and smoke test
 **Contract**: Test suites for each function:
 
 **`computeCurrentMileage`** — 4 cases:
+
 - Empty repairs → returns baseline
 - All repairs below baseline → returns baseline
 - Single repair at baseline → returns baseline (km = 0)
 - Multiple repairs with varying mileage → returns max
 
 **`computeCostPerKm`** — 6 cases (oracle = hand-calculated values, NOT the formula):
+
 - No repairs → null
 - All repairs with null cost → null
 - Repairs at baseline mileage (km = 0) → null
@@ -121,15 +123,18 @@ Write unit tests for `computeCurrentMileage`, `computeCostPerKm`, and smoke test
 - Multiple repairs → hand-calculated cumulative result
 
 **`computeCostTrendData`** — 3 smoke cases:
+
 - Empty array → []
 - Single costed repair above baseline → array with one point
 - Repair at baseline (kmDriven = 0) → skipped, returns []
 
 **`computeMileageTrendData`** — 2 smoke cases:
+
 - Empty → []
 - Multiple repairs → sorted by date, all included
 
 **`computeTotalCostTrendData`** — 2 smoke cases:
+
 - Empty → []
 - Multiple costed repairs → running total, sorted by date
 
@@ -173,33 +178,39 @@ Write unit tests for `daysBetween`, `computeReminderStatus` (primary target — 
 **Contract**: Test suites for each function:
 
 **`daysBetween`** — 3 cases:
+
 - Same day → 0
 - 30 days apart → 30
 - Future date → negative number
 
 **`computeReminderStatus`** — 12+ cases covering all status paths:
 
-*Never-performed:*
+_Never-performed:_
+
 - Both last_performed fields null → "overdue"
 
-*Mileage-only (days_interval null):*
+_Mileage-only (days_interval null):_
+
 - km_remaining = 0 → "overdue"
-- km_remaining = km_interval * 0.1 (boundary) → "approaching"
-- km_remaining = km_interval * 0.1 + 1 → "ok"
+- km_remaining = km_interval \* 0.1 (boundary) → "approaching"
+- km_remaining = km_interval \* 0.1 + 1 → "ok"
 - Large remaining → "ok"
 
-*Date-only (km_interval null):*
+_Date-only (km_interval null):_
+
 - days_remaining = 0 → "overdue"
 - days_remaining = 30 (boundary) → "approaching"
 - days_remaining = 31 → "ok"
 
-*Both intervals present (precedence):*
+_Both intervals present (precedence):_
+
 - km overdue, date ok → "overdue"
 - km ok, date overdue → "overdue"
 - Both approaching → "approaching"
 - Both ok → "ok"
 
 **`computeThresholdSummary`** — 3 minimal cases:
+
 - Empty array → []
 - Single threshold → correct status propagated
 - km_remaining null when km_interval null → verified

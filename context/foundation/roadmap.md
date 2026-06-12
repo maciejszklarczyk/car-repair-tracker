@@ -27,16 +27,17 @@ Indywidualni właściciele aut nie mają jednego miejsca do śledzenia historii 
 
 ## At a glance
 
-| ID   | Change ID            | Outcome (user can …)                                                    | Prerequisites | PRD refs                             | Status   |
-| ---- | -------------------- | ----------------------------------------------------------------------- | ------------- | ------------------------------------ | -------- |
-| S-01 | add-vehicle          | dodać auto (marka, model, rok, przebieg bazowy) i zobaczyć je na liście | —             | FR-001, FR-002, US-01                | done     |
-| S-02 | add-repair           | dodać naprawę (data, opis, koszt, przebieg) do wybranego auta           | S-01          | FR-003, US-01                        | done     |
-| S-03 | repair-history       | przeglądać, edytować i usuwać naprawy na liście historii auta           | S-02          | FR-006, US-01                        | done     |
-| S-04 | cost-per-km          | zobaczyć liczbę koszt/km na dashboardzie auta po dodaniu naprawy        | S-02          | FR-007, US-01                        | done     |
-| S-08 | fix-mileage-tracking | widzieć poprawny aktualny przebieg (z napraw) i poprawny koszt/km       | S-02          | FR-007                               | done     |
-| S-05 | ai-classification    | zobaczyć naprawę sklasyfikowaną przez AI i nadpisać kategorię ręcznie   | S-02          | FR-004, FR-005, FR-011, US-01, US-02 | done     |
-| S-06 | service-reminders    | zdefiniować progi serwisowe i widzieć przypomnienia na dashboardzie     | S-01          | FR-008, FR-009, US-03                | done     |
-| S-07 | cost-trend-chart     | zobaczyć wizualny wykres trendu kosztów/km per auto w czasie            | S-04          | FR-010                               | done     |
+| ID   | Change ID            | Outcome (user can …)                                                    | Prerequisites | PRD refs                             | Status |
+| ---- | -------------------- | ----------------------------------------------------------------------- | ------------- | ------------------------------------ | ------ |
+| S-01 | add-vehicle          | dodać auto (marka, model, rok, przebieg bazowy) i zobaczyć je na liście | —             | FR-001, FR-002, US-01                | done   |
+| S-02 | add-repair           | dodać naprawę (data, opis, koszt, przebieg) do wybranego auta           | S-01          | FR-003, US-01                        | done   |
+| S-03 | repair-history       | przeglądać, edytować i usuwać naprawy na liście historii auta           | S-02          | FR-006, US-01                        | done   |
+| S-04 | cost-per-km          | zobaczyć liczbę koszt/km na dashboardzie auta po dodaniu naprawy        | S-02          | FR-007, US-01                        | done   |
+| S-08 | fix-mileage-tracking | widzieć poprawny aktualny przebieg (z napraw) i poprawny koszt/km       | S-02          | FR-007                               | done   |
+| S-05 | ai-classification    | zobaczyć naprawę sklasyfikowaną przez AI i nadpisać kategorię ręcznie   | S-02          | FR-004, FR-005, FR-011, US-01, US-02 | done   |
+| S-06 | service-reminders    | zdefiniować progi serwisowe i widzieć przypomnienia na dashboardzie     | S-01          | FR-008, FR-009, US-03                | done   |
+| S-07 | cost-trend-chart     | zobaczyć wizualny wykres trendu kosztów/km per auto w czasie            | S-04          | FR-010                               | done   |
+| S-09 | ci-test-job          | mieć pewność że testy jednostkowe przechodzą na każdym PR i pushu       | —             | —                                    | draft  |
 
 ## Streams
 
@@ -163,18 +164,31 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 - **Status:** done
 - **Delivered scope:** Recharts-based tabbed chart section on vehicle detail page with three views: Cost/km trend (cumulative cost ÷ km driven), Total Cost (cumulative repair spend), and Mileage (odometer at each repair). Hidden when < 2 data points. Component: `src/components/vehicles/CostTrendChart.tsx`, helpers in `src/lib/costPerKm.ts`.
 
+### S-09: Job testowy w CI
+
+- **Outcome:** każdy push i PR uruchamia `npm run test` w GitHub Actions; pipeline failuje gdy test nie przechodzi
+- **Change ID:** ci-test-job
+- **PRD refs:** —
+- **Prerequisites:** —
+- **Parallel with:** —
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** Minimalny — dodanie jednego kroku `npm run test` do istniejącego workflow `ci.yml`. Vitest + konfiguracja już obecne po S-01–S-07 testing rollout.
+- **Status:** draft
+
 ## Backlog Handoff
 
-| Roadmap ID | Change ID            | Suggested issue title                                         | Ready for `/10x-plan` | Notes                                    |
-| ---------- | -------------------- | ------------------------------------------------------------- | --------------------- | ---------------------------------------- |
-| S-01       | add-vehicle          | Dodawanie auta — formularz + lista + migracja DB              | —                     | done                                     |
-| S-02       | add-repair           | Dodawanie naprawy do auta — formularz + migracja DB           | —                     | done                                     |
-| S-03       | repair-history       | Historia napraw — lista + edycja + usunięcie z potwierdzeniem | —                     | done                                     |
-| S-04       | cost-per-km          | Koszt/km na dashboardzie auta                                 | —                     | done                                     |
-| S-08       | fix-mileage-tracking | Poprawne liczenie przebiegu i kosztu/km                       | —                     | done                                     |
-| S-05       | ai-classification    | Klasyfikacja AI napraw + nadpisanie kategorii                 | —                     | done                                     |
-| S-06       | service-reminders    | Progi serwisowe + przypomnienia na dashboardzie               | —                     | done                                     |
-| S-07       | cost-trend-chart     | Wykres trendu kosztów/km w czasie                             | —                     | done                                     |
+| Roadmap ID | Change ID            | Suggested issue title                                         | Ready for `/10x-plan` | Notes |
+| ---------- | -------------------- | ------------------------------------------------------------- | --------------------- | ----- |
+| S-01       | add-vehicle          | Dodawanie auta — formularz + lista + migracja DB              | —                     | done  |
+| S-02       | add-repair           | Dodawanie naprawy do auta — formularz + migracja DB           | —                     | done  |
+| S-03       | repair-history       | Historia napraw — lista + edycja + usunięcie z potwierdzeniem | —                     | done  |
+| S-04       | cost-per-km          | Koszt/km na dashboardzie auta                                 | —                     | done  |
+| S-08       | fix-mileage-tracking | Poprawne liczenie przebiegu i kosztu/km                       | —                     | done  |
+| S-05       | ai-classification    | Klasyfikacja AI napraw + nadpisanie kategorii                 | —                     | done  |
+| S-06       | service-reminders    | Progi serwisowe + przypomnienia na dashboardzie               | —                     | done  |
+| S-07       | cost-trend-chart     | Wykres trendu kosztów/km w czasie                             | —                     | done  |
+| S-09       | ci-test-job          | Job testowy w CI (npm run test w GitHub Actions)              | yes                   | —     |
 
 ## Open Roadmap Questions
 

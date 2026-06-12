@@ -41,6 +41,7 @@ Five pure functions. No external dependencies beyond TypeScript types.
 Returns `Math.max(baselineMileage, ...repairs.map(r => r.mileage))`, or `baselineMileage` if repairs is empty.
 
 **Edge cases to test:**
+
 - Empty repairs → returns baseline (safe)
 - All repairs with mileage < baseline → returns baseline (Math.max handles)
 - Single repair with mileage = baseline → returns baseline (km driven = 0)
@@ -53,6 +54,7 @@ Returns `Math.max(baselineMileage, ...repairs.map(r => r.mileage))`, or `baselin
 Formula: `totalCost / (currentMileage - baseline_mileage)`. Returns `null` when km <= 0 or totalCost === 0.
 
 **Edge cases to test:**
+
 - No repairs → km = 0 → null
 - All repairs with null cost → totalCost = 0 → null
 - Repairs with mileage = baseline → km = 0 → null
@@ -67,6 +69,7 @@ Formula: `totalCost / (currentMileage - baseline_mileage)`. Returns `null` when 
 Filters to costed repairs, sorts by `repair_date` (lexicographic `localeCompare`), builds cumulative cost/km trend. Skips points where `kmDriven <= 0`. Rounds to 2 decimal places via `toFixed(2)`.
 
 **Edge cases to test:**
+
 - Empty / all-null-cost → returns []
 - First repair at baseline mileage (kmDriven = 0) → skipped; runningCost still accumulates for next point
 - Rounding: `toFixed(2)` rounds half-up (1.105 → "1.11")
@@ -95,6 +98,7 @@ Three functions. Pure, no external dependencies.
 Converts date string to Date, calculates `Math.floor((today - past) / MS_PER_DAY)`.
 
 **Edge cases:**
+
 - Future date → returns negative number (no validation)
 - Invalid date string → returns NaN (no validation)
 - Same day → returns 0
@@ -104,6 +108,7 @@ Converts date string to Date, calculates `Math.floor((today - past) / MS_PER_DAY
 Returns `"overdue" | "approaching" | "ok"`.
 
 **Key logic with asymmetric margins:**
+
 - If both `last_performed_mileage` and `last_performed_date` are null → immediate `"overdue"` (line 25-26)
 - **Mileage check** (line 31-39): `km_remaining = last_performed_mileage + km_interval - currentMileage`
   - `km_remaining <= 0` → `"overdue"` (returns immediately)
@@ -115,11 +120,12 @@ Returns `"overdue" | "approaching" | "ok"`.
 **Status precedence:** overdue > approaching > ok. First overdue found returns immediately.
 
 **Edge cases to test:**
+
 - Never performed (both nulls) → "overdue"
 - km_remaining = 0 exactly → "overdue" (boundary)
 - km_remaining = 1 → depends on interval size (if interval = 10, 10% = 1, so "approaching")
-- km_remaining = km_interval * 0.1 exactly → "approaching" (uses `<=`)
-- km_remaining = km_interval * 0.1 + 1 → "ok"
+- km_remaining = km_interval \* 0.1 exactly → "approaching" (uses `<=`)
+- km_remaining = km_interval \* 0.1 + 1 → "ok"
 - days_remaining = 0 → "overdue"
 - days_remaining = 30 → "approaching" (uses `<=`)
 - days_remaining = 31 → "ok"
@@ -137,6 +143,7 @@ Returns `"overdue" | "approaching" | "ok"`.
 Maps each threshold through `computeReminderStatus()`, adds computed `km_remaining` and `days_remaining`. Creates `today = new Date()` internally (line 56).
 
 **Testability concern:** `new Date()` inside function makes deterministic testing harder. Either:
+
 - Accept the slight non-determinism for summary-level tests (dates won't change within a test run)
 - Focus unit tests on `computeReminderStatus()` which accepts `today` as parameter
 - Consider refactoring to accept `today` as parameter (but this is a code change, not a test-only decision)
@@ -145,12 +152,12 @@ Maps each threshold through `computeReminderStatus()`, adds computed `km_remaini
 
 ### 3. Callers and Null Handling
 
-| Caller | Functions used | Null handling |
-|--------|---------------|---------------|
-| `src/pages/dashboard/vehicles/index.astro:64` | `computeCurrentMileage` | None needed (always returns number) |
-| `src/pages/dashboard/vehicles/[id].astro:61-66` | All 5 cost functions + `computeThresholdSummary` | `costPerKm` checked with ternary; trend data passed to chart |
-| `src/components/vehicles/CostTrendChart.tsx:34-38` | Receives trend data as props | Checks `.length >= 2` before rendering |
-| `src/components/service-reminders/ServiceReminders.tsx` | Receives ThresholdWithStatus[] | Filters for overdue/approaching |
+| Caller                                                  | Functions used                                   | Null handling                                                |
+| ------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------ |
+| `src/pages/dashboard/vehicles/index.astro:64`           | `computeCurrentMileage`                          | None needed (always returns number)                          |
+| `src/pages/dashboard/vehicles/[id].astro:61-66`         | All 5 cost functions + `computeThresholdSummary` | `costPerKm` checked with ternary; trend data passed to chart |
+| `src/components/vehicles/CostTrendChart.tsx:34-38`      | Receives trend data as props                     | Checks `.length >= 2` before rendering                       |
+| `src/components/service-reminders/ServiceReminders.tsx` | Receives ThresholdWithStatus[]                   | Filters for overdue/approaching                              |
 
 All null paths handled at call sites. No unguarded null dereferences.
 
@@ -159,12 +166,14 @@ All null paths handled at call sites. No unguarded null dereferences.
 **Current state:** Zero test infrastructure. No runner, no config, no test files.
 
 **Required:**
+
 - Install: `npm install -D vitest`
 - Create `vitest.config.ts` with `@` → `./src` path alias (matches `tsconfig.json` paths)
 - Add scripts to `package.json`: `"test": "vitest run"`, `"test:watch": "vitest"`
 - Environment: `node` (no DOM needed for pure functions)
 
 **Not required for Phase 1:**
+
 - `jsdom` or `happy-dom` (no React component tests)
 - `@astrojs/test-utils` (no Astro component tests)
 - MSW or any mocking library (pure functions, no HTTP)
@@ -174,11 +183,11 @@ All null paths handled at call sites. No unguarded null dereferences.
 
 ### 5. Test Plan Response Guidance Verification
 
-| Risk | Plan guidance | Research verdict |
-|------|--------------|-----------------|
-| #2 | Unit test `computeCostPerKm` edge cases; avoid oracle problem | Confirmed. Function is pure, 6 edge cases identified. Test oracle must be hand-calculated values, not the formula. |
-| #4 | Unit test `computeCurrentMileage`; challenge "S-08 fixed it" | Confirmed. Function is pure, 4 edge cases. No regression tests exist despite prior fix. |
-| #6 | Unit test reminder margins; test both km and date paths | Confirmed. Asymmetric margins (10% km vs 30-day fixed) are non-obvious. `computeReminderStatus` is the primary target (accepts `today` param). 12+ edge case combinations for status precedence. |
+| Risk | Plan guidance                                                 | Research verdict                                                                                                                                                                                 |
+| ---- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| #2   | Unit test `computeCostPerKm` edge cases; avoid oracle problem | Confirmed. Function is pure, 6 edge cases identified. Test oracle must be hand-calculated values, not the formula.                                                                               |
+| #4   | Unit test `computeCurrentMileage`; challenge "S-08 fixed it"  | Confirmed. Function is pure, 4 edge cases. No regression tests exist despite prior fix.                                                                                                          |
+| #6   | Unit test reminder margins; test both km and date paths       | Confirmed. Asymmetric margins (10% km vs 30-day fixed) are non-obvious. `computeReminderStatus` is the primary target (accepts `today` param). 12+ edge case combinations for status precedence. |
 
 No corrections needed to test plan §2.
 

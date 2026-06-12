@@ -16,16 +16,16 @@ Every new repair shows a colored category badge auto-assigned by Gemini. Users o
 
 ## Key Decisions Made
 
-| Decision | Choice | Why (1 sentence) |
-| --- | --- | --- |
-| AI provider | Gemini 2.5 Flash-Lite | Best multilingual quality (94% vs 78%), generous free tier (1.5K RPD), designed for classification |
-| Data model | 3 columns: category, category_source, original_category | Tracks origin (ai/manual) and preserves AI's pick for future accuracy measurement |
-| Classification trigger | Synchronous on create, 3s timeout | Single request cycle, no background jobs, matches FR-011 "few seconds" |
-| Audit trail | Store original_category | Enables accuracy measurement from day one per PRD open question #4 |
-| Override UX | Inline dropdown on repair list item | Minimal clicks, consistent with existing edit patterns |
-| Re-classify on edit | Yes, only if category_source is 'ai' | Keeps AI category fresh without overriding user's conscious choice |
-| Pending state UX | Badge + manual dropdown (no retry) | Consistent UX — one pattern for both override and pending resolution |
-| Testing | Unit tests with mocked Gemini + manual E2E | Fast reliable tests; real API quality verified manually |
+| Decision               | Choice                                                  | Why (1 sentence)                                                                                   |
+| ---------------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| AI provider            | Gemini 2.5 Flash-Lite                                   | Best multilingual quality (94% vs 78%), generous free tier (1.5K RPD), designed for classification |
+| Data model             | 3 columns: category, category_source, original_category | Tracks origin (ai/manual) and preserves AI's pick for future accuracy measurement                  |
+| Classification trigger | Synchronous on create, 3s timeout                       | Single request cycle, no background jobs, matches FR-011 "few seconds"                             |
+| Audit trail            | Store original_category                                 | Enables accuracy measurement from day one per PRD open question #4                                 |
+| Override UX            | Inline dropdown on repair list item                     | Minimal clicks, consistent with existing edit patterns                                             |
+| Re-classify on edit    | Yes, only if category_source is 'ai'                    | Keeps AI category fresh without overriding user's conscious choice                                 |
+| Pending state UX       | Badge + manual dropdown (no retry)                      | Consistent UX — one pattern for both override and pending resolution                               |
+| Testing                | Unit tests with mocked Gemini + manual E2E              | Fast reliable tests; real API quality verified manually                                            |
 
 ## Scope
 
@@ -50,12 +50,12 @@ New module `src/lib/classifyRepair.ts` — pure async function, same pattern as 
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-| --- | --- | --- |
-| 1. DB Migration + Types | 3 new nullable columns on repairs, updated TS interface | None — additive migration |
-| 2. Classification Service | `classifyRepair()` function + env setup | Gemini Polish quality unknown until tested |
-| 3. API Integration | Classification on create/edit, PATCH override endpoint | 3s timeout may cause some pending results |
-| 4. UI: Display + Override | Category badge, inline dropdown, pending state | New UI pattern (inline dropdown) |
+| Phase                     | What it delivers                                        | Key risk                                   |
+| ------------------------- | ------------------------------------------------------- | ------------------------------------------ |
+| 1. DB Migration + Types   | 3 new nullable columns on repairs, updated TS interface | None — additive migration                  |
+| 2. Classification Service | `classifyRepair()` function + env setup                 | Gemini Polish quality unknown until tested |
+| 3. API Integration        | Classification on create/edit, PATCH override endpoint  | 3s timeout may cause some pending results  |
+| 4. UI: Display + Override | Category badge, inline dropdown, pending state          | New UI pattern (inline dropdown)           |
 
 **Prerequisites:** Gemini API key (free tier, no credit card needed)
 **Estimated effort:** ~2-3 sessions across 4 phases

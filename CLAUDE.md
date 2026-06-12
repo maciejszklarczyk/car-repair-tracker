@@ -32,6 +32,10 @@ Full server-side rendering (`output: "server"` in astro.config.mjs). All pages a
 
 See @README.md for setup, commands, env vars, and deployment.
 
+## Lessons
+
+Lessons learned during development are stored in @context/foundation/lessons.md — read before starting any task.
+
 ## CI
 
 GitHub Actions workflow (`.github/workflows/ci.yml`) runs lint + build on every push and PR to `main`. Also builds and pushes a Docker image on pushes to `main`. Requires `SUPABASE_URL` and `SUPABASE_KEY` repository secrets for the build step.

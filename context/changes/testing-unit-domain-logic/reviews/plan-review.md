@@ -1,21 +1,22 @@
 <!-- PLAN-REVIEW-REPORT -->
+
 # Plan Review: Unit Tests on Domain Logic
 
 - **Plan**: context/changes/testing-unit-domain-logic/plan.md
 - **Mode**: Deep
 - **Date**: 2026-06-12
 - **Verdict**: REVISE → SOUND (after fix)
-- **Findings**: 1 critical  0 warnings  0 observations
+- **Findings**: 1 critical 0 warnings 0 observations
 
 ## Verdicts
 
-| Dimension | Verdict |
-|-----------|---------|
-| End-State Alignment | PASS |
-| Lean Execution | PASS |
-| Architectural Fitness | PASS |
-| Blind Spots | PASS (after fix) |
-| Plan Completeness | PASS |
+| Dimension             | Verdict          |
+| --------------------- | ---------------- |
+| End-State Alignment   | PASS             |
+| Lean Execution        | PASS             |
+| Architectural Fitness | PASS             |
+| Blind Spots           | PASS (after fix) |
+| Plan Completeness     | PASS             |
 
 ## Grounding
 

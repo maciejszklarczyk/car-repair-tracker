@@ -1,4 +1,5 @@
 <!-- PLAN-REVIEW-REPORT -->
+
 # Plan Review: AI Repair Classification
 
 - **Plan**: context/changes/ai-classification/plan.md
@@ -9,13 +10,13 @@
 
 ## Verdicts
 
-| Dimension | Verdict |
-|-----------|---------|
-| End-State Alignment | PASS |
-| Lean Execution | PASS |
-| Architectural Fitness | PASS |
-| Blind Spots | WARNING |
-| Plan Completeness | WARNING |
+| Dimension             | Verdict |
+| --------------------- | ------- |
+| End-State Alignment   | PASS    |
+| Lean Execution        | PASS    |
+| Architectural Fitness | PASS    |
+| Blind Spots           | WARNING |
+| Plan Completeness     | WARNING |
 
 ## Grounding
 
@@ -58,6 +59,6 @@
 - **Impact**: 🏃 LOW
 - **Dimension**: Plan Completeness
 - **Location**: Phase 4, §4
-- **Detail**: Plan referenced select("*") at line 42; actual is line 43.
+- **Detail**: Plan referenced select("\*") at line 42; actual is line 43.
 - **Fix**: Corrected to line 43.
 - **Decision**: FIXED

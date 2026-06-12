@@ -26,6 +26,7 @@ Add AI-powered repair classification using Google Gemini 2.5 Flash-Lite. Each re
 ## Desired End State
 
 After implementation:
+
 - Every new repair is auto-classified by Gemini within 3s or saved as `pending`
 - Each repair displays a colored category badge in the repair list
 - Users can change category via inline dropdown (saves immediately)
@@ -66,7 +67,8 @@ Add three nullable columns to the repairs table and update the TypeScript interf
 
 **Intent**: Add `category`, `category_source`, and `original_category` columns to the `repairs` table. All nullable — existing rows get NULL (uncategorized), new rows get values from the classification flow.
 
-**Contract**: 
+**Contract**:
+
 - `category TEXT` — one of `silnik`, `hamulce`, `elektryka`, `ogumienie`, `przegląd`, `inne`, `pending`, or NULL
 - `category_source TEXT` — one of `ai`, `manual`, `pending`, or NULL
 - `original_category TEXT` — stores AI's original pick before user override, or NULL
@@ -87,7 +89,7 @@ Add three nullable columns to the repairs table and update the TypeScript interf
 
 - Migration applies cleanly: `npx supabase db push`
 - TypeScript compiles: `npx astro check` (or `npm run build`)
-- Existing repair queries still work (select * returns new columns as null)
+- Existing repair queries still work (select \* returns new columns as null)
 
 #### Manual Verification:
 
@@ -126,12 +128,13 @@ Create the Gemini classification function and wire the API key into the env sche
 
 **Intent**: Pure async function that takes a repair description string and returns a category or null. Calls Gemini 2.5 Flash-Lite with a structured prompt constraining output to exactly one of the six categories. Uses AbortSignal with 3-second timeout. Returns `null` on any failure (timeout, API error, unexpected response).
 
-**Contract**: 
+**Contract**:
+
 ```ts
 export const REPAIR_CATEGORIES = ["silnik", "hamulce", "elektryka", "ogumienie", "przegląd", "inne"] as const;
 export type RepairCategory = (typeof REPAIR_CATEGORIES)[number];
 
-export async function classifyRepair(description: string): Promise<RepairCategory | null>
+export async function classifyRepair(description: string): Promise<RepairCategory | null>;
 ```
 
 The prompt must instruct the model to return ONLY the category name, no explanation. Parse the response, trim whitespace, lowercase, and validate against `REPAIR_CATEGORIES`. Return `null` if the response doesn't match any category.

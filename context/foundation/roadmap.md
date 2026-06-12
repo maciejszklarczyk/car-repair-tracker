@@ -38,6 +38,7 @@ Indywidualni właściciele aut nie mają jednego miejsca do śledzenia historii 
 | S-06 | service-reminders    | zdefiniować progi serwisowe i widzieć przypomnienia na dashboardzie     | S-01          | FR-008, FR-009, US-03                | done   |
 | S-07 | cost-trend-chart     | zobaczyć wizualny wykres trendu kosztów/km per auto w czasie            | S-04          | FR-010                               | done   |
 | S-09 | ci-test-job          | mieć pewność że testy jednostkowe przechodzą na każdym PR i pushu       | —             | —                                    | draft  |
+| S-10 | demo-data-seeder     | oglądać demo z realistycznymi danymi, resetowanymi cyklicznie           | S-01, S-02    | —                                    | draft  |
 
 ## Streams
 
@@ -164,6 +165,20 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 - **Status:** done
 - **Delivered scope:** Recharts-based tabbed chart section on vehicle detail page with three views: Cost/km trend (cumulative cost ÷ km driven), Total Cost (cumulative repair spend), and Mileage (odometer at each repair). Hidden when < 2 data points. Component: `src/components/vehicles/CostTrendChart.tsx`, helpers in `src/lib/costPerKm.ts`.
 
+### S-10: Cykliczny reset danych demo
+
+- **Outcome:** konto demo posiada realistyczne dane (auta, naprawy, progi serwisowe), resetowane periodycznie do znanego stanu — pozwala pokazać produkt bez ręcznego seedowania
+- **Change ID:** demo-data-seeder
+- **PRD refs:** —
+- **Prerequisites:** S-01, S-02
+- **Parallel with:** S-09
+- **Blockers:** —
+- **Unknowns:**
+  - Mechanizm schedulingu (cron job na serwerze, GitHub Actions scheduled workflow, Supabase pg_cron)? — Owner: user. Block: no.
+  - Identyfikacja konta demo (stały UUID, osobna flaga, dedykowany email)? — Owner: user. Block: no.
+- **Risk:** Musi operować wyłącznie na danych demo usera — błąd w filtrze `user_id` przy DELETE kasuje dane prawdziwych użytkowników. Wymaga osobnej walidacji RLS i hardcoded demo user ID. Seed data muszą pokrywać edge-case'y widoczne w UI (auto bez napraw, naprawa bez kosztu, aktywne przypomnienie).
+- **Status:** draft
+
 ### S-09: Job testowy w CI
 
 - **Outcome:** każdy push i PR uruchamia `npm run test` w GitHub Actions; pipeline failuje gdy test nie przechodzi
@@ -189,6 +204,7 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 | S-06       | service-reminders    | Progi serwisowe + przypomnienia na dashboardzie               | —                     | done  |
 | S-07       | cost-trend-chart     | Wykres trendu kosztów/km w czasie                             | —                     | done  |
 | S-09       | ci-test-job          | Job testowy w CI (npm run test w GitHub Actions)              | yes                   | —     |
+| S-10       | demo-data-seeder     | Cykliczny reset danych demo na produkcji                      | yes                   | —     |
 
 ## Open Roadmap Questions
 

@@ -17,13 +17,13 @@ Vitest installed and configured. Two test files with ~35 test cases covering all
 
 ## Key Decisions Made
 
-| Decision | Choice | Why (1 sentence) | Source |
-|----------|--------|-------------------|--------|
-| Test runner | Vitest | ESM-native, fast, works with Astro/Vite out of the box | Research |
-| Test file location | `src/lib/__tests__/` | User preference for separate directory | Plan |
+| Decision                            | Choice                              | Why (1 sentence)                                                           | Source   |
+| ----------------------------------- | ----------------------------------- | -------------------------------------------------------------------------- | -------- |
+| Test runner                         | Vitest                              | ESM-native, fast, works with Astro/Vite out of the box                     | Research |
+| Test file location                  | `src/lib/__tests__/`                | User preference for separate directory                                     | Plan     |
 | computeThresholdSummary testability | Test computeReminderStatus directly | Avoids production code change; computeReminderStatus accepts `today` param | Research |
-| Trend function depth | Smoke tests only | Lower risk than core formulas; cost × signal principle | Plan |
-| Oracle strategy | Hand-calculated values | Avoid copying production formula into tests (oracle problem) | Research |
+| Trend function depth                | Smoke tests only                    | Lower risk than core formulas; cost × signal principle                     | Plan     |
+| Oracle strategy                     | Hand-calculated values              | Avoid copying production formula into tests (oracle problem)               | Research |
 
 ## Scope
 
@@ -33,11 +33,11 @@ Vitest installed and configured. Two test files with ~35 test cases covering all
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-|-------|-----------------|----------|
-| 1. Bootstrap Vitest | Working test runner with path alias | Path alias misconfiguration |
-| 2. Cost/km + mileage tests | 17 test cases covering risks #2, #4 | Oracle problem — must hand-calculate expected values |
-| 3. Reminder tests + cookbook | 18+ test cases covering risk #6 + §6.1 update | Asymmetric margin boundaries (10% km vs 30 days) |
+| Phase                        | What it delivers                              | Key risk                                             |
+| ---------------------------- | --------------------------------------------- | ---------------------------------------------------- |
+| 1. Bootstrap Vitest          | Working test runner with path alias           | Path alias misconfiguration                          |
+| 2. Cost/km + mileage tests   | 17 test cases covering risks #2, #4           | Oracle problem — must hand-calculate expected values |
+| 3. Reminder tests + cookbook | 18+ test cases covering risk #6 + §6.1 update | Asymmetric margin boundaries (10% km vs 30 days)     |
 
 **Prerequisites:** None — greenfield test setup
 **Estimated effort:** ~1 session across 3 phases

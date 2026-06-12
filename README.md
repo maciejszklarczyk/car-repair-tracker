@@ -23,6 +23,7 @@ Track repairs, know your cost/km, never miss a service deadline. A web app for i
 - [Supabase](https://supabase.com/) — auth + Postgres database with RLS
 - [Google Gemini](https://ai.google.dev/) — AI repair classification (Gemini 2.5 Flash-Lite)
 - [Recharts](https://recharts.org/) — cost trend charts
+
 ## Prerequisites
 
 - Node.js v22.14.0 (as specified in `.nvmrc`)
@@ -78,6 +79,8 @@ npm run dev
 - `npm run lint` — run ESLint with type-checked rules
 - `npm run lint:fix` — auto-fix ESLint issues
 - `npm run format` — run Prettier
+- `npm run test` — run unit tests (Vitest)
+- `npm run test:watch` — run tests in watch mode
 
 ## Project Structure
 
@@ -138,10 +141,10 @@ npx supabase stop
 
 Add these variables to `.env`:
 
-| Variable         | Description                                                                                             |
-| ---------------- | ------------------------------------------------------------------------------------------------------- |
-| `SUPABASE_URL`   | Project URL from Supabase dashboard → Settings → API                                                    |
-| `SUPABASE_KEY`   | `anon` public key from Supabase dashboard → Settings → API                                              |
+| Variable         | Description                                                                                              |
+| ---------------- | -------------------------------------------------------------------------------------------------------- |
+| `SUPABASE_URL`   | Project URL from Supabase dashboard → Settings → API                                                     |
+| `SUPABASE_KEY`   | `anon` public key from Supabase dashboard → Settings → API                                               |
 | `GEMINI_API_KEY` | Optional — API key from [Google AI Studio](https://aistudio.google.com/apikey) for repair classification |
 
 ### Email confirmation in local development
@@ -153,16 +156,16 @@ To skip email confirmation during local development:
 
 ### Routes
 
-| Route                          | Description                              |
-| ------------------------------ | ---------------------------------------- |
-| `/auth/signin`                 | Email/password sign-in                   |
-| `/auth/signup`                 | Email/password sign-up                   |
-| `/auth/confirm-email`          | Post-signup confirmation page            |
-| `/dashboard/vehicles`          | Vehicle list                             |
-| `/dashboard/vehicles/new`      | Add vehicle form                         |
+| Route                          | Description                                          |
+| ------------------------------ | ---------------------------------------------------- |
+| `/auth/signin`                 | Email/password sign-in                               |
+| `/auth/signup`                 | Email/password sign-up                               |
+| `/auth/confirm-email`          | Post-signup confirmation page                        |
+| `/dashboard/vehicles`          | Vehicle list                                         |
+| `/dashboard/vehicles/new`      | Add vehicle form                                     |
 | `/dashboard/vehicles/[id]`     | Vehicle detail (cost/km, repairs, charts, reminders) |
-| `/dashboard/repairs/new`       | Add repair form                          |
-| `/dashboard/repairs/[id]/edit` | Edit repair form                         |
+| `/dashboard/repairs/new`       | Add repair form                                      |
+| `/dashboard/repairs/[id]/edit` | Edit repair form                                     |
 
 All `/dashboard/*` routes redirect to `/auth/signin` if unauthenticated. Protection handled in `src/middleware.ts`.
 

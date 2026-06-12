@@ -203,3 +203,8 @@ GitHub Actions (`.github/workflows/ci.yml`) runs lint + build on every push and 
 ## License
 
 MIT
+
+## Coded with help of CLAUDE CODE
+<p align="center">
+  <img src="./public/mann.gif" width="200" alt="Mann" />
+</p>

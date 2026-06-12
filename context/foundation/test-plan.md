@@ -65,7 +65,7 @@ orchestrator updates Status as artifacts appear on disk.
 
 | #   | Phase name                     | Goal (one line)                                                                         | Risks covered | Test types  | Status      | Change folder             |
 | --- | ------------------------------ | --------------------------------------------------------------------------------------- | ------------- | ----------- | ----------- | ------------------------- |
-| 1   | Unit tests on domain logic     | Bootstrap Vitest + defend core formulas (cost/km, mileage, reminders) at cheapest layer | #2, #4, #6    | unit        | planned     | testing-unit-domain-logic |
+| 1   | Unit tests on domain logic     | Bootstrap Vitest + defend core formulas (cost/km, mileage, reminders) at cheapest layer | #2, #4, #6    | unit        | complete    | testing-unit-domain-logic |
 | 2   | API authorization + validation | Defend data isolation and input validation with integration tests against API endpoints | #1, #3, #5    | integration | not started | —                         |
 | 3   | Quality gates wiring           | Lock the test floor in CI — fail PR on test regression                                  | cross-cutting | CI gates    | not started | —                         |
 

@@ -1,7 +1,7 @@
 ---
 change_id: testing-unit-domain-logic
 title: Unit tests on domain logic
-status: implementing
+status: implemented
 created: 2026-06-12
 updated: 2026-06-12
 archived_at: null

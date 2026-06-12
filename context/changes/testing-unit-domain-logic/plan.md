@@ -278,8 +278,8 @@ Write unit tests for `daysBetween`, `computeReminderStatus` (primary target — 
 
 #### Automated
 
-- [x] 3.1 `npx vitest run` exits 0 with all tests passing (cost/km + reminders)
-- [x] 3.2 No TypeScript errors in test files
+- [x] 3.1 `npx vitest run` exits 0 with all tests passing (cost/km + reminders) — 98d8884
+- [x] 3.2 No TypeScript errors in test files — 98d8884
 
 #### Manual
 

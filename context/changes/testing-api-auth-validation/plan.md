@@ -339,17 +339,17 @@ Update test-plan §6.2 and §6.3 with the integration test patterns established 
 
 #### Automated
 
-- [x] 1.1 `npx vitest run` exits 0 with smoke test passing
-- [x] 1.2 TypeScript types resolve correctly for mock utilities
-- [x] 1.3 `npm run lint` passes
+- [x] 1.1 `npx vitest run` exits 0 with smoke test passing — 54af6d5
+- [x] 1.2 TypeScript types resolve correctly for mock utilities — 54af6d5
+- [x] 1.3 `npm run lint` passes — 54af6d5
 
 ### Phase 2: JSON Endpoint Tests
 
 #### Automated
 
-- [ ] 2.1 `npx vitest run` exits 0 with all JSON endpoint tests passing
-- [ ] 2.2 No TypeScript errors in test files
-- [ ] 2.3 `npm run lint` passes
+- [x] 2.1 `npx vitest run` exits 0 with all JSON endpoint tests passing
+- [x] 2.2 No TypeScript errors in test files
+- [x] 2.3 `npm run lint` passes
 
 ### Phase 3: FormData Endpoint Tests
 

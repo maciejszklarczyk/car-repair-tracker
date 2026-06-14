@@ -5,7 +5,7 @@ import { createMockSupabase } from "@/test/helpers";
 // Module mocks — imported by test files via `import "./setup"`
 // ---------------------------------------------------------------------------
 
-const { client, from, mockResult } = createMockSupabase();
+const { client, from, mockResult, mockResults } = createMockSupabase();
 
 vi.mock("@/lib/supabase", () => ({
   createClient: vi.fn(() => client),
@@ -22,4 +22,4 @@ vi.mock("astro:env/server", () => ({
   GEMINI_API_KEY: undefined,
 }));
 
-export { client, from, mockResult };
+export { client, from, mockResult, mockResults };

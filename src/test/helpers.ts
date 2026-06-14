@@ -11,7 +11,14 @@ interface SupabaseResult {
 }
 
 function createChain(defaultResult: SupabaseResult = { data: null, error: null }) {
-  let result = defaultResult;
+  let fallback = defaultResult;
+  const queue: SupabaseResult[] = [];
+
+  const resolve = () => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const r = queue.length > 0 ? queue.shift()! : fallback;
+    return Promise.resolve(r);
+  };
 
   const chain: Record<string, unknown> = {};
 
@@ -37,25 +44,32 @@ function createChain(defaultResult: SupabaseResult = { data: null, error: null }
   }
 
   for (const m of terminalMethods) {
-    chain[m] = vi.fn(() => Promise.resolve(result));
+    chain[m] = vi.fn(() => resolve());
   }
 
-  chain.then = (resolve: (v: SupabaseResult) => void) => Promise.resolve(result).then(resolve);
+  chain.then = (onfulfilled: (v: SupabaseResult) => void) => resolve().then(onfulfilled);
 
   const mockResult = (r: SupabaseResult) => {
-    result = r;
+    fallback = r;
+    queue.length = 0;
   };
 
-  return { chain, mockResult };
+  const mockResults = (results: SupabaseResult[]) => {
+    queue.length = 0;
+    queue.push(...results);
+  };
+
+  return { chain, mockResult, mockResults };
 }
 
 export function createMockSupabase() {
-  const { chain, mockResult } = createChain();
+  const { chain, mockResult, mockResults } = createChain();
 
   return {
     client: chain as unknown as ReturnType<typeof import("@/lib/supabase").createClient>,
     from: chain.from as ReturnType<typeof vi.fn>,
     mockResult,
+    mockResults,
   };
 }
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-06-14
+
+- [28276eb] fix(testing-api-auth-validation): impl-review fixes — payload assertions, DB-error tests, shared helpers, factory dedup
+- [34bd84b] chore(testing-api-auth-validation): add plan-brief, plan-review, and mann.gif asset
+
 ## 2026-06-08
 
 - [94f47b6] feat(cost-trend-chart): add total cost and mileage chart tabs, update seed data and roadmap

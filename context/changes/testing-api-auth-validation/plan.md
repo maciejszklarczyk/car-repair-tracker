@@ -347,17 +347,17 @@ Update test-plan §6.2 and §6.3 with the integration test patterns established 
 
 #### Automated
 
-- [x] 2.1 `npx vitest run` exits 0 with all JSON endpoint tests passing
-- [x] 2.2 No TypeScript errors in test files
-- [x] 2.3 `npm run lint` passes
+- [x] 2.1 `npx vitest run` exits 0 with all JSON endpoint tests passing — bb382b5
+- [x] 2.2 No TypeScript errors in test files — bb382b5
+- [x] 2.3 `npm run lint` passes — bb382b5
 
 ### Phase 3: FormData Endpoint Tests
 
 #### Automated
 
-- [ ] 3.1 `npx vitest run` exits 0 with all tests passing (JSON + FormData)
-- [ ] 3.2 No TypeScript errors
-- [ ] 3.3 `npm run lint` passes
+- [x] 3.1 `npx vitest run` exits 0 with all tests passing (JSON + FormData)
+- [x] 3.2 No TypeScript errors
+- [x] 3.3 `npm run lint` passes
 
 ### Phase 4: Cookbook Update
 

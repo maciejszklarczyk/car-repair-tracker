@@ -355,16 +355,16 @@ Update test-plan §6.2 and §6.3 with the integration test patterns established 
 
 #### Automated
 
-- [x] 3.1 `npx vitest run` exits 0 with all tests passing (JSON + FormData)
-- [x] 3.2 No TypeScript errors
-- [x] 3.3 `npm run lint` passes
+- [x] 3.1 `npx vitest run` exits 0 with all tests passing (JSON + FormData) — c00398a
+- [x] 3.2 No TypeScript errors — c00398a
+- [x] 3.3 `npm run lint` passes — c00398a
 
 ### Phase 4: Cookbook Update
 
 #### Automated
 
-- [ ] 4.1 `npx vitest run` exits 0 (no regressions)
+- [x] 4.1 `npx vitest run` exits 0 (no regressions)
 
 #### Manual
 
-- [ ] 4.2 §6.2 and §6.3 in test-plan.md accurately describe the test patterns
+- [x] 4.2 §6.2 and §6.3 in test-plan.md accurately describe the test patterns

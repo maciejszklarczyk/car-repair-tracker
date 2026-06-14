@@ -66,7 +66,7 @@ orchestrator updates Status as artifacts appear on disk.
 | #   | Phase name                     | Goal (one line)                                                                         | Risks covered | Test types  | Status      | Change folder             |
 | --- | ------------------------------ | --------------------------------------------------------------------------------------- | ------------- | ----------- | ----------- | ------------------------- |
 | 1   | Unit tests on domain logic     | Bootstrap Vitest + defend core formulas (cost/km, mileage, reminders) at cheapest layer | #2, #4, #6    | unit        | complete    | testing-unit-domain-logic |
-| 2   | API authorization + validation | Defend data isolation and input validation with integration tests against API endpoints | #1, #3, #5    | integration | not started | —                         |
+| 2   | API authorization + validation | Defend data isolation and input validation with integration tests against API endpoints | #1, #3, #5    | integration | planned | testing-api-auth-validation |
 | 3   | Quality gates wiring           | Lock the test floor in CI — fail PR on test regression                                  | cross-cutting | CI gates    | not started | —                         |
 
 ## 4. Stack
@@ -113,11 +113,35 @@ the relevant rollout phase ships; before that, the sub-section reads
 
 ### 6.2 Adding an integration test
 
-TBD — see §3 Phase 2. Will cover API endpoint authorization (IDOR), input validation, and repair CRUD side-effects.
+**Location:** `src/pages/api/__tests__/<endpoint>.test.ts`
+
+**Naming:** Test file mirrors the endpoint file — `repairs/[id].ts` → `repairs-id.test.ts`, `service-thresholds.ts` → `service-thresholds.test.ts`.
+
+**Mock setup:** Import `"./setup"` at the top of each test file. This activates `vi.mock` for `@/lib/supabase`, `@/lib/classifyRepair`, and `astro:env/server`. Import `mockResult` (single result) or `mockResults` (FIFO queue for multi-step handlers) from `"./setup"` to control Supabase responses per test. Import `createMockContext` and entity factories from `@/test/helpers`.
+
+**Assertion patterns — JSON endpoints:** Assert `response.status` and destructure `await response.json()` with a type cast: `const body = (await res.json()) as { error: string }`.
+
+**Assertion patterns — FormData endpoints:** Assert `response.status === 302` and check `response.headers.get("Location")` for redirect target and URL-encoded error/success params (`%20` encoding, not `+`).
+
+**Reset:** Call `vi.clearAllMocks()` and `mockResult({ data: null, error: null })` in `beforeEach` to reset mock state between tests.
+
+**Reference tests:** `src/pages/api/__tests__/repairs-id.test.ts` (JSON), `src/pages/api/__tests__/repairs.test.ts` (FormData)
+
+**Run:** `npm run test` (single run) or `npm run test:watch` (watch mode).
 
 ### 6.3 Adding a test for a new API endpoint
 
-TBD — see §3 Phase 2. Pattern: send request with owned/unowned resource ID, assert authorization; send invalid payload, assert rejection.
+Every new API mutation endpoint gets three test groups:
+
+1. **Auth** — unauthenticated (`user: null` → 401 or redirect to `/auth/signin`) + cross-user (resource owned by `"user-2"`, request from `"user-1"` → 403 or redirect with error).
+2. **Validation** — invalid JSON/FormData → 400 or redirect with error; missing required fields; out-of-range values (negative cost, mileage below baseline, future year); zod `.refine()` edge cases (e.g., at least one interval required).
+3. **Happy path** — valid input with owned resource → success response + correct Supabase method called.
+
+**For JSON endpoints:** Use `new Request(url, { method, body: JSON.stringify(payload), headers: { "Content-Type": "application/json" } })`. Assert status codes and JSON body.
+
+**For FormData endpoints:** Build `FormData`, set fields as strings (handlers coerce with `Number()`). Assert redirect status (302) and `Location` header content.
+
+**Multi-step Supabase calls:** Use `mockResults([...])` to queue results in order — e.g., first call returns the resource for ownership check, second returns the car for baseline mileage, third returns the mutation result.
 
 ### 6.4 Per-rollout-phase notes
 

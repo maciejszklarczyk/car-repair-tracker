@@ -4,6 +4,7 @@
 
 - [28276eb] fix(testing-api-auth-validation): impl-review fixes — payload assertions, DB-error tests, shared helpers, factory dedup
 - [34bd84b] chore(testing-api-auth-validation): add plan-brief, plan-review, and mann.gif asset
+- [aaab101] chore(test-plan): mark Phase 2 complete
 
 ## 2026-06-08
 

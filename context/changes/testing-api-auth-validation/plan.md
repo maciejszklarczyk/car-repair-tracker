@@ -363,8 +363,8 @@ Update test-plan §6.2 and §6.3 with the integration test patterns established 
 
 #### Automated
 
-- [x] 4.1 `npx vitest run` exits 0 (no regressions)
+- [x] 4.1 `npx vitest run` exits 0 (no regressions) — dc3e7fe
 
 #### Manual
 
-- [x] 4.2 §6.2 and §6.3 in test-plan.md accurately describe the test patterns
+- [x] 4.2 §6.2 and §6.3 in test-plan.md accurately describe the test patterns — dc3e7fe

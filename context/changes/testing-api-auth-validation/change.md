@@ -1,7 +1,7 @@
 ---
 change_id: testing-api-auth-validation
 title: API authorization and input validation integration tests
-status: implementing
+status: implemented
 created: 2026-06-14
 updated: 2026-06-15
 archived_at: null

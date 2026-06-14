@@ -1,19 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import "./setup";
-import { mockResult, mockResults } from "./setup";
-import { createMockContext, makeVehicle } from "@/test/helpers";
+import { mockResult, mockResults, insert } from "./setup";
+import { createMockContext, makeVehicle, formRequest } from "@/test/helpers";
 import { POST } from "@/pages/api/repairs";
+import { createClient } from "@/lib/supabase";
 import { classifyRepair } from "@/lib/classifyRepair";
 
 const mockedClassify = vi.mocked(classifyRepair);
-
-function formRequest(fields: Record<string, string>) {
-  const form = new FormData();
-  for (const [k, v] of Object.entries(fields)) {
-    form.set(k, v);
-  }
-  return new Request("http://test/api/repairs", { method: "POST", body: form });
-}
 
 const VALID_FIELDS = {
   car_id: "v1",
@@ -29,8 +22,17 @@ beforeEach(() => {
 });
 
 describe("POST /api/repairs", () => {
+  it("redirects with error when createClient returns null", async () => {
+    vi.mocked(createClient).mockReturnValueOnce(null);
+    const ctx = createMockContext({ request: formRequest("http://test/api/repairs", VALID_FIELDS) });
+    const res = await POST(ctx);
+    expect(res.status).toBe(302);
+    const location = res.headers.get("Location") ?? "";
+    expect(location).toContain("Supabase");
+  });
+
   it("redirects to signin when unauthenticated", async () => {
-    const ctx = createMockContext({ user: null, request: formRequest(VALID_FIELDS) });
+    const ctx = createMockContext({ user: null, request: formRequest("http://test/api/repairs", VALID_FIELDS) });
     const res = await POST(ctx);
     expect(res.status).toBe(302);
     expect(res.headers.get("Location")).toBe("/auth/signin");
@@ -39,7 +41,7 @@ describe("POST /api/repairs", () => {
   it("redirects with error when car owned by different user", async () => {
     mockResult({ data: makeVehicle({ user_id: "user-2" }), error: null });
 
-    const ctx = createMockContext({ request: formRequest(VALID_FIELDS) });
+    const ctx = createMockContext({ request: formRequest("http://test/api/repairs", VALID_FIELDS) });
     const res = await POST(ctx);
     expect(res.status).toBe(302);
     expect(res.headers.get("Location")).toContain("Vehicle%20not%20found");
@@ -47,7 +49,7 @@ describe("POST /api/repairs", () => {
 
   it("redirects with error for missing description", async () => {
     const ctx = createMockContext({
-      request: formRequest({ ...VALID_FIELDS, description: "" }),
+      request: formRequest("http://test/api/repairs", { ...VALID_FIELDS, description: "" }),
     });
 
     mockResult({ data: makeVehicle({ user_id: "user-1" }), error: null });
@@ -62,7 +64,7 @@ describe("POST /api/repairs", () => {
     mockResult({ data: makeVehicle({ user_id: "user-1" }), error: null });
 
     const ctx = createMockContext({
-      request: formRequest({ ...VALID_FIELDS, cost: "-100" }),
+      request: formRequest("http://test/api/repairs", { ...VALID_FIELDS, cost: "-100" }),
     });
     const res = await POST(ctx);
     expect(res.status).toBe(302);
@@ -74,7 +76,7 @@ describe("POST /api/repairs", () => {
     mockResult({ data: makeVehicle({ user_id: "user-1", baseline_mileage: 20000 }), error: null });
 
     const ctx = createMockContext({
-      request: formRequest({ ...VALID_FIELDS, mileage: "11000" }),
+      request: formRequest("http://test/api/repairs", { ...VALID_FIELDS, mileage: "11000" }),
     });
     const res = await POST(ctx);
     expect(res.status).toBe(302);
@@ -88,7 +90,7 @@ describe("POST /api/repairs", () => {
       { data: null, error: null },
     ]);
 
-    const ctx = createMockContext({ request: formRequest(VALID_FIELDS) });
+    const ctx = createMockContext({ request: formRequest("http://test/api/repairs", VALID_FIELDS) });
     const res = await POST(ctx);
     expect(res.status).toBe(302);
     expect(res.headers.get("Location")).toContain("/dashboard/vehicles/v1?success=1");
@@ -101,9 +103,25 @@ describe("POST /api/repairs", () => {
     ]);
     mockedClassify.mockResolvedValueOnce(null);
 
-    const ctx = createMockContext({ request: formRequest(VALID_FIELDS) });
+    const ctx = createMockContext({ request: formRequest("http://test/api/repairs", VALID_FIELDS) });
     await POST(ctx);
     expect(mockedClassify).toHaveBeenCalledWith("Oil change");
+    expect(insert).toHaveBeenCalledWith(
+      expect.objectContaining({ category: "pending", category_source: "pending", original_category: "pending" }),
+    );
+  });
+
+  it("redirects with error when insert fails", async () => {
+    mockResults([
+      { data: makeVehicle({ user_id: "user-1" }), error: null },
+      { data: null, error: { message: "constraint violation" } },
+    ]);
+
+    const ctx = createMockContext({ request: formRequest("http://test/api/repairs", VALID_FIELDS) });
+    const res = await POST(ctx);
+    expect(res.status).toBe(302);
+    const location = res.headers.get("Location") ?? "";
+    expect(location).toContain("constraint%20violation");
   });
 
   it("sets category from classifyRepair when it returns a value", async () => {
@@ -113,8 +131,11 @@ describe("POST /api/repairs", () => {
     ]);
     mockedClassify.mockResolvedValueOnce("hamulce");
 
-    const ctx = createMockContext({ request: formRequest(VALID_FIELDS) });
+    const ctx = createMockContext({ request: formRequest("http://test/api/repairs", VALID_FIELDS) });
     await POST(ctx);
     expect(mockedClassify).toHaveBeenCalledWith("Oil change");
+    expect(insert).toHaveBeenCalledWith(
+      expect.objectContaining({ category: "hamulce", category_source: "ai", original_category: "hamulce" }),
+    );
   });
 });

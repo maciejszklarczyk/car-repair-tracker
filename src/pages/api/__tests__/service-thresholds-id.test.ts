@@ -1,16 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import "./setup";
 import { mockResult, mockResults } from "./setup";
-import { createMockContext, makeServiceThreshold } from "@/test/helpers";
+import { createMockContext, makeServiceThreshold, jsonRequest } from "@/test/helpers";
 import { PUT, DELETE } from "@/pages/api/service-thresholds/[id]";
-
-function jsonRequest(url: string, method: string, body: unknown) {
-  return new Request(url, {
-    method,
-    body: JSON.stringify(body),
-    headers: { "Content-Type": "application/json" },
-  });
-}
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -66,6 +58,20 @@ describe("PUT /api/service-thresholds/[id]", () => {
     });
     const res = await PUT(ctx);
     expect(res.status).toBe(400);
+  });
+
+  it("returns 404 when update fails", async () => {
+    mockResults([
+      { data: makeServiceThreshold({ user_id: "user-1" }), error: null },
+      { data: null, error: { message: "not found" } },
+    ]);
+
+    const ctx = createMockContext({
+      params: { id: "st1" },
+      request: jsonRequest("http://test/api/service-thresholds/st1", "PUT", { name: "New name" }),
+    });
+    const res = await PUT(ctx);
+    expect(res.status).toBe(404);
   });
 
   it("returns updated threshold on valid partial update", async () => {

@@ -109,6 +109,26 @@ export function createMockContext(options: MockContextOptions = {}) {
 }
 
 // ---------------------------------------------------------------------------
+// Request factories
+// ---------------------------------------------------------------------------
+
+export function jsonRequest(url: string, method: string, body: unknown) {
+  return new Request(url, {
+    method,
+    body: JSON.stringify(body),
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+export function formRequest(url: string, fields: Record<string, string>) {
+  const form = new FormData();
+  for (const [k, v] of Object.entries(fields)) {
+    form.set(k, v);
+  }
+  return new Request(url, { method: "POST", body: form });
+}
+
+// ---------------------------------------------------------------------------
 // Entity factories
 // ---------------------------------------------------------------------------
 

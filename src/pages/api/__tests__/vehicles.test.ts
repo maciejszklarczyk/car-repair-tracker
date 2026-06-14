@@ -1,16 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import "./setup";
 import { mockResult } from "./setup";
-import { createMockContext } from "@/test/helpers";
+import { createMockContext, formRequest } from "@/test/helpers";
 import { POST } from "@/pages/api/vehicles";
-
-function formRequest(fields: Record<string, string>) {
-  const form = new FormData();
-  for (const [k, v] of Object.entries(fields)) {
-    form.set(k, v);
-  }
-  return new Request("http://test/api/vehicles", { method: "POST", body: form });
-}
 
 const VALID_FIELDS = {
   make: "Toyota",
@@ -26,7 +18,7 @@ beforeEach(() => {
 
 describe("POST /api/vehicles", () => {
   it("redirects to signin when unauthenticated", async () => {
-    const ctx = createMockContext({ user: null, request: formRequest(VALID_FIELDS) });
+    const ctx = createMockContext({ user: null, request: formRequest("http://test/api/vehicles", VALID_FIELDS) });
     const res = await POST(ctx);
     expect(res.status).toBe(302);
     expect(res.headers.get("Location")).toBe("/auth/signin");
@@ -34,7 +26,7 @@ describe("POST /api/vehicles", () => {
 
   it("redirects with error for missing make", async () => {
     const ctx = createMockContext({
-      request: formRequest({ ...VALID_FIELDS, make: "" }),
+      request: formRequest("http://test/api/vehicles", { ...VALID_FIELDS, make: "" }),
     });
     const res = await POST(ctx);
     expect(res.status).toBe(302);
@@ -44,7 +36,7 @@ describe("POST /api/vehicles", () => {
 
   it("redirects with error for year in future", async () => {
     const ctx = createMockContext({
-      request: formRequest({ ...VALID_FIELDS, year: "2099" }),
+      request: formRequest("http://test/api/vehicles", { ...VALID_FIELDS, year: "2099" }),
     });
     const res = await POST(ctx);
     expect(res.status).toBe(302);
@@ -54,7 +46,7 @@ describe("POST /api/vehicles", () => {
 
   it("redirects with error for negative baseline mileage", async () => {
     const ctx = createMockContext({
-      request: formRequest({ ...VALID_FIELDS, baseline_mileage: "-1" }),
+      request: formRequest("http://test/api/vehicles", { ...VALID_FIELDS, baseline_mileage: "-1" }),
     });
     const res = await POST(ctx);
     expect(res.status).toBe(302);
@@ -62,10 +54,20 @@ describe("POST /api/vehicles", () => {
     expect(location).toContain("error=");
   });
 
+  it("redirects with error when insert fails", async () => {
+    mockResult({ data: null, error: { message: "DB error" } });
+
+    const ctx = createMockContext({ request: formRequest("http://test/api/vehicles", VALID_FIELDS) });
+    const res = await POST(ctx);
+    expect(res.status).toBe(302);
+    const location = res.headers.get("Location") ?? "";
+    expect(location).toContain("DB%20error");
+  });
+
   it("redirects to vehicles list on valid creation", async () => {
     mockResult({ data: null, error: null });
 
-    const ctx = createMockContext({ request: formRequest(VALID_FIELDS) });
+    const ctx = createMockContext({ request: formRequest("http://test/api/vehicles", VALID_FIELDS) });
     const res = await POST(ctx);
     expect(res.status).toBe(302);
     expect(res.headers.get("Location")).toBe("/dashboard/vehicles");

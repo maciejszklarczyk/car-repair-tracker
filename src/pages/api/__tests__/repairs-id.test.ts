@@ -1,19 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import "./setup";
-import { mockResult, mockResults } from "./setup";
-import { createMockContext, makeRepair } from "@/test/helpers";
+import { mockResult, mockResults, update } from "./setup";
+import { createMockContext, makeRepair, jsonRequest } from "@/test/helpers";
 import { PUT, DELETE, PATCH } from "@/pages/api/repairs/[id]";
+import { createClient } from "@/lib/supabase";
 import { classifyRepair } from "@/lib/classifyRepair";
 
 const mockedClassify = vi.mocked(classifyRepair);
-
-function jsonRequest(url: string, method: string, body: unknown) {
-  return new Request(url, {
-    method,
-    body: JSON.stringify(body),
-    headers: { "Content-Type": "application/json" },
-  });
-}
 
 const VALID_UPDATE = {
   repair_date: "2024-06-01",
@@ -31,6 +24,16 @@ beforeEach(() => {
 // PUT (edit repair)
 // ---------------------------------------------------------------------------
 describe("PUT /api/repairs/[id]", () => {
+  it("returns 500 when createClient returns null", async () => {
+    vi.mocked(createClient).mockReturnValueOnce(null);
+    const ctx = createMockContext({
+      params: { id: "r1" },
+      request: jsonRequest("http://test/api/repairs/r1", "PUT", VALID_UPDATE),
+    });
+    const res = await PUT(ctx);
+    expect(res.status).toBe(500);
+  });
+
   it("returns 401 when unauthenticated", async () => {
     const ctx = createMockContext({
       user: null,
@@ -146,6 +149,24 @@ describe("PUT /api/repairs/[id]", () => {
     expect(body.success).toBe(true);
   });
 
+  it("returns 500 when update fails", async () => {
+    mockResults([
+      {
+        data: makeRepair({ user_id: "user-1", description: "Oil change", category: "inne", category_source: "ai" }),
+        error: null,
+      },
+      { data: { baseline_mileage: 10000 }, error: null },
+      { data: null, error: { message: "constraint violation" } },
+    ]);
+
+    const ctx = createMockContext({
+      params: { id: "r1" },
+      request: jsonRequest("http://test/api/repairs/r1", "PUT", VALID_UPDATE),
+    });
+    const res = await PUT(ctx);
+    expect(res.status).toBe(500);
+  });
+
   it("calls classifyRepair when description changed and category_source is not manual", async () => {
     mockResults([
       {
@@ -168,6 +189,9 @@ describe("PUT /api/repairs/[id]", () => {
     });
     await PUT(ctx);
     expect(mockedClassify).toHaveBeenCalledWith(VALID_UPDATE.description);
+    expect(update).toHaveBeenCalledWith(
+      expect.objectContaining({ category: "hamulce", category_source: "ai", original_category: "hamulce" }),
+    );
   });
 
   it("calls classifyRepair when existing category is null", async () => {
@@ -187,6 +211,9 @@ describe("PUT /api/repairs/[id]", () => {
     });
     await PUT(ctx);
     expect(mockedClassify).toHaveBeenCalled();
+    expect(update).toHaveBeenCalledWith(
+      expect.objectContaining({ category: "silnik", category_source: "ai", original_category: "silnik" }),
+    );
   });
 
   it("does not call classifyRepair when description unchanged and category exists", async () => {

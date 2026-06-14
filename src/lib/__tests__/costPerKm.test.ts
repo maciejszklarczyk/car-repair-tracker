@@ -6,40 +6,7 @@ import {
   computeMileageTrendData,
   computeTotalCostTrendData,
 } from "@/lib/costPerKm";
-import type { Repair, Vehicle } from "@/types";
-
-function makeVehicle(overrides: Partial<Vehicle> = {}): Vehicle {
-  return {
-    id: "v1",
-    user_id: "u1",
-    make: "Toyota",
-    model: "Corolla",
-    year: 2020,
-    baseline_mileage: 10000,
-    archived_at: null,
-    created_at: "2024-01-01T00:00:00Z",
-    updated_at: "2024-01-01T00:00:00Z",
-    ...overrides,
-  };
-}
-
-function makeRepair(overrides: Partial<Repair> = {}): Repair {
-  return {
-    id: "r1",
-    car_id: "v1",
-    user_id: "u1",
-    repair_date: "2024-06-01",
-    description: "Oil change",
-    cost: 500,
-    mileage: 10500,
-    category: null,
-    category_source: null,
-    original_category: null,
-    created_at: "2024-06-01T00:00:00Z",
-    updated_at: "2024-06-01T00:00:00Z",
-    ...overrides,
-  };
-}
+import { makeVehicle, makeRepair } from "@/test/helpers";
 
 describe("computeCurrentMileage", () => {
   it("returns baseline when no repairs", () => {

@@ -22,4 +22,7 @@ vi.mock("astro:env/server", () => ({
   GEMINI_API_KEY: undefined,
 }));
 
-export { client, from, mockResult, mockResults };
+const insert = (client as Record<string, unknown>).insert as ReturnType<typeof vi.fn>;
+const update = (client as Record<string, unknown>).update as ReturnType<typeof vi.fn>;
+
+export { client, from, insert, update, mockResult, mockResults };

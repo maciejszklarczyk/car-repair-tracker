@@ -33,3 +33,10 @@ supabase/.temp/
 
 # claude files
 .claude/
+
+# playwright
+auth.json
+auth-user-a.json
+auth-user-b.json
+test-results/
+playwright-report/

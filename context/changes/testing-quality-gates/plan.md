@@ -79,6 +79,8 @@ Three phases: fix existing type errors first (Phase 0), then CI gates (Phase 1),
 
 **Contract**: Either pass full `Repair[]` data or adjust `computeCurrentMileage` to accept a narrower type.
 
+**Addendum (impl-review)**: Fix applied in `src/lib/costPerKm.ts` (function definition) rather than `index.astro` (call site). Signature narrowed to `Pick<Repair, "mileage">[]` — the cleaner of the two contract options.
+
 ### Success Criteria:
 
 #### Automated Verification:

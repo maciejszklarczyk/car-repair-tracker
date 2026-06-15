@@ -7,9 +7,10 @@ if [ -z "$FILE" ]; then
   exit 0
 fi
 
-# Skip non-TS files
+# Only lint TS/TSX files
 case "$FILE" in
-  *.json|*.css|*.md|*.astro|*.svg|*.yml|*.yaml) exit 0 ;;
+  *.ts|*.tsx) ;;
+  *) exit 0 ;;
 esac
 
 # Make path relative to repo root

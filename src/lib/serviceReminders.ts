@@ -44,7 +44,7 @@ export function computeReminderStatus(
       return "overdue";
     }
     // Fixed 30-day margin (intentional — km uses relative 10% instead).
-    if (days_remaining <= 30 && status !== "overdue") {
+    if (days_remaining <= 30) {
       status = "approaching";
     }
   }

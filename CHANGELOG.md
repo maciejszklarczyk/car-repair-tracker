@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-06-15
+
+- [69d0640] chore(testing-quality-gates): impl-review fixes — plan addendum, hook inclusion pattern
+
 ## 2026-06-14
 
 - [28276eb] fix(testing-api-auth-validation): impl-review fixes — payload assertions, DB-error tests, shared helpers, factory dedup

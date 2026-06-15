@@ -79,8 +79,8 @@ export default function CostTrendChart({ costPerKmData, totalCostData, mileageDa
             <YAxis tickFormatter={(v: number) => `${v} PLN/km`} stroke={axisStroke} tick={axisTick} width={90} />
             <Tooltip
               contentStyle={tooltipStyle}
-              formatter={(value: number) => [`${value.toFixed(2)} PLN/km`, "Cost/km"]}
-              labelFormatter={formatDate}
+              formatter={(value) => [`${Number(value).toFixed(2)} PLN/km`, "Cost/km"]}
+              labelFormatter={(label) => formatDate(String(label))}
             />
             <Area type="monotone" dataKey="costPerKm" stroke="#818cf8" strokeWidth={2} fill="url(#costGradient)" />
           </AreaChart>
@@ -97,8 +97,8 @@ export default function CostTrendChart({ costPerKmData, totalCostData, mileageDa
             <YAxis tickFormatter={(v: number) => `${v} PLN`} stroke={axisStroke} tick={axisTick} width={90} />
             <Tooltip
               contentStyle={tooltipStyle}
-              formatter={(value: number) => [`${value.toFixed(2)} PLN`, "Total Cost"]}
-              labelFormatter={formatDate}
+              formatter={(value) => [`${Number(value).toFixed(2)} PLN`, "Total Cost"]}
+              labelFormatter={(label) => formatDate(String(label))}
             />
             <Area type="monotone" dataKey="totalCost" stroke="#a78bfa" strokeWidth={2} fill="url(#totalCostGradient)" />
           </AreaChart>
@@ -120,8 +120,8 @@ export default function CostTrendChart({ costPerKmData, totalCostData, mileageDa
             />
             <Tooltip
               contentStyle={tooltipStyle}
-              formatter={(value: number) => [`${value.toLocaleString()} km`, "Mileage"]}
-              labelFormatter={formatDate}
+              formatter={(value) => [`${Number(value).toLocaleString()} km`, "Mileage"]}
+              labelFormatter={(label) => formatDate(String(label))}
             />
             <Area type="monotone" dataKey="mileage" stroke="#34d399" strokeWidth={2} fill="url(#mileageGradient)" />
           </AreaChart>

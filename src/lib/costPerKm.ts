@@ -1,6 +1,6 @@
 import type { Repair, Vehicle } from "@/types";
 
-export function computeCurrentMileage(repairs: Repair[], baselineMileage: number): number {
+export function computeCurrentMileage(repairs: Pick<Repair, "mileage">[], baselineMileage: number): number {
   if (repairs.length === 0) return baselineMileage;
   return Math.max(baselineMileage, ...repairs.map((r) => r.mileage));
 }

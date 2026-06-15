@@ -13,6 +13,23 @@ export default defineConfig({
   integrations: [react(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      // Pre-bundle island dependencies at dev startup so the first visit to a
+      // route doesn't trigger Vite's mid-run "Outdated Optimize Dep" 504, which
+      // aborts React island hydration (e.g. the edit-repair form's submit would
+      // fall back to a native page reload). Dev-only; does not affect prod build.
+      warmup: {
+        clientFiles: [
+          "./src/components/auth/SignInForm.tsx",
+          "./src/components/auth/SignUpForm.tsx",
+          "./src/components/vehicles/AddVehicleForm.tsx",
+          "./src/components/vehicles/CostTrendChart.tsx",
+          "./src/components/repairs/AddRepairForm.tsx",
+          "./src/components/repairs/EditRepairForm.tsx",
+          "./src/components/repairs/RepairList.tsx",
+        ],
+      },
+    },
   },
   adapter: node({ mode: "standalone" }),
   security: {

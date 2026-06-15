@@ -299,23 +299,23 @@ The job uses `services` or direct Docker commands for Supabase. Env vars for the
 
 #### Automated
 
-- [x] 2.1 npm run e2e -- e2e/data-isolation.spec.ts passes
-- [x] 2.2 Test fails if RLS is disabled (deliberate-break check)
+- [x] 2.1 npm run e2e -- e2e/data-isolation.spec.ts passes — 0f7611b
+- [x] 2.2 Test fails if RLS is disabled (deliberate-break check) — 0f7611b
 
 #### Manual
 
-- [ ] 2.3 Review test output confirms cross-user assertions fire against real Supabase
+- [x] 2.3 Review test output confirms cross-user assertions fire against real Supabase — 0f7611b
 
 ### Phase 3: Repair Lifecycle E2E Test (Risk #5)
 
 #### Automated
 
-- [ ] 3.1 npm run e2e -- e2e/repair-lifecycle.spec.ts passes
-- [ ] 3.2 All three cost/km assertions verify distinct values
+- [x] 3.1 npm run e2e -- e2e/repair-lifecycle.spec.ts passes
+- [x] 3.2 All three cost/km assertions verify distinct values
 
 #### Manual
 
-- [ ] 3.3 Review test confirms cost/km values match hand-calculated expectations
+- [x] 3.3 Review test confirms cost/km values match hand-calculated expectations
 
 ### Phase 4: CI Integration
 

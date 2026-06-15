@@ -285,22 +285,22 @@ The job uses `services` or direct Docker commands for Supabase. Env vars for the
 
 #### Automated
 
-- [x] 1.1 supabase db reset applies cleanly with both test users
-- [x] 1.2 npm run e2e runs seed.spec.ts with User A auth — passes
-- [x] 1.3 Both auth-user-a.json and auth-user-b.json created by auth setup
-- [x] 1.4 npm run lint passes
-- [x] 1.5 npx astro check passes
+- [x] 1.1 supabase db reset applies cleanly with both test users — 05c9ffb
+- [x] 1.2 npm run e2e runs seed.spec.ts with User A auth — passes — 05c9ffb
+- [x] 1.3 Both auth-user-a.json and auth-user-b.json created by auth setup — 05c9ffb
+- [x] 1.4 npm run lint passes — 05c9ffb
+- [x] 1.5 npx astro check passes — 05c9ffb
 
 #### Manual
 
-- [x] 1.6 Both test users can sign in via app UI
+- [x] 1.6 Both test users can sign in via app UI — 05c9ffb
 
 ### Phase 2: Data Isolation E2E Test (Risk #1)
 
 #### Automated
 
-- [ ] 2.1 npm run e2e -- e2e/data-isolation.spec.ts passes
-- [ ] 2.2 Test fails if RLS is disabled (deliberate-break check)
+- [x] 2.1 npm run e2e -- e2e/data-isolation.spec.ts passes
+- [x] 2.2 Test fails if RLS is disabled (deliberate-break check)
 
 #### Manual
 

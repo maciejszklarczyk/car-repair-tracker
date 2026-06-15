@@ -211,26 +211,26 @@ Configure a Claude Code PostToolUse hook that runs ESLint and related Vitest tes
 
 #### Automated
 
-- [x] 1.1 CI workflow YAML is valid
-- [x] 1.2 Tests pass locally (`npm run test`)
-- [x] 1.3 Typecheck passes locally (`npx astro check`)
+- [x] 1.1 CI workflow YAML is valid — 7288e48
+- [x] 1.2 Tests pass locally (`npm run test`) — 7288e48
+- [x] 1.3 Typecheck passes locally (`npx astro check`) — 7288e48
 
 #### Manual
 
-- [x] 1.4 PR with broken test → CI fails on test step
-- [x] 1.5 PR with type error → CI fails on astro check step
-- [x] 1.6 Clean PR → CI passes all steps
+- [x] 1.4 PR with broken test → CI fails on test step — 7288e48
+- [x] 1.5 PR with type error → CI fails on astro check step — 7288e48
+- [x] 1.6 Clean PR → CI passes all steps — 7288e48
 
 ### Phase 2: PostToolUse Agent Hook
 
 #### Automated
 
-- [ ] 2.1 Hook script is executable
-- [ ] 2.2 Hook script exits 0 on clean file
-- [ ] 2.3 Settings JSON is valid
+- [x] 2.1 Hook script is executable
+- [x] 2.2 Hook script exits 0 on clean file
+- [x] 2.3 Settings JSON is valid
 
 #### Manual
 
-- [ ] 2.4 Edit risk-area file → hook shows lint + test results
-- [ ] 2.5 Edit non-risk file → lint only
-- [ ] 2.6 Deliberate test break → hook surfaces failure
+- [x] 2.4 Edit risk-area file → hook shows lint + test results
+- [x] 2.5 Edit non-risk file → lint only
+- [x] 2.6 Deliberate test break → hook surfaces failure

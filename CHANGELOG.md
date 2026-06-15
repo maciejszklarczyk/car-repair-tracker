@@ -3,6 +3,7 @@
 ## 2026-06-15
 
 - [69d0640] chore(testing-quality-gates): impl-review fixes — plan addendum, hook inclusion pattern
+- [925427c] chore: add astro check to pre-commit, update roadmap and test-plan status
 
 ## 2026-06-14
 

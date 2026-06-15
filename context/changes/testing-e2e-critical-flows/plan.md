@@ -310,12 +310,12 @@ The job uses `services` or direct Docker commands for Supabase. Env vars for the
 
 #### Automated
 
-- [x] 3.1 npm run e2e -- e2e/repair-lifecycle.spec.ts passes
-- [x] 3.2 All three cost/km assertions verify distinct values
+- [x] 3.1 npm run e2e -- e2e/repair-lifecycle.spec.ts passes — c85407c
+- [x] 3.2 All three cost/km assertions verify distinct values — c85407c
 
 #### Manual
 
-- [x] 3.3 Review test confirms cost/km values match hand-calculated expectations
+- [x] 3.3 Review test confirms cost/km values match hand-calculated expectations — c85407c
 
 ### Phase 4: CI Integration
 

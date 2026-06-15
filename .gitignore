@@ -40,3 +40,4 @@ auth-user-a.json
 auth-user-b.json
 test-results/
 playwright-report/
+.playwright-cli/

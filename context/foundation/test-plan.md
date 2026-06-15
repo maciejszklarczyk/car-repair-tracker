@@ -68,6 +68,7 @@ orchestrator updates Status as artifacts appear on disk.
 | 1   | Unit tests on domain logic     | Bootstrap Vitest + defend core formulas (cost/km, mileage, reminders) at cheapest layer | #2, #4, #6    | unit        | complete    | testing-unit-domain-logic |
 | 2   | API authorization + validation | Defend data isolation and input validation with integration tests against API endpoints | #1, #3, #5    | integration | complete | testing-api-auth-validation |
 | 3   | Quality gates wiring           | Lock the test floor in CI — fail PR on test regression                                  | cross-cutting | CI gates    | complete    | testing-quality-gates     |
+| 4   | E2E critical flows             | Prove data isolation and repair lifecycle work end-to-end through real browser + DB      | #1, #5        | e2e         | not started | —                         |
 
 ## 4. Stack
 
@@ -75,7 +76,7 @@ orchestrator updates Status as artifacts appear on disk.
 | ----------- | ------ | ---------------------- | ----------------------------------------------------------------------------------- |
 | unit        | Vitest | none yet — see Phase 1 | Natural fit for Astro + TS project; fast, ESM-native                                |
 | integration | Vitest | none yet — see Phase 2 | Same runner for unit + integration; API endpoint tests                              |
-| e2e         | none   | —                      | Not planned for MVP rollout; cost × signal does not justify it for current risk map |
+| e2e         | Playwright | TBD — see Phase 4 | Browser-level tests for cross-boundary risks that integration tests can't fully prove (real RLS, real UI recalc) |
 
 **Stack grounding tools (current session):**
 
@@ -92,6 +93,7 @@ orchestrator updates Status as artifacts appear on disk.
 | unit tests         | local + CI | required after §3 Phase 1    | domain logic regressions               |
 | integration tests  | local + CI | required after §3 Phase 2    | authorization / validation regressions |
 | coverage threshold | CI on PR   | recommended after §3 Phase 3 | test floor erosion                     |
+| e2e tests          | CI on PR   | required after §3 Phase 4    | cross-boundary regressions (RLS, UI recalc) |
 
 ## 6. Cookbook Patterns
 
@@ -143,7 +145,11 @@ Every new API mutation endpoint gets three test groups:
 
 **Multi-step Supabase calls:** Use `mockResults([...])` to queue results in order — e.g., first call returns the resource for ownership check, second returns the car for baseline mileage, third returns the mutation result.
 
-### 6.4 Per-rollout-phase notes
+### 6.4 Adding an E2E test
+
+TBD — see §3 Phase 4 for Playwright setup, seed test pattern, auth via `storageState`, and risk-tied test conventions.
+
+### 6.5 Per-rollout-phase notes
 
 (Filled in as phases land.)
 
@@ -153,8 +159,8 @@ Every new API mutation endpoint gets three test groups:
 
 ## 8. Freshness Ledger
 
-- Strategy (§1–§5) last reviewed: 2026-06-12
-- Stack versions last verified: 2026-06-12
+- Strategy (§1–§5) last reviewed: 2026-06-15
+- Stack versions last verified: 2026-06-15
 - AI-native tool references last verified: n/a (none used)
 
 Refresh (`/10x-test-plan --refresh`) when:

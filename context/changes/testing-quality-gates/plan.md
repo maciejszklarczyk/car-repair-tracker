@@ -199,27 +199,27 @@ Configure a Claude Code PostToolUse hook that runs ESLint and related Vitest tes
 
 #### Automated
 
-- [x] 0.1 Typecheck passes (`npx astro check` reports 0 errors)
-- [x] 0.2 Tests still pass (`npm run test`)
-- [x] 0.3 Build still passes (`npm run build`)
+- [x] 0.1 Typecheck passes (`npx astro check` reports 0 errors) — 8f7a6b4
+- [x] 0.2 Tests still pass (`npm run test`) — 8f7a6b4
+- [x] 0.3 Build still passes (`npm run build`) — 8f7a6b4
 
 #### Manual
 
-- [x] 0.4 Vehicle detail page still renders cost trend chart correctly
+- [x] 0.4 Vehicle detail page still renders cost trend chart correctly — 8f7a6b4
 
 ### Phase 1: CI Quality Gates
 
 #### Automated
 
-- [ ] 1.1 CI workflow YAML is valid
-- [ ] 1.2 Tests pass locally (`npm run test`)
-- [ ] 1.3 Typecheck passes locally (`npx astro check`)
+- [x] 1.1 CI workflow YAML is valid
+- [x] 1.2 Tests pass locally (`npm run test`)
+- [x] 1.3 Typecheck passes locally (`npx astro check`)
 
 #### Manual
 
-- [ ] 1.4 PR with broken test → CI fails on test step
-- [ ] 1.5 PR with type error → CI fails on astro check step
-- [ ] 1.6 Clean PR → CI passes all steps
+- [x] 1.4 PR with broken test → CI fails on test step
+- [x] 1.5 PR with type error → CI fails on astro check step
+- [x] 1.6 Clean PR → CI passes all steps
 
 ### Phase 2: PostToolUse Agent Hook
 

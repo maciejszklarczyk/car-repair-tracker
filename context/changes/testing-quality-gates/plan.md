@@ -225,12 +225,12 @@ Configure a Claude Code PostToolUse hook that runs ESLint and related Vitest tes
 
 #### Automated
 
-- [x] 2.1 Hook script is executable
-- [x] 2.2 Hook script exits 0 on clean file
-- [x] 2.3 Settings JSON is valid
+- [x] 2.1 Hook script is executable — bc4b384
+- [x] 2.2 Hook script exits 0 on clean file — bc4b384
+- [x] 2.3 Settings JSON is valid — bc4b384
 
 #### Manual
 
-- [x] 2.4 Edit risk-area file → hook shows lint + test results
-- [x] 2.5 Edit non-risk file → lint only
-- [x] 2.6 Deliberate test break → hook surfaces failure
+- [x] 2.4 Edit risk-area file → hook shows lint + test results — bc4b384
+- [x] 2.5 Edit non-risk file → lint only — bc4b384
+- [x] 2.6 Deliberate test break → hook surfaces failure — bc4b384

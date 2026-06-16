@@ -19,6 +19,7 @@ export default defineConfig({
       sourceMapsUploadOptions: {
         project: "car-repair-tracker",
         org: "e42014e5b963",
+        // eslint-disable-next-line no-undef
         authToken: process.env.SENTRY_AUTH_TOKEN,
       },
     }),

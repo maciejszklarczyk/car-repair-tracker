@@ -10,10 +10,7 @@ const vehicleModel = `IsoModel${uid}`;
 let userACarId: string;
 let userARepairId: string;
 
-test("User B cannot see User A's vehicles or access User A's repairs", async ({
-  page,
-  browser,
-}) => {
+test("User B cannot see User A's vehicles or access User A's repairs", async ({ page, browser }) => {
   // --- User A: create a vehicle ---
   await page.goto("/dashboard/vehicles/new");
   await page.waitForLoadState("networkidle");
@@ -32,7 +29,8 @@ test("User B cannot see User A's vehicles or access User A's repairs", async ({
   const vehicleCard = vehicleHeading.locator("..");
   const viewDetailsLink = vehicleCard.getByRole("link", { name: "View details" });
   const vehicleHref = await viewDetailsLink.getAttribute("href");
-  userACarId = vehicleHref!.split("/dashboard/vehicles/")[1];
+  if (!vehicleHref) throw new Error("Vehicle href not found");
+  userACarId = vehicleHref.split("/dashboard/vehicles/")[1];
 
   // --- User A: create a repair ---
   await page.goto(`/dashboard/repairs/new?vehicle_id=${userACarId}`);
@@ -51,7 +49,10 @@ test("User B cannot see User A's vehicles or access User A's repairs", async ({
   const editLink = page.getByRole("link", { name: "Edit" }).first();
   await expect(editLink).toBeVisible();
   const editHref = await editLink.getAttribute("href");
-  userARepairId = editHref!.match(/\/dashboard\/repairs\/([^/]+)\/edit/)![1];
+  if (!editHref) throw new Error("Edit href not found");
+  const repairMatch = /\/dashboard\/repairs\/([^/]+)\/edit/.exec(editHref);
+  if (!repairMatch) throw new Error("Repair ID not found in edit href");
+  userARepairId = repairMatch[1];
 
   // --- User B: verify cannot see User A's vehicles ---
   const userBContext: BrowserContext = await browser.newContext({
@@ -63,25 +64,17 @@ test("User B cannot see User A's vehicles or access User A's repairs", async ({
   await userBPage.waitForLoadState("networkidle");
 
   await expect(userBPage.getByText(vehicleMake)).not.toBeVisible();
-  await expect(
-    userBPage.getByText("No vehicles yet")
-  ).toBeVisible();
+  await expect(userBPage.getByText("No vehicles yet")).toBeVisible();
 
   // --- User B: verify cannot delete User A's repair via API ---
-  const deleteResponse = await userBPage.request.delete(
-    `/api/repairs/${userARepairId}`
-  );
+  const deleteResponse = await userBPage.request.delete(`/api/repairs/${userARepairId}`);
   expect(deleteResponse.status()).toBe(403);
 
   await userBContext.close();
 
   // --- Teardown: User A deletes repair via API ---
   // page.request carries User A's live cookies from the browsing session
-  const cleanupResponse = await page.request.delete(
-    `/api/repairs/${userARepairId}`
-  );
+  const cleanupResponse = await page.request.delete(`/api/repairs/${userARepairId}`);
   // Cleanup is best-effort — orphan data is harmless (unique names prevent collision)
-  if (!cleanupResponse.ok()) {
-    console.warn(`Cleanup DELETE /api/repairs/${userARepairId} returned ${cleanupResponse.status()}`);
-  }
+  expect(cleanupResponse.ok()).toBe(true);
 });

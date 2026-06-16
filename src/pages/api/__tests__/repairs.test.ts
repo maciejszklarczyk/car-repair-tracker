@@ -121,6 +121,19 @@ describe("POST /api/repairs", () => {
     await expect(POST(ctx)).rejects.toThrow("constraint violation");
   });
 
+  it("inserts mileage field matching the database column name", async () => {
+    mockResults([
+      { data: makeVehicle({ user_id: "user-1" }), error: null },
+      { data: null, error: null },
+    ]);
+
+    const ctx = createMockContext({ request: formRequest("http://test/api/repairs", VALID_FIELDS) });
+    await POST(ctx);
+    const insertedRow = insert.mock.calls[0][0];
+    expect(insertedRow).toHaveProperty("mileage");
+    expect(insertedRow).not.toHaveProperty("odometer");
+  });
+
   it("sets category from classifyRepair when it returns a value", async () => {
     mockResults([
       { data: makeVehicle({ user_id: "user-1" }), error: null },

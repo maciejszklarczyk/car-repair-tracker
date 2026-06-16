@@ -28,6 +28,51 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
 
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Install Supabase CLI
+        run: npx supabase --version
+      - name: Start Supabase
+        run: npx supabase start
+      - name: Reset database (apply migrations + seed)
+        run: npx supabase db reset
+      - name: Set Supabase env vars
+        run: |
+          echo "SUPABASE_URL=http://127.0.0.1:54321" >> $GITHUB_ENV
+          ANON_KEY=$(npx supabase status -o env | grep ANON_KEY | cut -d= -f2- | tr -d '"')
+          echo "SUPABASE_KEY=$ANON_KEY" >> $GITHUB_ENV
+      - name: Get Playwright version
+        id: pw-version
+        run: echo "version=$(npx playwright --version | awk '{print $2}')" >> $GITHUB_OUTPUT
+      - name: Cache Playwright browsers
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ steps.pw-version.outputs.version }}-chromium
+      - name: Install Playwright browsers
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Install Playwright deps (OS libraries)
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - name: Run E2E tests
+        run: npm run e2e
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
   docker:
     needs: ci
     runs-on: ubuntu-latest

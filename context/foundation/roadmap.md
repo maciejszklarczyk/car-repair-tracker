@@ -37,7 +37,7 @@ Indywidualni właściciele aut nie mają jednego miejsca do śledzenia historii 
 | S-05 | ai-classification    | zobaczyć naprawę sklasyfikowaną przez AI i nadpisać kategorię ręcznie   | S-02          | FR-004, FR-005, FR-011, US-01, US-02 | done   |
 | S-06 | service-reminders    | zdefiniować progi serwisowe i widzieć przypomnienia na dashboardzie     | S-01          | FR-008, FR-009, US-03                | done   |
 | S-07 | cost-trend-chart     | zobaczyć wizualny wykres trendu kosztów/km per auto w czasie            | S-04          | FR-010                               | done   |
-| S-09 | ci-test-job          | mieć pewność że testy jednostkowe przechodzą na każdym PR i pushu       | —             | —                                    | draft  |
+| S-09 | ci-test-job          | mieć pewność że testy jednostkowe przechodzą na każdym PR i pushu       | —             | —                                    | done   |
 | S-10 | demo-data-seeder     | oglądać demo z realistycznymi danymi, resetowanymi cyklicznie           | S-01, S-02    | —                                    | draft  |
 
 ## Streams
@@ -189,7 +189,8 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Minimalny — dodanie jednego kroku `npm run test` do istniejącego workflow `ci.yml`. Vitest + konfiguracja już obecne po S-01–S-07 testing rollout.
-- **Status:** draft
+- **Status:** done
+- **Delivered scope:** CI workflow now runs `npx astro check` (typecheck) + `npm run test` (Vitest) on every push and PR. PostToolUse agent hook runs ESLint + scoped tests on risk-area edits. Delivered as part of testing-quality-gates change (PR #40).
 
 ## Backlog Handoff
 
@@ -203,7 +204,7 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 | S-05       | ai-classification    | Klasyfikacja AI napraw + nadpisanie kategorii                 | —                     | done  |
 | S-06       | service-reminders    | Progi serwisowe + przypomnienia na dashboardzie               | —                     | done  |
 | S-07       | cost-trend-chart     | Wykres trendu kosztów/km w czasie                             | —                     | done  |
-| S-09       | ci-test-job          | Job testowy w CI (npm run test w GitHub Actions)              | yes                   | —     |
+| S-09       | ci-test-job          | Job testowy w CI (npm run test w GitHub Actions)              | —                     | done  |
 | S-10       | demo-data-seeder     | Cykliczny reset danych demo na produkcji                      | yes                   | —     |
 
 ## Open Roadmap Questions
@@ -234,3 +235,4 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 | S-05 | ai-classification    | yes    | PR #28 merged to main |
 | S-06 | service-reminders    | yes    | PR #26 merged to main |
 | S-07 | cost-trend-chart     | yes    | Implemented on main   |
+| S-09 | ci-test-job          | yes    | PR #40 merged to main |

@@ -59,7 +59,7 @@ export const POST: APIRoute = async (context) => {
     repair_date: result.data.repair_date,
     description: result.data.description,
     cost: result.data.cost,
-    mileage: result.data.mileage,
+    odometer: result.data.mileage,
     category,
     category_source: categorySource,
     original_category: category,

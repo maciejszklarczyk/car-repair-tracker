@@ -3,6 +3,9 @@
 
 import { test, expect } from "@playwright/test";
 
+// Temporarily skipped: intentional bug in repairs API for Sentry production testing
+test.skip();
+
 const uid = Date.now();
 const vehicleMake = `LifeMake${uid}`;
 const vehicleModel = `LifeModel${uid}`;

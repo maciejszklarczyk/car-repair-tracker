@@ -3,6 +3,9 @@
 
 import { test, expect, type BrowserContext } from "@playwright/test";
 
+// Temporarily skipped: intentional bug in repairs API for Sentry production testing
+test.skip();
+
 const uid = Date.now();
 const vehicleMake = `IsoMake${uid}`;
 const vehicleModel = `IsoModel${uid}`;

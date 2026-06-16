@@ -3,7 +3,7 @@ change_id: testing-e2e-critical-flows
 title: E2E tests for data isolation and repair lifecycle
 status: implementing
 created: 2026-06-15
-updated: 2026-06-15
+updated: 2026-06-16
 
 researched: 2026-06-15
 archived_at: null

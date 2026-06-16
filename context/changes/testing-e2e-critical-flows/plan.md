@@ -321,9 +321,9 @@ The job uses `services` or direct Docker commands for Supabase. Env vars for the
 
 #### Automated
 
-- [ ] 4.1 CI workflow syntax valid
-- [ ] 4.2 E2E tests pass in CI environment
-- [ ] 4.3 npm run lint passes
+- [x] 4.1 CI workflow syntax valid
+- [x] 4.2 E2E tests pass in CI environment
+- [x] 4.3 npm run lint passes
 
 #### Manual
 

@@ -68,7 +68,7 @@ orchestrator updates Status as artifacts appear on disk.
 | 1   | Unit tests on domain logic     | Bootstrap Vitest + defend core formulas (cost/km, mileage, reminders) at cheapest layer | #2, #4, #6    | unit        | complete    | testing-unit-domain-logic |
 | 2   | API authorization + validation | Defend data isolation and input validation with integration tests against API endpoints | #1, #3, #5    | integration | complete | testing-api-auth-validation |
 | 3   | Quality gates wiring           | Lock the test floor in CI — fail PR on test regression                                  | cross-cutting | CI gates    | complete    | testing-quality-gates     |
-| 4   | E2E critical flows             | Prove data isolation and repair lifecycle work end-to-end through real browser + DB      | #1, #5        | e2e         | not started | —                         |
+| 4   | E2E critical flows             | Prove data isolation and repair lifecycle work end-to-end through real browser + DB      | #1, #5        | e2e         | implementing | testing-e2e-critical-flows |
 
 ## 4. Stack
 
@@ -76,7 +76,7 @@ orchestrator updates Status as artifacts appear on disk.
 | ----------- | ------ | ---------------------- | ----------------------------------------------------------------------------------- |
 | unit        | Vitest | none yet — see Phase 1 | Natural fit for Astro + TS project; fast, ESM-native                                |
 | integration | Vitest | none yet — see Phase 2 | Same runner for unit + integration; API endpoint tests                              |
-| e2e         | Playwright | TBD — see Phase 4 | Browser-level tests for cross-boundary risks that integration tests can't fully prove (real RLS, real UI recalc) |
+| e2e         | Playwright | 1.61               | Browser-level tests for cross-boundary risks that integration tests can't fully prove (real RLS, real UI recalc) |
 
 **Stack grounding tools (current session):**
 
@@ -147,7 +147,25 @@ Every new API mutation endpoint gets three test groups:
 
 ### 6.4 Adding an E2E test
 
-TBD — see §3 Phase 4 for Playwright setup, seed test pattern, auth via `storageState`, and risk-tied test conventions.
+**Location:** `e2e/<risk-or-flow>.spec.ts`
+
+**Naming:** Test file named after the risk or flow it covers — `data-isolation.spec.ts`, `repair-lifecycle.spec.ts`.
+
+**Auth setup:** Two test users seeded in `supabase/seed.sql` (`test@test.com` and `test2@test.com`). Auth sessions are created by `e2e/auth.setup.ts` and saved as `auth-user-a.json` / `auth-user-b.json`. Default Playwright project uses User A via `storageState: "auth-user-a.json"`. For cross-user tests, create a second browser context: `browser.newContext({ storageState: "auth-user-b.json" })`.
+
+**Data isolation pattern:** User A creates data, User B attempts to access it and gets empty/error. Use `page.request.fetch()` for API-level cross-user assertions inside a browser context.
+
+**Cleanup:** Each test creates unique data (timestamp-suffixed names) and deletes it in teardown via UI or API. Orphan data from crashed tests is harmless due to unique names.
+
+**Locators:** Prefer `getByRole` / `getByLabel` / `getByText`. Use `getByTestId` only when accessibility attributes are ambiguous. Never CSS selectors or XPath.
+
+**Waits:** Never `page.waitForTimeout()`. Wait for state: `toBeVisible()`, `waitForURL()`, `waitForResponse()`.
+
+**Reference tests:** `e2e/data-isolation.spec.ts` (cross-user isolation), `e2e/repair-lifecycle.spec.ts` (mutation + recalculation).
+
+**Run:** `npm run e2e` (all specs) or `npm run e2e -- e2e/<file>.spec.ts` (single spec).
+
+**CI:** E2E tests run in a dedicated `e2e` job in `.github/workflows/ci.yml` with a local Supabase instance started via `supabase start` + `supabase db reset`.
 
 ### 6.5 Per-rollout-phase notes
 

@@ -66,7 +66,7 @@ export const POST: APIRoute = async (context) => {
   });
 
   if (error) {
-    throw new Error(error.message);
+    return context.redirect(`/dashboard/repairs/new?vehicle_id=${carId}&error=${encodeURIComponent(error.message)}`);
   }
 
   return context.redirect(`/dashboard/vehicles/${carId}?success=1`);

@@ -132,9 +132,8 @@ describe("POST /api/repairs", () => {
 
     const ctx = createMockContext({ request: formRequest("http://test/api/repairs", VALID_FIELDS) });
     await POST(ctx);
-    const insertedRow = insert.mock.calls[0][0];
-    expect(insertedRow).toHaveProperty("mileage");
-    expect(insertedRow).not.toHaveProperty("odometer");
+    expect(insert).toHaveBeenCalledWith(expect.objectContaining({ mileage: 11000 }));
+    expect(insert).not.toHaveBeenCalledWith(expect.objectContaining({ odometer: expect.anything() as unknown }));
   });
 
   it("sets category from classifyRepair when it returns a value", async () => {

@@ -111,14 +111,29 @@ describe("POST /api/repairs", () => {
     );
   });
 
-  it("throws when insert fails", async () => {
+  it("redirects with error when insert fails", async () => {
     mockResults([
       { data: makeVehicle({ user_id: "user-1" }), error: null },
       { data: null, error: { message: "constraint violation" } },
     ]);
 
     const ctx = createMockContext({ request: formRequest("http://test/api/repairs", VALID_FIELDS) });
-    await expect(POST(ctx)).rejects.toThrow("constraint violation");
+    const res = await POST(ctx);
+    expect(res.status).toBe(302);
+    const location = res.headers.get("Location") ?? "";
+    expect(location).toContain("constraint%20violation");
+  });
+
+  it("inserts mileage field matching the database column name", async () => {
+    mockResults([
+      { data: makeVehicle({ user_id: "user-1" }), error: null },
+      { data: null, error: null },
+    ]);
+
+    const ctx = createMockContext({ request: formRequest("http://test/api/repairs", VALID_FIELDS) });
+    await POST(ctx);
+    expect(insert).toHaveBeenCalledWith(expect.objectContaining({ mileage: 11000 }));
+    expect(insert).not.toHaveBeenCalledWith(expect.objectContaining({ odometer: expect.anything() as unknown }));
   });
 
   it("sets category from classifyRepair when it returns a value", async () => {

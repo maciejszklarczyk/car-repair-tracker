@@ -48,8 +48,21 @@ jobs:
           echo "SUPABASE_URL=http://127.0.0.1:54321" >> $GITHUB_ENV
           ANON_KEY=$(npx supabase status -o env | grep ANON_KEY | cut -d= -f2- | tr -d '"')
           echo "SUPABASE_KEY=$ANON_KEY" >> $GITHUB_ENV
+      - name: Get Playwright version
+        id: pw-version
+        run: echo "version=$(npx playwright --version | awk '{print $2}')" >> $GITHUB_OUTPUT
+      - name: Cache Playwright browsers
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ steps.pw-version.outputs.version }}-chromium
       - name: Install Playwright browsers
+        if: steps.pw-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
+      - name: Install Playwright deps (OS libraries)
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
       - name: Run E2E tests
         run: npm run e2e
       - name: Upload Playwright report

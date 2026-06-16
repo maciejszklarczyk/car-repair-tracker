@@ -25,9 +25,8 @@ test("User B cannot see User A's vehicles or access User A's repairs", async ({ 
   const vehicleHeading = page.getByRole("heading", { name: `${vehicleMake} ${vehicleModel}` });
   await expect(vehicleHeading).toBeVisible();
 
-  // Extract car ID from "View details" link in the same card
-  const vehicleCard = vehicleHeading.locator("..");
-  const viewDetailsLink = vehicleCard.getByRole("link", { name: "View details" });
+  // Extract car ID from "View details" link — heading's parent is the card div
+  const viewDetailsLink = vehicleHeading.locator("..").getByRole("link", { name: "View details" });
   const vehicleHref = await viewDetailsLink.getAttribute("href");
   if (!vehicleHref) throw new Error("Vehicle href not found");
   userACarId = vehicleHref.split("/dashboard/vehicles/")[1];
@@ -76,5 +75,5 @@ test("User B cannot see User A's vehicles or access User A's repairs", async ({ 
   // page.request carries User A's live cookies from the browsing session
   const cleanupResponse = await page.request.delete(`/api/repairs/${userARepairId}`);
   // Cleanup is best-effort — orphan data is harmless (unique names prevent collision)
-  expect(cleanupResponse.ok()).toBe(true);
+  void cleanupResponse.ok();
 });

@@ -40,14 +40,10 @@ test("repair add/edit/delete triggers correct cost/km recalculation", async ({ p
     name: `${vehicleMake} ${vehicleModel}`,
   });
   await expect(vehicleHeading).toBeVisible();
-  const vehicleCard = vehicleHeading.locator("..");
-  const viewDetailsLink = vehicleCard.getByRole("link", {
-    name: "View details",
-  });
+  const viewDetailsLink = vehicleHeading.locator("..").getByRole("link", { name: "View details" });
   const vehicleHref = await viewDetailsLink.getAttribute("href");
-  expect(vehicleHref).toBeTruthy();
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  vehicleId = vehicleHref!.split("/dashboard/vehicles/")[1];
+  if (!vehicleHref) throw new Error("Vehicle href not found");
+  vehicleId = vehicleHref.split("/dashboard/vehicles/")[1];
 
   // --- Step 2: Add a repair with known cost and mileage ---
   await page.goto(`/dashboard/repairs/new?vehicle_id=${vehicleId}`);
@@ -70,12 +66,10 @@ test("repair add/edit/delete triggers correct cost/km recalculation", async ({ p
   const editLink = page.getByRole("link", { name: "Edit" }).first();
   await expect(editLink).toBeVisible();
   const editHref = await editLink.getAttribute("href");
-  expect(editHref).toBeTruthy();
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const repairMatch = /\/dashboard\/repairs\/([^/]+)\/edit/.exec(editHref!);
-  expect(repairMatch).toBeTruthy();
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  repairId = repairMatch![1];
+  if (!editHref) throw new Error("Edit href not found");
+  const repairMatch = /\/dashboard\/repairs\/([^/]+)\/edit/.exec(editHref);
+  if (!repairMatch) throw new Error("Repair ID not found in edit href");
+  repairId = repairMatch[1];
 
   // --- Step 4: Edit the repair cost ---
   await page.goto(`/dashboard/repairs/${repairId}/edit`);

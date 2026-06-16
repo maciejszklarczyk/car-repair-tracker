@@ -12,6 +12,7 @@ interface Props {
 
 function formatDate(date: string): string {
   return new Date(date).toLocaleDateString("en-GB", {
+    day: "numeric",
     month: "short",
     year: "2-digit",
   });

@@ -6,11 +6,23 @@ import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import node from "@astrojs/node";
 
+import sentry from "@sentry/astro";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://car-repair-tracker.msolve.it",
   output: "server",
-  integrations: [react(), sitemap()],
+  integrations: [
+    react(),
+    sitemap(),
+    sentry({
+      sourceMapsUploadOptions: {
+        project: "car-repair-tracker",
+        org: "e42014e5b963",
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+      },
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
     server: {
@@ -40,6 +52,7 @@ export default defineConfig({
       SUPABASE_URL: envField.string({ context: "server", access: "secret", optional: true }),
       SUPABASE_KEY: envField.string({ context: "server", access: "secret", optional: true }),
       GEMINI_API_KEY: envField.string({ context: "server", access: "secret", optional: true }),
+      SENTRY_AUTH_TOKEN: envField.string({ context: "server", access: "secret", optional: true }),
     },
   },
 });

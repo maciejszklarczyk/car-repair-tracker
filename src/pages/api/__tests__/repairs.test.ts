@@ -111,17 +111,14 @@ describe("POST /api/repairs", () => {
     );
   });
 
-  it("redirects with error when insert fails", async () => {
+  it("throws when insert fails", async () => {
     mockResults([
       { data: makeVehicle({ user_id: "user-1" }), error: null },
       { data: null, error: { message: "constraint violation" } },
     ]);
 
     const ctx = createMockContext({ request: formRequest("http://test/api/repairs", VALID_FIELDS) });
-    const res = await POST(ctx);
-    expect(res.status).toBe(302);
-    const location = res.headers.get("Location") ?? "";
-    expect(location).toContain("constraint%20violation");
+    await expect(POST(ctx)).rejects.toThrow("constraint violation");
   });
 
   it("sets category from classifyRepair when it returns a value", async () => {

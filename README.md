@@ -220,7 +220,7 @@ Required repository secrets: `SUPABASE_URL`, `SUPABASE_KEY`. Additional secrets 
 
 MIT
 
-## Coded with help of CLAUDE CODE
+## Coded with the help of CLAUDE CODE
 <p align="center">
   <img src="./public/mann.gif" width="200" alt="Mann" />
 </p>

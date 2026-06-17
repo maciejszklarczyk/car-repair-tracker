@@ -314,24 +314,24 @@ No database migrations required. All tables already exist with the correct schem
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npx astro check`
-- [x] 3.2 Linting passes: `npm run lint`
-- [x] 3.3 Build succeeds: `npm run build`
+- [x] 3.1 Type checking passes: `npx astro check` — 5d7dec3
+- [x] 3.2 Linting passes: `npm run lint` — 5d7dec3
+- [x] 3.3 Build succeeds: `npm run build` — 5d7dec3
 
 #### Manual
 
-- [x] 3.4 Landing page shows three distinct buttons
-- [x] 3.5 Try Demo click → dashboard with seeded data
-- [x] 3.6 Buttons responsive on mobile
+- [x] 3.4 Landing page shows three distinct buttons — 5d7dec3
+- [x] 3.5 Try Demo click → dashboard with seeded data — 5d7dec3
+- [x] 3.6 Buttons responsive on mobile — 5d7dec3
 
 ### Phase 4: GitHub Actions Cleanup Workflow
 
 #### Automated
 
-- [ ] 4.1 Workflow YAML valid
-- [ ] 4.2 Existing CI unaffected
+- [x] 4.1 Workflow YAML valid
+- [x] 4.2 Existing CI unaffected
 
 #### Manual
 
-- [ ] 4.3 Manual workflow trigger deletes stale demo accounts
-- [ ] 4.4 Real user accounts untouched
+- [x] 4.3 Manual workflow trigger deletes stale demo accounts
+- [x] 4.4 Real user accounts untouched

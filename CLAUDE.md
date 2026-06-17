@@ -38,4 +38,10 @@ Lessons learned during development are stored in @context/foundation/lessons.md 
 
 ## CI
 
-GitHub Actions workflow (`.github/workflows/ci.yml`) runs lint + build on every push and PR to `main`. Also builds and pushes a Docker image on pushes to `main`. Requires `SUPABASE_URL` and `SUPABASE_KEY` repository secrets for the build step.
+GitHub Actions workflows:
+
+- **`ci.yml`** — parallel lint (ESLint + `astro check`), test (Vitest), and build jobs on every push and PR to `main`. E2E (Playwright) runs on PRs only.
+- **`deploy.yml`** — builds and pushes Docker image on release publish or manual trigger.
+- **`demo-cleanup.yml`** — nightly cron deletes expired demo accounts.
+
+Required repository secrets: `SUPABASE_URL`, `SUPABASE_KEY`. Demo cleanup also needs `SUPABASE_SERVICE_ROLE_KEY`.

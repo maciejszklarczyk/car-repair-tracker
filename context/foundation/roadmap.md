@@ -38,7 +38,7 @@ Indywidualni właściciele aut nie mają jednego miejsca do śledzenia historii 
 | S-06 | service-reminders    | zdefiniować progi serwisowe i widzieć przypomnienia na dashboardzie     | S-01          | FR-008, FR-009, US-03                | done   |
 | S-07 | cost-trend-chart     | zobaczyć wizualny wykres trendu kosztów/km per auto w czasie            | S-04          | FR-010                               | done   |
 | S-09 | ci-test-job          | mieć pewność że testy jednostkowe przechodzą na każdym PR i pushu       | —             | —                                    | done   |
-| S-10 | demo-data-seeder     | oglądać demo z realistycznymi danymi, resetowanymi cyklicznie           | S-01, S-02    | —                                    | draft  |
+| S-10 | demo-data-seeder     | oglądać demo z realistycznymi danymi, resetowanymi cyklicznie           | S-01, S-02    | —                                    | done   |
 
 ## Streams
 
@@ -177,7 +177,8 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
   - Mechanizm schedulingu (cron job na serwerze, GitHub Actions scheduled workflow, Supabase pg_cron)? — Owner: user. Block: no.
   - Identyfikacja konta demo (stały UUID, osobna flaga, dedykowany email)? — Owner: user. Block: no.
 - **Risk:** Musi operować wyłącznie na danych demo usera — błąd w filtrze `user_id` przy DELETE kasuje dane prawdziwych użytkowników. Wymaga osobnej walidacji RLS i hardcoded demo user ID. Seed data muszą pokrywać edge-case'y widoczne w UI (auto bez napraw, naprawa bez kosztu, aktywne przypomnienie).
-- **Status:** draft
+- **Status:** done
+- **Delivered scope:** One-click demo via `POST /api/demo` creates a temporary user with seeded vehicles, repairs, and service thresholds. Landing page "Try Demo" button. Nightly GitHub Actions cleanup (`demo-cleanup.yml`) deletes demo accounts older than 24h. Uses Supabase service role client for admin operations.
 
 ### S-09: Job testowy w CI
 
@@ -205,7 +206,7 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 | S-06       | service-reminders    | Progi serwisowe + przypomnienia na dashboardzie               | —                     | done  |
 | S-07       | cost-trend-chart     | Wykres trendu kosztów/km w czasie                             | —                     | done  |
 | S-09       | ci-test-job          | Job testowy w CI (npm run test w GitHub Actions)              | —                     | done  |
-| S-10       | demo-data-seeder     | Cykliczny reset danych demo na produkcji                      | yes                   | —     |
+| S-10       | demo-data-seeder     | Cykliczny reset danych demo na produkcji                      | —                     | done  |
 
 ## Open Roadmap Questions
 
@@ -236,3 +237,4 @@ Brak wymaganych fundamentów. Auth, frontend i deploy są obecne w baseline. Sch
 | S-06 | service-reminders    | yes    | PR #26 merged to main |
 | S-07 | cost-trend-chart     | yes    | Implemented on main   |
 | S-09 | ci-test-job          | yes    | PR #40 merged to main |
+| S-10 | demo-data-seeder     | yes    | PR #44 merged to main |

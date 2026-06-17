@@ -12,6 +12,8 @@ Track repairs, know your cost/km, never miss a service deadline. A web app for i
 - **AI classification** — repairs auto-categorized into six categories (silnik, hamulce, elektryka, ogumienie, przegląd, inne) via Google Gemini; manual override available
 - **Service reminders** — define maintenance thresholds (km or time interval) per vehicle and see alerts on the dashboard
 - **Cost trend charts** — visual cost/km, total cost, and mileage trends over time (Recharts)
+- **Demo mode** — one-click demo account with realistic seed data; demo accounts cleaned up nightly
+- **Error tracking** — Sentry integration for server-side error monitoring
 
 ## Tech Stack
 
@@ -23,6 +25,8 @@ Track repairs, know your cost/km, never miss a service deadline. A web app for i
 - [Supabase](https://supabase.com/) — auth + Postgres database with RLS
 - [Google Gemini](https://ai.google.dev/) — AI repair classification (Gemini 2.5 Flash-Lite)
 - [Recharts](https://recharts.org/) — cost trend charts
+- [Sentry](https://sentry.io/) — error tracking
+- [Playwright](https://playwright.dev/) — E2E testing
 
 ## Prerequisites
 
@@ -98,12 +102,14 @@ npm run dev
 │   │   ├── api/
 │   │   │   ├── auth/        # signin, signup, signout
 │   │   │   ├── repairs/     # CRUD endpoints
-│   │   │   └── service-thresholds/  # CRUD endpoints
+│   │   │   ├── service-thresholds/  # CRUD endpoints
+│   │   │   └── demo.ts      # demo account creation + seed
 │   │   ├── auth/            # signin, signup, confirm-email pages
 │   │   └── dashboard/
 │   │       ├── vehicles/    # vehicle list, detail, add
 │   │       └── repairs/     # add repair, edit repair
 │   └── types.ts             # Shared entity types and DTOs
+├── e2e/                     # Playwright E2E tests
 ├── supabase/
 │   └── migrations/          # Postgres migrations (cars, repairs, service_thresholds, categories)
 ├── public/                  # Static assets
@@ -147,6 +153,9 @@ Add these variables to `.env`:
 | `SUPABASE_URL`   | Project URL from Supabase dashboard → Settings → API                                                     |
 | `SUPABASE_KEY`   | `anon` public key from Supabase dashboard → Settings → API                                               |
 | `GEMINI_API_KEY` | Optional — API key from [Google AI Studio](https://aistudio.google.com/apikey) for repair classification |
+| `SUPABASE_SERVICE_ROLE_KEY` | Optional — service role key for demo account creation (from Supabase dashboard → Settings → API) |
+| `SENTRY_DSN` | Optional — Sentry DSN for error tracking |
+| `SENTRY_AUTH_TOKEN` | Optional — Sentry auth token for source map uploads |
 
 ### Email confirmation in local development
 
@@ -199,7 +208,13 @@ docker compose -f docker-compose.prod.yml up -d
 
 ## CI
 
-GitHub Actions (`.github/workflows/ci.yml`) runs lint + build on every push and PR to `main`. The workflow also builds and pushes a Docker image on pushes to `main`. Configure `SUPABASE_URL` and `SUPABASE_KEY` as repository secrets in GitHub.
+GitHub Actions workflows:
+
+- **`ci.yml`** — runs lint (ESLint + `astro check`), unit tests (Vitest), and build as parallel jobs on every push and PR to `main`. E2E tests (Playwright) run on PRs only, against a local Supabase instance.
+- **`deploy.yml`** — builds and pushes a Docker image on release publish or manual trigger.
+- **`demo-cleanup.yml`** — nightly cron (03:00 UTC) deletes expired demo accounts and their data.
+
+Required repository secrets: `SUPABASE_URL`, `SUPABASE_KEY`. Additional secrets for demo cleanup: `SUPABASE_SERVICE_ROLE_KEY`.
 
 ## License
 

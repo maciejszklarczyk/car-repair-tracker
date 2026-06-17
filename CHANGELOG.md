@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-06-18
+
+- [49a6183] feat: redirect logged-in users from homepage to dashboard
+
 ## 2026-06-17
 
 - [7dea914] ci: trigger deploy on GitHub release publish

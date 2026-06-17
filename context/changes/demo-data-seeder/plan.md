@@ -328,10 +328,10 @@ No database migrations required. All tables already exist with the correct schem
 
 #### Automated
 
-- [x] 4.1 Workflow YAML valid
-- [x] 4.2 Existing CI unaffected
+- [x] 4.1 Workflow YAML valid — 5139f57
+- [x] 4.2 Existing CI unaffected — 5139f57
 
 #### Manual
 
-- [x] 4.3 Manual workflow trigger deletes stale demo accounts
-- [x] 4.4 Real user accounts untouched
+- [x] 4.3 Manual workflow trigger deletes stale demo accounts — 5139f57
+- [x] 4.4 Real user accounts untouched — 5139f57

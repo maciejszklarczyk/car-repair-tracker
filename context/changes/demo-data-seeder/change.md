@@ -1,7 +1,7 @@
 ---
 change_id: demo-data-seeder
 title: Periodic demo data reset on production
-status: implementing
+status: implemented
 created: 2026-06-17
 updated: 2026-06-17
 archived_at: null

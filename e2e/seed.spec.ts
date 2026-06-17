@@ -24,6 +24,9 @@ test("add vehicle and verify it appears in vehicle list", async ({ page }) => {
   const vehicleHref = await viewDetailsLink.getAttribute("href");
   if (vehicleHref) {
     const vehicleId = vehicleHref.split("/dashboard/vehicles/")[1];
-    await page.request.delete(`/api/vehicles/${vehicleId}`);
+    const delResp = await page.request.delete(`/api/vehicles/${vehicleId}`, {
+      headers: { Origin: "http://localhost:4321" },
+    });
+    expect(delResp.status()).toBe(200);
   }
 });

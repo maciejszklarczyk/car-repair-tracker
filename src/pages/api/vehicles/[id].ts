@@ -29,10 +29,14 @@ export const DELETE: APIRoute = async (context) => {
     return Response.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const { error } = await supabase.from("cars").delete().eq("id", vehicleId);
+  const { error, count } = await supabase.from("cars").delete({ count: "exact" }).eq("id", vehicleId);
 
   if (error) {
     return Response.json({ error: "Something went wrong" }, { status: 500 });
+  }
+
+  if (count === 0) {
+    return Response.json({ error: "Delete failed" }, { status: 500 });
   }
 
   return Response.json({ success: true });

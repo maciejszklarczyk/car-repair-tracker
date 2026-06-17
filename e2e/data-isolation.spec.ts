@@ -66,11 +66,15 @@ test("User B cannot see User A's vehicles or access User A's repairs", async ({ 
   await expect(userBPage.getByText("No vehicles yet")).toBeVisible();
 
   // --- User B: verify cannot delete User A's repair via API ---
-  const deleteResponse = await userBPage.request.delete(`/api/repairs/${userARepairId}`);
+  const deleteResponse = await userBPage.request.delete(`/api/repairs/${userARepairId}`, {
+    headers: { Origin: "http://localhost:4321" },
+  });
   expect(deleteResponse.status()).toBe(403);
 
   await userBContext.close();
 
   // --- Teardown: User A deletes vehicle (cascades to repairs) ---
-  await page.request.delete(`/api/vehicles/${userACarId}`);
+  await page.request.delete(`/api/vehicles/${userACarId}`, {
+    headers: { Origin: "http://localhost:4321" },
+  });
 });

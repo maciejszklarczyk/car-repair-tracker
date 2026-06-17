@@ -111,5 +111,7 @@ test("repair add/edit/delete triggers correct cost/km recalculation", async ({ p
   await expect(page.getByText("— PLN/km — no cost data yet")).toBeVisible();
 
   // --- Teardown: delete the test vehicle (cascades to repairs) ---
-  await page.request.delete(`/api/vehicles/${vehicleId}`);
+  await page.request.delete(`/api/vehicles/${vehicleId}`, {
+    headers: { Origin: "http://localhost:4321" },
+  });
 });

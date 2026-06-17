@@ -3,9 +3,6 @@
 
 import { test, expect, type BrowserContext } from "@playwright/test";
 
-// Temporarily skipped: intentional bug in repairs API for Sentry production testing
-test.skip();
-
 const uid = Date.now();
 const vehicleMake = `IsoMake${uid}`;
 const vehicleModel = `IsoModel${uid}`;
@@ -74,9 +71,6 @@ test("User B cannot see User A's vehicles or access User A's repairs", async ({ 
 
   await userBContext.close();
 
-  // --- Teardown: User A deletes repair via API ---
-  // page.request carries User A's live cookies from the browsing session
-  const cleanupResponse = await page.request.delete(`/api/repairs/${userARepairId}`);
-  // Cleanup is best-effort — orphan data is harmless (unique names prevent collision)
-  void cleanupResponse.ok();
+  // --- Teardown: User A deletes vehicle (cascades to repairs) ---
+  await page.request.delete(`/api/vehicles/${userACarId}`);
 });

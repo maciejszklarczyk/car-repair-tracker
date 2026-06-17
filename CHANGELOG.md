@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-06-17
+
+- [37f38eb] fix(e2e): remove double-click bug in repair lifecycle test, add vehicle cleanup
+- [2180553] chore(demo-data-seeder): close out plan (epilogue)
+- [5139f57] chore(demo-data-seeder): GitHub Actions demo cleanup workflow (p4)
+- [5d7dec3] feat(demo-data-seeder): landing page Try Demo button (p3)
+- [5af169f] feat(demo-data-seeder): demo API endpoint and seed data (p2)
+- [b8f6eba] feat(demo-data-seeder): service role client and env setup (p1)
+
 ## 2026-06-15
 
 - [b1af671] test(testing-e2e-critical-flows): data isolation E2E + quality levers (p2)

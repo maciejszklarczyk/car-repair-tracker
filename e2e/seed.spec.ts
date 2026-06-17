@@ -17,4 +17,13 @@ test("add vehicle and verify it appears in vehicle list", async ({ page }) => {
 
   await page.waitForURL("/dashboard/vehicles");
   await expect(page.getByText(make)).toBeVisible();
+
+  // --- Teardown: delete the test vehicle ---
+  const vehicleHeading = page.getByRole("heading", { name: `${make} ${model}` });
+  const viewDetailsLink = vehicleHeading.locator("..").getByRole("link", { name: "View details" });
+  const vehicleHref = await viewDetailsLink.getAttribute("href");
+  if (vehicleHref) {
+    const vehicleId = vehicleHref.split("/dashboard/vehicles/")[1];
+    await page.request.delete(`/api/vehicles/${vehicleId}`);
+  }
 });

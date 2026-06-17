@@ -3,9 +3,6 @@
 
 import { test, expect } from "@playwright/test";
 
-// Temporarily skipped: intentional bug in repairs API for Sentry production testing
-test.skip();
-
 const uid = Date.now();
 const vehicleMake = `LifeMake${uid}`;
 const vehicleModel = `LifeModel${uid}`;
@@ -84,7 +81,13 @@ test("repair add/edit/delete triggers correct cost/km recalculation", async ({ p
 
   const saveBtn = page.getByRole("button", { name: "Save changes" });
   await expect(saveBtn).toBeEnabled();
-  await saveBtn.click();
+
+  // Wait for the PUT response
+  const [putResponse] = await Promise.all([
+    page.waitForResponse((r) => r.url().includes("/api/repairs/") && r.request().method() === "PUT"),
+    saveBtn.click(),
+  ]);
+  expect(putResponse.status()).toBe(200);
 
   // Edit form uses fetch PUT + window.location.href redirect
   await page.waitForURL(new RegExp(`/dashboard/vehicles/${vehicleId}\\?success=updated`));
@@ -107,6 +110,6 @@ test("repair add/edit/delete triggers correct cost/km recalculation", async ({ p
   // --- Step 7: Assert cost/km resets to no-data state ---
   await expect(page.getByText("— PLN/km — no cost data yet")).toBeVisible();
 
-  // --- Teardown: delete the test vehicle via API ---
-  // No vehicle delete API exists, but orphan data is harmless (unique names prevent collision)
+  // --- Teardown: delete the test vehicle (cascades to repairs) ---
+  await page.request.delete(`/api/vehicles/${vehicleId}`);
 });

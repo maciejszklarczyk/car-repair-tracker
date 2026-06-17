@@ -286,29 +286,29 @@ No database migrations required. All tables already exist with the correct schem
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npx astro check`
-- [x] 1.2 Linting passes: `npm run lint`
-- [x] 1.3 Existing tests pass: `npm run test`
-- [x] 1.4 Build succeeds: `npm run build`
+- [x] 1.1 Type checking passes: `npx astro check` — b8f6eba
+- [x] 1.2 Linting passes: `npm run lint` — b8f6eba
+- [x] 1.3 Existing tests pass: `npm run test` — b8f6eba
+- [x] 1.4 Build succeeds: `npm run build` — b8f6eba
 
 #### Manual
 
-- [x] 1.5 Admin client returns non-null when env vars are set locally
+- [x] 1.5 Admin client returns non-null when env vars are set locally — b8f6eba
 
 ### Phase 2: Demo API Endpoint + Seed Data
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npx astro check`
-- [ ] 2.2 Linting passes: `npm run lint`
-- [ ] 2.3 Existing tests pass: `npm run test`
-- [ ] 2.4 Build succeeds: `npm run build`
+- [x] 2.1 Type checking passes: `npx astro check`
+- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.3 Existing tests pass: `npm run test`
+- [x] 2.4 Build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 2.5 POST to /api/demo creates temp user, seeds data, redirects to dashboard
-- [ ] 2.6 Dashboard shows 2 cars with correct data
-- [ ] 2.7 Second demo click creates separate isolated data
+- [x] 2.5 POST to /api/demo creates temp user, seeds data, redirects to dashboard
+- [x] 2.6 Dashboard shows 2 cars with correct data
+- [x] 2.7 Second demo click creates separate isolated data
 
 ### Phase 3: Landing Page "Try Demo" Button
 

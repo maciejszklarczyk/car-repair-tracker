@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: 22
       - name: Install Supabase client
-        run: npm install @supabase/supabase-js
+        run: npm install @supabase/supabase-js@2
       - name: Delete stale demo accounts
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}

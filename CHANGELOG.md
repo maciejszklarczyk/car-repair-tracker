@@ -2,6 +2,7 @@
 
 ## 2026-06-17
 
+- [44d32f6] ci: move docker, migrate, deploy to on-demand workflow
 - [443618b] fix(ci): pin supabase-js to v2 in demo cleanup workflow
 - [ac055f0] test(e2e): verify vehicle DELETE endpoint respects RLS ownership
 - [3e982de] fix(e2e): add cars DELETE RLS policy and Origin header for e2e teardown

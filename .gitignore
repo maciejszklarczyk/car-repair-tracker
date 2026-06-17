@@ -41,3 +41,4 @@ auth-user-b.json
 test-results/
 playwright-report/
 .playwright-cli/
+.playwright-mcp/

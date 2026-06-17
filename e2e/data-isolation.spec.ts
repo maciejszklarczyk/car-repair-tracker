@@ -3,9 +3,6 @@
 
 import { test, expect, type BrowserContext } from "@playwright/test";
 
-// Temporarily skipped: intentional bug in repairs API for Sentry production testing
-test.skip();
-
 const uid = Date.now();
 const vehicleMake = `IsoMake${uid}`;
 const vehicleModel = `IsoModel${uid}`;
@@ -13,7 +10,7 @@ const vehicleModel = `IsoModel${uid}`;
 let userACarId: string;
 let userARepairId: string;
 
-test("User B cannot see User A's vehicles or access User A's repairs", async ({ page, browser }) => {
+test("User B cannot see, delete User A's vehicles or repairs", async ({ page, browser }) => {
   // --- User A: create a vehicle ---
   await page.goto("/dashboard/vehicles/new");
   await page.waitForLoadState("networkidle");
@@ -69,14 +66,21 @@ test("User B cannot see User A's vehicles or access User A's repairs", async ({ 
   await expect(userBPage.getByText("No vehicles yet")).toBeVisible();
 
   // --- User B: verify cannot delete User A's repair via API ---
-  const deleteResponse = await userBPage.request.delete(`/api/repairs/${userARepairId}`);
-  expect(deleteResponse.status()).toBe(403);
+  const deleteRepairResponse = await userBPage.request.delete(`/api/repairs/${userARepairId}`, {
+    headers: { Origin: "http://localhost:4321" },
+  });
+  expect(deleteRepairResponse.status()).toBe(403);
+
+  // --- User B: verify cannot delete User A's vehicle via API ---
+  const deleteVehicleResponse = await userBPage.request.delete(`/api/vehicles/${userACarId}`, {
+    headers: { Origin: "http://localhost:4321" },
+  });
+  expect(deleteVehicleResponse.status()).toBe(403);
 
   await userBContext.close();
 
-  // --- Teardown: User A deletes repair via API ---
-  // page.request carries User A's live cookies from the browsing session
-  const cleanupResponse = await page.request.delete(`/api/repairs/${userARepairId}`);
-  // Cleanup is best-effort — orphan data is harmless (unique names prevent collision)
-  void cleanupResponse.ok();
+  // --- Teardown: User A deletes vehicle (cascades to repairs) ---
+  await page.request.delete(`/api/vehicles/${userACarId}`, {
+    headers: { Origin: "http://localhost:4321" },
+  });
 });

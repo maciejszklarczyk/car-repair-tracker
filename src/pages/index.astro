@@ -1,8 +1,17 @@
 ---
 import Welcome from "@/components/Welcome.astro";
 import Layout from "@/layouts/Layout.astro";
+
+const error = Astro.url.searchParams.get("error");
 ---
 
 <Layout>
+  {
+    error === "demo_failed" && (
+      <div class="fixed top-4 left-1/2 z-50 -translate-x-1/2 rounded-lg border border-red-500/30 bg-red-950/80 px-6 py-3 text-sm text-red-200 backdrop-blur-sm">
+        Demo creation failed. Please try again later.
+      </div>
+    )
+  }
   <Welcome />
 </Layout>

@@ -81,6 +81,7 @@ npm run dev
 - `npm run format` — run Prettier
 - `npm run test` — run unit tests (Vitest)
 - `npm run test:watch` — run tests in watch mode
+- `npm run e2e` — run E2E tests (Playwright, requires local Supabase running)
 
 ## Project Structure
 

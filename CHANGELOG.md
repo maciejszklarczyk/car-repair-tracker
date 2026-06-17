@@ -2,6 +2,7 @@
 
 ## 2026-06-17
 
+- [ac055f0] test(e2e): verify vehicle DELETE endpoint respects RLS ownership
 - [3e982de] fix(e2e): add cars DELETE RLS policy and Origin header for e2e teardown
 - [37f38eb] fix(e2e): remove double-click bug in repair lifecycle test, add vehicle cleanup
 - [2180553] chore(demo-data-seeder): close out plan (epilogue)

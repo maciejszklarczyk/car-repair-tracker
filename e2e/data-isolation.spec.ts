@@ -10,7 +10,7 @@ const vehicleModel = `IsoModel${uid}`;
 let userACarId: string;
 let userARepairId: string;
 
-test("User B cannot see User A's vehicles or access User A's repairs", async ({ page, browser }) => {
+test("User B cannot see, delete User A's vehicles or repairs", async ({ page, browser }) => {
   // --- User A: create a vehicle ---
   await page.goto("/dashboard/vehicles/new");
   await page.waitForLoadState("networkidle");
@@ -66,10 +66,16 @@ test("User B cannot see User A's vehicles or access User A's repairs", async ({ 
   await expect(userBPage.getByText("No vehicles yet")).toBeVisible();
 
   // --- User B: verify cannot delete User A's repair via API ---
-  const deleteResponse = await userBPage.request.delete(`/api/repairs/${userARepairId}`, {
+  const deleteRepairResponse = await userBPage.request.delete(`/api/repairs/${userARepairId}`, {
     headers: { Origin: "http://localhost:4321" },
   });
-  expect(deleteResponse.status()).toBe(403);
+  expect(deleteRepairResponse.status()).toBe(403);
+
+  // --- User B: verify cannot delete User A's vehicle via API ---
+  const deleteVehicleResponse = await userBPage.request.delete(`/api/vehicles/${userACarId}`, {
+    headers: { Origin: "http://localhost:4321" },
+  });
+  expect(deleteVehicleResponse.status()).toBe(403);
 
   await userBContext.close();
 

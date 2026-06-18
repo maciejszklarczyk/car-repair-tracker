@@ -1,0 +1,185 @@
+// Question: "Where do transitive side-effects make isolation testing hard?"
+//
+// Legend (node fill color):
+//   #a6e3a1 green  = pure (no mocks needed)
+//   #f9e2af gold   = platform coupling (astro:env, AstroCookies — needs vi.mock)
+//   #f38ba8 red    = external API (Google Gemini — needs mock or stub)
+//   #89b4fa blue   = browser side-effect (fetch + window.location.reload)
+//   #585b70 gray   = .astro page (untestable by unit runner, needs e2e)
+//
+// Legend (edge style):
+//   solid        = direct import (depcruise-verified)
+//   dotted gray  = .astro import (depcruise-invisible, grep-verified)
+//   bold red     = problematic import (schemas → classifyRepair)
+//   dashed red   = transitive side-effect leak
+
+digraph testability_risk {
+  rankdir=TB;
+  fontname="Helvetica";
+  fontsize=13;
+  label="Testability risk: where transitive side-effects leak into repairs + lib";
+  labelloc=t;
+  node [fontname="Helvetica", fontsize=10, style="filled,rounded", shape=box, margin="0.15,0.08"];
+  edge [fontsize=8, fontname="Helvetica"];
+  nodesep=0.4;
+  ranksep=0.7;
+  splines=polyline;
+
+  bgcolor="#1e1e2e";
+  fontcolor="#cdd6f4";
+  node [fontcolor="#1e1e2e"];
+  edge [color="#585b70", fontcolor="#a6adc8"];
+
+  // ══════════════════════════════════════════════════════════════
+  // LAYER 0: Pages (.astro — gray, not unit-testable)
+  // ══════════════════════════════════════════════════════════════
+
+  subgraph cluster_pages {
+    label="PAGES  ·  Astro SSR  ·  not unit-testable  ·  depcruise-invisible";
+    labeljust=l;
+    fontsize=10;
+    fontcolor="#a6adc8";
+    color="#45475a";
+    style=dashed;
+
+    vid   [label="vehicles/[id].astro\ngod-page · 10+ imports · 7 commits"
+           fillcolor="#585b70", fontcolor="#cdd6f4"];
+    rnew  [label="repairs/new.astro"
+           fillcolor="#585b70", fontcolor="#cdd6f4"];
+    redit [label="repairs/[id]/edit.astro"
+           fillcolor="#585b70", fontcolor="#cdd6f4"];
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // LAYER 1: API routes (gold — platform coupling, need mocks)
+  // ══════════════════════════════════════════════════════════════
+
+  subgraph cluster_api {
+    label="API ROUTES  ·  unit-testable with mocks  ·  platform-coupled";
+    labeljust=l;
+    fontsize=10;
+    fontcolor="#a6adc8";
+    color="#45475a";
+    style=dashed;
+
+    repairs_post [label="repairs.ts POST\n6 commits · mock: supabase×2 + classify"
+                  fillcolor="#f9e2af"];
+    repairs_id   [label="repairs/[id].ts PUT|DELETE|PATCH\n7 commits · mock: supabase×4 + classify"
+                  fillcolor="#f9e2af"];
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // LAYER 2: Components (React islands)
+  // ══════════════════════════════════════════════════════════════
+
+  subgraph cluster_components {
+    label="COMPONENTS  ·  React islands";
+    labeljust=l;
+    fontsize=10;
+    fontcolor="#a6adc8";
+    color="#45475a";
+    style=dashed;
+
+    repairlist [label="RepairList.tsx\nfetch() + window.reload()\n6 commits · NO TESTS"
+                fillcolor="#89b4fa"];
+    editform   [label="EditRepairForm.tsx\npure form state"
+                fillcolor="#a6e3a1"];
+    addform    [label="AddRepairForm.tsx\npure form state"
+                fillcolor="#a6e3a1"];
+    catselect  [label="CategorySelect.tsx"
+                fillcolor="#a6e3a1"];
+    catbadge   [label="CategoryBadge.tsx\npure render"
+                fillcolor="#a6e3a1"];
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // LAYER 3: lib/ (business logic — mixed purity)
+  // ══════════════════════════════════════════════════════════════
+
+  subgraph cluster_lib {
+    label="LIB  ·  business logic";
+    labeljust=l;
+    fontsize=10;
+    fontcolor="#a6adc8";
+    color="#45475a";
+    style=dashed;
+
+    schemas    [label="schemas.ts\nconnector #1 · fan-in=5 · 7 commits\nimports REPAIR_CATEGORIES via classify"
+                fillcolor="#f9e2af"];
+    classify   [label="classifyRepair.ts\nGoogleGenAI + astro:env\nHTTP · 3s timeout\nparsing logic UNTESTED"
+                fillcolor="#f38ba8", fontcolor="#cdd6f4"];
+    supabase   [label="supabase.ts\nastro:env + AstroCookies\nfan-in=15 · always mocked"
+                fillcolor="#f9e2af"];
+
+    costperkm  [label="costPerKm.ts\npure · well tested"  fillcolor="#a6e3a1"];
+    svcremind  [label="serviceReminders.ts\npure"          fillcolor="#a6e3a1"];
+    utils      [label="utils.ts\ncn() · fan-in=6"          fillcolor="#a6e3a1"];
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // LAYER 4: Leaf types + categories
+  // ══════════════════════════════════════════════════════════════
+
+  subgraph cluster_leaf {
+    label="LEAF  ·  pure, zero deps";
+    labeljust=l;
+    fontsize=10;
+    fontcolor="#a6adc8";
+    color="#45475a";
+    style=dashed;
+
+    categories [label="repairCategories.ts\nconst array · zero deps"
+                fillcolor="#a6e3a1"];
+    types      [label="types.ts\npure types · fan-in=13"
+                fillcolor="#a6e3a1"];
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // EDGES: Direct imports (solid)
+  // ══════════════════════════════════════════════════════════════
+
+  // API → lib
+  repairs_post -> supabase;
+  repairs_post -> schemas;
+  repairs_post -> classify;
+  repairs_id   -> supabase;
+  repairs_id   -> schemas;
+  repairs_id   -> classify;
+
+  // lib internal
+  classify -> categories;
+
+  // THE problematic edge: schemas pulls Gemini module transitively
+  schemas -> classify [style=bold, color="#f38ba8", penwidth=2.5,
+    label="pulls Gemini\ninto validation"];
+
+  // components → lib/leaf
+  catselect  -> categories;
+  catbadge   -> utils;
+  repairlist -> catbadge;
+  editform   -> catselect;
+
+  // ══════════════════════════════════════════════════════════════
+  // EDGES: .astro imports (dotted — depcruise-invisible)
+  // ══════════════════════════════════════════════════════════════
+
+  vid   -> supabase   [style=dotted, label=".astro"];
+  vid   -> costperkm  [style=dotted, label=".astro"];
+  vid   -> svcremind  [style=dotted, label=".astro"];
+  vid   -> repairlist [style=dotted, label=".astro"];
+  vid   -> types      [style=dotted, label=".astro"];
+  rnew  -> addform    [style=dotted, label=".astro"];
+  rnew  -> supabase   [style=dotted, label=".astro"];
+  redit -> editform   [style=dotted, label=".astro"];
+  redit -> supabase   [style=dotted, label=".astro"];
+  redit -> types      [style=dotted, label=".astro"];
+
+  // ══════════════════════════════════════════════════════════════
+  // EDGES: Transitive side-effect leaks (dashed red)
+  // ══════════════════════════════════════════════════════════════
+
+  repairs_post -> categories [style=dashed, color="#f38ba8",
+    label="transitive: via schemas→classify"];
+  repairs_id   -> categories [style=dashed, color="#f38ba8",
+    label="transitive: via schemas→classify"];
+}

@@ -22,7 +22,7 @@ Full server-side rendering (`output: "server"` in astro.config.mjs). All pages a
 - **Astro components** for static content/layout; **React components** only when interactivity is needed.
 - **Tailwind class merging**: use the `cn()` helper from `@/lib/utils` (clsx + tailwind-merge) for conditional/merged class names. Do not concatenate class strings manually.
 - **shadcn/ui**: components live in `src/components/ui/`, "new-york" style variant. Install new ones with `npx shadcn@latest add [name]`.
-- **API routes**: use uppercase `GET`, `POST` exports; validate input with zod.
+- **API routes**: validate input with zod.
 - **Supabase migrations**: `supabase/migrations/` using naming format `YYYYMMDDHHmmss_short_description.sql`. Always enable RLS on new tables with granular per-operation, per-role policies.
 - **React**: no Next.js directives ("use client" etc.). Extract hooks to `src/components/hooks/`.
 - **Services/helpers** go in `src/lib/` (or `src/lib/services/` for extracted business logic).
@@ -38,10 +38,4 @@ Lessons learned during development are stored in @context/foundation/lessons.md 
 
 ## CI
 
-GitHub Actions workflows:
-
-- **`ci.yml`** — parallel lint (ESLint + `astro check`), test (Vitest), and build jobs on every push and PR to `main`. E2E (Playwright) runs on PRs only.
-- **`deploy.yml`** — builds and pushes Docker image on release publish or manual trigger.
-- **`demo-cleanup.yml`** — nightly cron deletes expired demo accounts.
-
-Required repository secrets: `SUPABASE_URL`, `SUPABASE_KEY`. Demo cleanup also needs `SUPABASE_SERVICE_ROLE_KEY`.
+See @README.md § CI for workflow details and required repository secrets.

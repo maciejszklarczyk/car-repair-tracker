@@ -286,11 +286,11 @@ Replace `window.location.reload()` in `RepairList` and `ServiceThresholdList` wi
 
 #### Automated
 
-- [x] 2.1 TypeScript check passes: `npx astro check`
-- [x] 2.2 Build succeeds: `npm run build`
-- [x] 2.3 Lint passes: `npm run lint`
-- [x] 2.4 Unit tests pass: `npm run test`
-- [x] 2.5 E2E tests pass: `npm run e2e`
+- [x] 2.1 TypeScript check passes: `npx astro check` — c8f064f
+- [x] 2.2 Build succeeds: `npm run build` — c8f064f
+- [x] 2.3 Lint passes: `npm run lint` — c8f064f
+- [x] 2.4 Unit tests pass: `npm run test` — c8f064f
+- [x] 2.5 E2E tests pass: `npm run e2e` — c8f064f
 
 #### Manual
 
@@ -302,8 +302,8 @@ Replace `window.location.reload()` in `RepairList` and `ServiceThresholdList` wi
 
 #### Automated
 
-- [ ] 3.1 New tests pass: `npm run test`
-- [ ] 3.2 TypeScript check passes: `npx astro check`
+- [x] 3.1 New tests pass: `npm run test`
+- [x] 3.2 TypeScript check passes: `npx astro check`
 
 ### Phase 4: Replace Reload with Local State (K6) + Component Tests
 

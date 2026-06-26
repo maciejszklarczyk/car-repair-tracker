@@ -104,10 +104,12 @@ test("repair add/edit/delete triggers correct cost/km recalculation", async ({ p
   await expect(dialog).toBeVisible();
   await dialog.getByRole("button", { name: "Delete" }).click();
 
-  // Delete triggers window.location.reload() — wait for fresh SSR
-  await page.waitForLoadState("networkidle");
+  // Delete removes item from local state — wait for it to disappear
+  await expect(page.getByText(`Lifecycle test repair ${uid}`)).toBeHidden();
 
   // --- Step 7: Assert cost/km resets to no-data state ---
+  // Cost/km is server-rendered; reload to get recalculated value
+  await page.reload();
   await expect(page.getByText("— PLN/km — no cost data yet")).toBeVisible();
 
   // --- Teardown: delete the test vehicle (cascades to repairs) ---

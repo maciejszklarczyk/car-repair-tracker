@@ -19,7 +19,8 @@ interface Props {
   repairs: Repair[];
 }
 
-export default function RepairList({ repairs }: Props) {
+export default function RepairList({ repairs: initialRepairs }: Props) {
+  const [repairs, setRepairs] = useState<Repair[]>(initialRepairs);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
   async function handleDelete(repairId: string) {
@@ -27,7 +28,7 @@ export default function RepairList({ repairs }: Props) {
     try {
       const response = await fetch(`/api/repairs/${repairId}`, { method: "DELETE" });
       if (response.ok) {
-        window.location.reload();
+        setRepairs((prev) => prev.filter((r) => r.id !== repairId));
       } else {
         const data = (await response.json()) as { error?: string };
         setDeleteError(data.error ?? "Failed to delete repair. Please try again.");

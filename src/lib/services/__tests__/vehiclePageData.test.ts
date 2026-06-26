@@ -3,7 +3,10 @@ import { getVehiclePageData } from "@/lib/services/vehiclePageData";
 import { createMockSupabase, makeVehicle, makeRepair, makeServiceThreshold } from "@/test/helpers";
 
 const vehicle = makeVehicle();
-const repairs = [makeRepair({ id: "r1", mileage: 11000, cost: 500 }), makeRepair({ id: "r2", mileage: 12000, cost: 300 })];
+const repairs = [
+  makeRepair({ id: "r1", mileage: 11000, cost: 500 }),
+  makeRepair({ id: "r2", mileage: 12000, cost: 300 }),
+];
 const thresholds = [makeServiceThreshold()];
 
 describe("getVehiclePageData", () => {
@@ -18,15 +21,16 @@ describe("getVehiclePageData", () => {
     const result = await getVehiclePageData(client as never, "v1", "user-1");
 
     expect(result).not.toBeNull();
-    expect(result!.vehicle).toEqual(vehicle);
-    expect(result!.repairs).toEqual(repairs);
-    expect(result!.currentMileage).toBe(12000);
-    expect(result!.costPerKm).toBeTypeOf("number");
-    expect(result!.chartData).toBeInstanceOf(Array);
-    expect(result!.totalCostData).toBeInstanceOf(Array);
-    expect(result!.mileageData).toBeInstanceOf(Array);
-    expect(result!.thresholdSummary).toBeInstanceOf(Array);
-    expect(result!.thresholdSummary).toHaveLength(1);
+    if (result === null) return;
+    expect(result.vehicle).toEqual(vehicle);
+    expect(result.repairs).toEqual(repairs);
+    expect(result.currentMileage).toBe(12000);
+    expect(result.costPerKm).toBeTypeOf("number");
+    expect(result.chartData).toBeInstanceOf(Array);
+    expect(result.totalCostData).toBeInstanceOf(Array);
+    expect(result.mileageData).toBeInstanceOf(Array);
+    expect(result.thresholdSummary).toBeInstanceOf(Array);
+    expect(result.thresholdSummary).toHaveLength(1);
   });
 
   it("returns null when vehicle query fails", async () => {
@@ -85,10 +89,12 @@ describe("getVehiclePageData", () => {
 
     const result = await getVehiclePageData(client as never, "v1", "user-1");
 
-    expect(result!.currentMileage).toBe(12000);
-    expect(result!.costPerKm).toBeCloseTo(0.4);
-    expect(result!.chartData).toHaveLength(2);
-    expect(result!.totalCostData).toHaveLength(2);
-    expect(result!.mileageData).toHaveLength(2);
+    expect(result).not.toBeNull();
+    if (result === null) return;
+    expect(result.currentMileage).toBe(12000);
+    expect(result.costPerKm).toBeCloseTo(0.4);
+    expect(result.chartData).toHaveLength(2);
+    expect(result.totalCostData).toHaveLength(2);
+    expect(result.mileageData).toHaveLength(2);
   });
 });

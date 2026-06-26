@@ -1,20 +1,12 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import { createClient } from "@/lib/supabase";
-import {
-  computeCostPerKm,
-  computeCurrentMileage,
-  computeCostTrendData,
-  computeTotalCostTrendData,
-  computeMileageTrendData,
-} from "@/lib/costPerKm";
+import { getVehiclePageData } from "@/lib/services/vehiclePageData";
 import CostTrendChart from "@/components/vehicles/CostTrendChart";
-import { computeThresholdSummary } from "@/lib/serviceReminders";
 import RepairList from "@/components/repairs/RepairList";
 import ServiceReminders from "@/components/service-reminders/ServiceReminders";
 import ServiceThresholdList from "@/components/service-reminders/ServiceThresholdList";
 import AddServiceThresholdForm from "@/components/service-reminders/AddServiceThresholdForm";
-import type { Vehicle, Repair, ServiceThreshold } from "@/types";
 
 const user = Astro.locals.user;
 if (!user) return Astro.redirect("/auth/signin");
@@ -26,44 +18,12 @@ if (!id || !supabase) {
   return Astro.redirect("/dashboard/vehicles");
 }
 
-const result = await supabase
-  .from("cars")
-  .select("*")
-  .eq("id", id)
-  .eq("user_id", user.id)
-  .is("archived_at", null)
-  .single();
-if (result.error || !result.data) {
+const data = await getVehiclePageData(supabase, id, user.id);
+if (!data) {
   return Astro.redirect("/dashboard/vehicles");
 }
-const vehicle: Vehicle = result.data as Vehicle;
 
-const { data: repairsData, error: repairsError } = await supabase
-  .from("repairs")
-  .select("*")
-  .eq("car_id", id)
-  .order("repair_date", { ascending: false });
-if (repairsError) {
-  return Astro.redirect("/dashboard/vehicles");
-}
-const repairs: Repair[] = repairsData as Repair[];
-
-const { data: thresholdsData, error: thresholdsError } = await supabase
-  .from("service_thresholds")
-  .select("*")
-  .eq("car_id", id)
-  .order("created_at", { ascending: true });
-if (thresholdsError) {
-  return Astro.redirect("/dashboard/vehicles");
-}
-const thresholds: ServiceThreshold[] = thresholdsData as ServiceThreshold[];
-
-const currentMileage = computeCurrentMileage(repairs, vehicle.baseline_mileage);
-const costPerKm = computeCostPerKm(vehicle, repairs);
-const chartData = computeCostTrendData(vehicle, repairs);
-const totalCostData = computeTotalCostTrendData(repairs);
-const mileageData = computeMileageTrendData(repairs);
-const thresholdSummary = computeThresholdSummary(thresholds, currentMileage);
+const { vehicle, repairs, currentMileage, costPerKm, chartData, totalCostData, mileageData, thresholdSummary } = data;
 
 const success = Astro.url.searchParams.get("success");
 const successMessage =

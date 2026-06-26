@@ -25,7 +25,8 @@ const statusBadge: Record<string, string> = {
   ok: "bg-green-500/20 text-green-300 border-green-500/30",
 };
 
-export default function ServiceThresholdList({ thresholds }: Props) {
+export default function ServiceThresholdList({ thresholds: initialThresholds }: Props) {
+  const [thresholds, setThresholds] = useState<ThresholdWithStatus[]>(initialThresholds);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
@@ -34,7 +35,7 @@ export default function ServiceThresholdList({ thresholds }: Props) {
     try {
       const response = await fetch(`/api/service-thresholds/${id}`, { method: "DELETE" });
       if (response.ok || response.status === 204) {
-        window.location.reload();
+        setThresholds((prev) => prev.filter((t) => t.threshold.id !== id));
       } else {
         const data = (await response.json()) as { error?: string };
         setDeleteError(data.error ?? "Failed to delete. Please try again.");

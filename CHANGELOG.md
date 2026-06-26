@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-06-26
+
+- [d9e78f1] refactor(vehicle-god-page): impl review fixes — parallel queries, select assertions, user_id filters
+
 ## 2026-06-18
 
 - [49a6183] feat: redirect logged-in users from homepage to dashboard

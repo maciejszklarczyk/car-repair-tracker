@@ -1,0 +1,80 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Vehicle, Repair, ServiceThreshold } from "@/types";
+import {
+  computeCostPerKm,
+  computeCurrentMileage,
+  computeCostTrendData,
+  computeTotalCostTrendData,
+  computeMileageTrendData,
+  type CostTrendPoint,
+  type TotalCostPoint,
+  type MileagePoint,
+} from "@/lib/costPerKm";
+import { computeThresholdSummary, type ThresholdWithStatus } from "@/lib/serviceReminders";
+
+export interface VehiclePageData {
+  vehicle: Vehicle;
+  repairs: Repair[];
+  currentMileage: number;
+  costPerKm: number | null;
+  chartData: CostTrendPoint[];
+  totalCostData: TotalCostPoint[];
+  mileageData: MileagePoint[];
+  thresholdSummary: ThresholdWithStatus[];
+}
+
+const VEHICLE_COLUMNS = "id, user_id, make, model, year, baseline_mileage, archived_at, created_at, updated_at";
+const REPAIR_COLUMNS =
+  "id, car_id, user_id, repair_date, description, cost, mileage, category, category_source, original_category, created_at, updated_at";
+const THRESHOLD_COLUMNS =
+  "id, car_id, user_id, name, km_interval, days_interval, last_performed_date, last_performed_mileage, created_at, updated_at";
+
+export async function getVehiclePageData(
+  supabase: SupabaseClient,
+  vehicleId: string,
+  userId: string,
+): Promise<VehiclePageData | null> {
+  const vehicleResult = await supabase
+    .from("cars")
+    .select(VEHICLE_COLUMNS)
+    .eq("id", vehicleId)
+    .eq("user_id", userId)
+    .is("archived_at", null)
+    .single();
+  if (vehicleResult.error) return null;
+  const vehicle: Vehicle = vehicleResult.data;
+
+  const repairsResult = await supabase
+    .from("repairs")
+    .select(REPAIR_COLUMNS)
+    .eq("car_id", vehicleId)
+    .order("repair_date", { ascending: false });
+  if (repairsResult.error) return null;
+  const repairs: Repair[] = repairsResult.data;
+
+  const thresholdsResult = await supabase
+    .from("service_thresholds")
+    .select(THRESHOLD_COLUMNS)
+    .eq("car_id", vehicleId)
+    .order("created_at", { ascending: true });
+  if (thresholdsResult.error) return null;
+  const thresholds: ServiceThreshold[] = thresholdsResult.data;
+
+  const currentMileage = computeCurrentMileage(repairs, vehicle.baseline_mileage);
+  const costPerKm = computeCostPerKm(vehicle, repairs);
+  const chartData = computeCostTrendData(vehicle, repairs);
+  const totalCostData = computeTotalCostTrendData(repairs);
+  const mileageData = computeMileageTrendData(repairs);
+  const thresholdSummary = computeThresholdSummary(thresholds, currentMileage);
+
+  return {
+    vehicle,
+    repairs,
+    currentMileage,
+    costPerKm,
+    chartData,
+    totalCostData,
+    mileageData,
+    thresholdSummary,
+  };
+}

@@ -277,20 +277,20 @@ Replace `window.location.reload()` in `RepairList` and `ServiceThresholdList` wi
 
 #### Automated
 
-- [x] 1.1 TypeScript check passes: `npx astro check`
-- [x] 1.2 Build succeeds: `npm run build`
-- [x] 1.3 Lint passes: `npm run lint`
-- [x] 1.4 Unit tests pass: `npm run test`
+- [x] 1.1 TypeScript check passes: `npx astro check` — 17888fe
+- [x] 1.2 Build succeeds: `npm run build` — 17888fe
+- [x] 1.3 Lint passes: `npm run lint` — 17888fe
+- [x] 1.4 Unit tests pass: `npm run test` — 17888fe
 
 ### Phase 2: Extract vehiclePageData Service (K1+K2)
 
 #### Automated
 
-- [ ] 2.1 TypeScript check passes: `npx astro check`
-- [ ] 2.2 Build succeeds: `npm run build`
-- [ ] 2.3 Lint passes: `npm run lint`
-- [ ] 2.4 Unit tests pass: `npm run test`
-- [ ] 2.5 E2E tests pass: `npm run e2e`
+- [x] 2.1 TypeScript check passes: `npx astro check`
+- [x] 2.2 Build succeeds: `npm run build`
+- [x] 2.3 Lint passes: `npm run lint`
+- [x] 2.4 Unit tests pass: `npm run test`
+- [x] 2.5 E2E tests pass: `npm run e2e`
 
 #### Manual
 

@@ -44,19 +44,22 @@ export async function getVehiclePageData(
   if (vehicleResult.error) return null;
   const vehicle: Vehicle = vehicleResult.data;
 
-  const repairsResult = await supabase
-    .from("repairs")
-    .select(REPAIR_COLUMNS)
-    .eq("car_id", vehicleId)
-    .order("repair_date", { ascending: false });
+  const [repairsResult, thresholdsResult] = await Promise.all([
+    supabase
+      .from("repairs")
+      .select(REPAIR_COLUMNS)
+      .eq("car_id", vehicleId)
+      .eq("user_id", userId)
+      .order("repair_date", { ascending: false }),
+    supabase
+      .from("service_thresholds")
+      .select(THRESHOLD_COLUMNS)
+      .eq("car_id", vehicleId)
+      .eq("user_id", userId)
+      .order("created_at", { ascending: true }),
+  ]);
   if (repairsResult.error) return null;
   const repairs: Repair[] = repairsResult.data;
-
-  const thresholdsResult = await supabase
-    .from("service_thresholds")
-    .select(THRESHOLD_COLUMNS)
-    .eq("car_id", vehicleId)
-    .order("created_at", { ascending: true });
   if (thresholdsResult.error) return null;
   const thresholds: ServiceThreshold[] = thresholdsResult.data;
 

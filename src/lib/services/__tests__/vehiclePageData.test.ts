@@ -65,7 +65,7 @@ describe("getVehiclePageData", () => {
   });
 
   it("passes explicit column lists to each select call", async () => {
-    const { client, from, mockResults } = createMockSupabase();
+    const { client, from, select, mockResults } = createMockSupabase();
     mockResults([
       { data: vehicle, error: null },
       { data: repairs, error: null },
@@ -77,6 +77,17 @@ describe("getVehiclePageData", () => {
     expect(from).toHaveBeenCalledWith("cars");
     expect(from).toHaveBeenCalledWith("repairs");
     expect(from).toHaveBeenCalledWith("service_thresholds");
+
+    const selectCalls = select.mock.calls.map((c: unknown[]) => c[0]);
+    expect(selectCalls).toContain(
+      "id, user_id, make, model, year, baseline_mileage, archived_at, created_at, updated_at",
+    );
+    expect(selectCalls).toContain(
+      "id, car_id, user_id, repair_date, description, cost, mileage, category, category_source, original_category, created_at, updated_at",
+    );
+    expect(selectCalls).toContain(
+      "id, car_id, user_id, name, km_interval, days_interval, last_performed_date, last_performed_mileage, created_at, updated_at",
+    );
   });
 
   it("calls compute functions with correct arguments", async () => {

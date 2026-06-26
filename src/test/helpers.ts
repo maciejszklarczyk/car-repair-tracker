@@ -68,6 +68,7 @@ export function createMockSupabase() {
   return {
     client: chain as unknown as ReturnType<typeof import("@/lib/supabase").createClient>,
     from: chain.from as ReturnType<typeof vi.fn>,
+    select: chain.select as ReturnType<typeof vi.fn>,
     mockResult,
     mockResults,
   };

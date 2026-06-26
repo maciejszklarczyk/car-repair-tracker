@@ -31,7 +31,7 @@ Structural refactor of vehicle module addressing three ranked refactor candidate
 - K5 (non-atomic DB ops) — RLS provides sufficient safety net; Supabase JS client doesn't support transactions
 - K7 (types.ts codegen) — defer until next migration; manual sync works
 - 4th `select("*")` in `repairs/[id]/edit.astro` — separate page, separate change
-- React component testing infrastructure setup — just adding focused tests for delete behavior
+- React component testing infrastructure beyond what Phase 4 needs (testing-library + jsdom added for component delete tests)
 - Any behavior changes — this is pure extraction and UX polish
 
 ## Implementation Approach

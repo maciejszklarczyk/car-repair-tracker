@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { REPAIR_CATEGORIES } from "@/lib/classifyRepair";
+import { REPAIR_CATEGORIES } from "@/lib/repairCategories";
 
 // For FormData input (POST) — cost is a string that gets transformed to number | null.
 export const createRepairSchema = z.object({

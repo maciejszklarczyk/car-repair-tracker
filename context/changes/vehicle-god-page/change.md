@@ -1,7 +1,7 @@
 ---
 change_id: vehicle-god-page
 title: Dependency analysis in vehicles module
-status: implementing
+status: implemented
 created: 2026-06-18
 updated: 2026-06-26
 research_iterations: 2

@@ -309,11 +309,11 @@ Replace `window.location.reload()` in `RepairList` and `ServiceThresholdList` wi
 
 #### Automated
 
-- [x] 4.1 TypeScript check passes: `npx astro check`
-- [x] 4.2 Build succeeds: `npm run build`
-- [x] 4.3 Lint passes: `npm run lint`
-- [x] 4.4 All tests pass: `npm run test`
-- [x] 4.5 E2E tests pass: `npm run e2e`
+- [x] 4.1 TypeScript check passes: `npx astro check` — 4a0acfc
+- [x] 4.2 Build succeeds: `npm run build` — 4a0acfc
+- [x] 4.3 Lint passes: `npm run lint` — 4a0acfc
+- [x] 4.4 All tests pass: `npm run test` — 4a0acfc
+- [x] 4.5 E2E tests pass: `npm run e2e` — 4a0acfc
 
 #### Manual
 

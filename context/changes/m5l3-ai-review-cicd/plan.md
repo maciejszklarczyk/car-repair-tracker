@@ -350,12 +350,12 @@ Zrób screenshot macierzy wyników.
 - [x] 3.2 Workflow checks out repo, installs deps, gets diff, calls composite action, logs verdict — 42bb1b7
 
 ### Phase 4: Weryfikacja pipeline'u
-- [x] 4.1 Branch pushed, PR opened, workflow runs successfully
+- [x] 4.1 Branch pushed, PR opened, workflow runs successfully — 23c730d
 - [ ] 4.2 Job Summary shows JSON review result (MANUAL — verify after workflow completes)
 - [ ] 4.3 Screenshots collected for 10xChampion (MANUAL — collect from GitHub Actions UI)
 
 ### Phase 5: promptfoo — ewaluacja modeli
-- [ ] 5.1 promptfoo installed as dev dependency
-- [ ] 5.2 `promptfooconfig.yaml` created with 3 providers and 3 test cases
-- [ ] 5.3 `review:eval` npm script added
-- [ ] 5.4 Eval runs successfully, matrix shows results for 3 models × 3 tests
+- [x] 5.1 promptfoo installed as dev dependency
+- [x] 5.2 `promptfooconfig.yaml` created with 3 providers and 3 test cases
+- [x] 5.3 `review:eval` npm script added
+- [ ] 5.4 Eval runs successfully, matrix shows results for 3 models × 3 tests (MANUAL — requires API keys)

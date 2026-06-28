@@ -51,16 +51,18 @@ jobs:
           VERDICT=$(echo "$REVIEW_RESULT" | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{try{console.log(JSON.parse(d).verdict)}catch{console.log('error')}})")
           SUMMARY=$(echo "$REVIEW_RESULT" | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{try{console.log(JSON.parse(d).summary)}catch{console.log('N/A')}})")
           if [ "$VERDICT" = "pass" ]; then ICON="✅"; else ICON="❌"; fi
-          BODY="## ${ICON} AI Code Review: ${VERDICT}
-
-${SUMMARY}
-
-<details>
-<summary>Full result</summary>
-
-\`\`\`json
-${REVIEW_RESULT}
-\`\`\`
-
-</details>"
-          gh pr comment "$PR_NUMBER" --body "$BODY"
+          {
+            echo "## ${ICON} AI Code Review: ${VERDICT}"
+            echo ""
+            echo "${SUMMARY}"
+            echo ""
+            echo "<details>"
+            echo "<summary>Full result</summary>"
+            echo ""
+            echo '```json'
+            echo "${REVIEW_RESULT}"
+            echo '```'
+            echo ""
+            echo "</details>"
+          } > /tmp/pr-comment.md
+          gh pr comment "$PR_NUMBER" --body-file /tmp/pr-comment.md

@@ -342,12 +342,12 @@ Zrób screenshot macierzy wyników.
 - [ ] 1.1 OPENROUTER_API_KEY added as GitHub Actions secret (MANUAL — user must add via GitHub Settings)
 
 ### Phase 2: Composite Action
-- [x] 2.1 `.github/actions/ai-reviewer/action.yml` created with inputs, outputs, and env-var-safe shell steps
-- [x] 2.2 Action reads diff via env var, runs agent, parses verdict, writes Job Summary
+- [x] 2.1 `.github/actions/ai-reviewer/action.yml` created with inputs, outputs, and env-var-safe shell steps — feb9dff
+- [x] 2.2 Action reads diff via env var, runs agent, parses verdict, writes Job Summary — feb9dff
 
 ### Phase 3: Workflow
-- [ ] 3.1 `.github/workflows/ai-review.yml` created, triggers on PR to main/master + workflow_dispatch
-- [ ] 3.2 Workflow checks out repo, installs deps, gets diff, calls composite action, logs verdict
+- [x] 3.1 `.github/workflows/ai-review.yml` created, triggers on PR to main/master + workflow_dispatch
+- [x] 3.2 Workflow checks out repo, installs deps, gets diff, calls composite action, logs verdict
 
 ### Phase 4: Weryfikacja pipeline'u
 - [ ] 4.1 Branch pushed, PR opened, workflow runs successfully

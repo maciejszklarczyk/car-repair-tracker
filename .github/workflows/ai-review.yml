@@ -1,0 +1,47 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get diff
+        id: diff
+        run: |
+          DIFF=$(git diff origin/${{ github.base_ref }}...HEAD)
+          echo "value<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$DIFF" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Run AI Review
+        id: review
+        uses: ./.github/actions/ai-reviewer
+        with:
+          api-key: ${{ secrets.OPENROUTER_API_KEY }}
+          diff: ${{ steps.diff.outputs.value }}
+
+      - name: Log verdict
+        run: |
+          echo "AI Review verdict: ${{ steps.review.outputs.verdict }}"
+          if [ "${{ steps.review.outputs.verdict }}" = "fail" ]; then
+            echo "⚠️ Review nie przeszło — sprawdź Job Summary"
+          fi

@@ -16,7 +16,7 @@ const openrouter = createOpenAI({
 });
 
 // Override via OPENROUTER_MODEL env var — see https://openrouter.ai/models?q=free
-const MODEL = process.env.OPENROUTER_MODEL ?? "meta-llama/llama-3.3-70b-instruct:free";
+const MODEL = process.env.OPENROUTER_MODEL ?? "google/gemma-4-26b-a4b-it:free";
 
 const SYSTEM_PROMPT = `You are a precise, constructive code reviewer assessing a pull request.
 Score the provided diff on five criteria from 1-10 (1 = serious issues, 10 = exemplary):

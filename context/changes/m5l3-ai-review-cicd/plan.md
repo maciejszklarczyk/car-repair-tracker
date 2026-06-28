@@ -355,7 +355,7 @@ Zrób screenshot macierzy wyników.
 - [ ] 4.3 Screenshots collected for 10xChampion (MANUAL — collect from GitHub Actions UI)
 
 ### Phase 5: promptfoo — ewaluacja modeli
-- [x] 5.1 promptfoo installed as dev dependency
-- [x] 5.2 `promptfooconfig.yaml` created with 3 providers and 3 test cases
-- [x] 5.3 `review:eval` npm script added
+- [x] 5.1 promptfoo installed as dev dependency — bbfb672
+- [x] 5.2 `promptfooconfig.yaml` created with 3 providers and 3 test cases — bbfb672
+- [x] 5.3 `review:eval` npm script added — bbfb672
 - [ ] 5.4 Eval runs successfully, matrix shows results for 3 models × 3 tests (MANUAL — requires API keys)

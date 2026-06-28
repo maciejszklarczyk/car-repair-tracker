@@ -1,6 +1,6 @@
 ---
 id: m5l3-ai-review-cicd
-status: implementing
+status: implemented
 updated: 2026-06-28
 ---
 

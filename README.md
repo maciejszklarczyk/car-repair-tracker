@@ -200,6 +200,36 @@ Get a free key from [Google AI Studio](https://aistudio.google.com/apikey). The 
 - 30 requests per minute, 1,500 requests per day
 - Classification adds ~1–2s to repair creation (3s timeout)
 
+## AI Code Review Agent
+
+An AI-powered code review agent in `packages/code-reviewer/` scores diffs on five criteria (correctness, idiomaticity, complexity, test coverage, security) and returns a pass/fail verdict with a summary.
+
+### Local usage
+
+```bash
+# Review last commit
+git diff HEAD~1 | npx tsx packages/code-reviewer/review.ts
+
+# Review staged changes
+git diff --cached | npx tsx packages/code-reviewer/review.ts
+
+# Review a specific range
+git diff main...HEAD | npx tsx packages/code-reviewer/review.ts
+```
+
+Requires `OPENROUTER_API_KEY` in `.env`. Override the model with `OPENROUTER_MODEL` env var (default: `openrouter/free`).
+
+### Model evaluation (promptfoo)
+
+Compare multiple models on the same test diffs:
+
+```bash
+npm run review:eval
+npx promptfoo view  # opens UI with results matrix
+```
+
+Requires `OPENROUTER_API_KEY` and optionally `GOOGLE_AI_API_KEY` in environment.
+
 ## Deployment
 
 A `Dockerfile` and `docker-compose.prod.yml` are included for deployment.

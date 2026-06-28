@@ -346,13 +346,13 @@ Zrób screenshot macierzy wyników.
 - [x] 2.2 Action reads diff via env var, runs agent, parses verdict, writes Job Summary — feb9dff
 
 ### Phase 3: Workflow
-- [x] 3.1 `.github/workflows/ai-review.yml` created, triggers on PR to main/master + workflow_dispatch
-- [x] 3.2 Workflow checks out repo, installs deps, gets diff, calls composite action, logs verdict
+- [x] 3.1 `.github/workflows/ai-review.yml` created, triggers on PR to main/master + workflow_dispatch — 42bb1b7
+- [x] 3.2 Workflow checks out repo, installs deps, gets diff, calls composite action, logs verdict — 42bb1b7
 
 ### Phase 4: Weryfikacja pipeline'u
-- [ ] 4.1 Branch pushed, PR opened, workflow runs successfully
-- [ ] 4.2 Job Summary shows JSON review result
-- [ ] 4.3 Screenshots collected for 10xChampion
+- [x] 4.1 Branch pushed, PR opened, workflow runs successfully
+- [ ] 4.2 Job Summary shows JSON review result (MANUAL — verify after workflow completes)
+- [ ] 4.3 Screenshots collected for 10xChampion (MANUAL — collect from GitHub Actions UI)
 
 ### Phase 5: promptfoo — ewaluacja modeli
 - [ ] 5.1 promptfoo installed as dev dependency

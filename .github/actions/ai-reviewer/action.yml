@@ -13,6 +13,9 @@ outputs:
   verdict:
     description: "pass or fail"
     value: ${{ steps.parse.outputs.verdict }}
+  result:
+    description: "Full JSON review result"
+    value: ${{ steps.agent.outputs.result }}
 
 runs:
   using: composite

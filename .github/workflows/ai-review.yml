@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: read
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
@@ -40,3 +40,27 @@ jobs:
           if [ "${{ steps.review.outputs.verdict }}" = "fail" ]; then
             echo "⚠️ Review nie przeszło — sprawdź Job Summary"
           fi
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REVIEW_RESULT: ${{ steps.review.outputs.result }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          VERDICT=$(echo "$REVIEW_RESULT" | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{try{console.log(JSON.parse(d).verdict)}catch{console.log('error')}})")
+          SUMMARY=$(echo "$REVIEW_RESULT" | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{try{console.log(JSON.parse(d).summary)}catch{console.log('N/A')}})")
+          if [ "$VERDICT" = "pass" ]; then ICON="✅"; else ICON="❌"; fi
+          BODY="## ${ICON} AI Code Review: ${VERDICT}
+
+${SUMMARY}
+
+<details>
+<summary>Full result</summary>
+
+\`\`\`json
+${REVIEW_RESULT}
+\`\`\`
+
+</details>"
+          gh pr comment "$PR_NUMBER" --body "$BODY"

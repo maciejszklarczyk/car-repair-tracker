@@ -27,7 +27,7 @@ jobs:
       - name: Get diff
         id: diff
         run: |
-          DIFF=$(git diff origin/${{ github.base_ref }}...HEAD)
+          DIFF=$(git diff origin/${{ github.base_ref }}...HEAD -- ':!context/')
           echo "value<<EOF" >> "$GITHUB_OUTPUT"
           echo "$DIFF" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"

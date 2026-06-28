@@ -184,6 +184,21 @@ git diff HEAD~1 | npx tsx packages/code-reviewer/review.ts
 
 ---
 
+## Addendum: Provider Switch (2026-06-28)
+
+During Phase 3 verification, the provider was switched from Google Gemini (`@ai-sdk/google` + `GEMINI_API_KEY`) to OpenRouter (`@ai-sdk/openai` + `OPENROUTER_API_KEY`). Key changes:
+
+- **Provider**: `createOpenAI` with `baseURL: "https://openrouter.ai/api/v1"` instead of `createGoogleGenerativeAI`
+- **Model**: configurable via `OPENROUTER_MODEL` env var, defaults to `openrouter/free`
+- **System prompt**: switched from Polish to English
+- **`structuredOutputs: false`**: required because OpenRouter doesn't reliably support native structured outputs across routed models
+- **`dotenv/config`**: added to load `.env` in standalone script context
+- **`.env.example`**: `OPENROUTER_API_KEY` added
+
+Structural skeleton (ToolLoopAgent, schema shape, stdin→JSON pipeline) unchanged.
+
+---
+
 ## Progress
 
 ### Phase 1: Setup zależności i klucza API

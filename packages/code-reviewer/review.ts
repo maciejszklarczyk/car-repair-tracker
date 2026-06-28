@@ -28,20 +28,30 @@ in English that the PR author can act on.`;
 const REVIEW_SCHEMA = z.object({
   implementationCorrectness: z
     .number()
-    .describe("Poprawność implementacji (1-10). 1: logika błędna. 10: poprawna na ścieżce głównej i edge casach."),
-  idiomaticity: z.number().describe("Idiomatyczność: zgodność z konwencjami języka i projektu (1-10)."),
+    .describe("Implementation correctness (1-10). 1: broken logic. 10: correct on happy path and edge cases."),
+  idiomaticity: z.number().describe("Idiomaticity: adherence to language and project conventions (1-10)."),
   complexity: z
     .number()
-    .describe("Złożoność: prostota względem problemu (1-10). 1: nadmiernie skomplikowane. 10: minimalne."),
-  testCoverage: z.number().describe("Pokrycie testami proporcjonalne do ryzyka (1-10)."),
-  security: z.number().describe("Bezpieczeństwo: brak podatności i wycieków sekretów (1-10)."),
-  verdict: z.enum(["pass", "fail"]).describe("Wiążący werdykt dla całej zmiany"),
+    .describe("Complexity: simplicity relative to the problem (1-10). 1: over-engineered. 10: minimal."),
+  testCoverage: z.number().describe("Test coverage proportional to risk (1-10)."),
+  security: z.number().describe("Security: no vulnerabilities or leaked secrets (1-10)."),
+  verdict: z.enum(["pass", "fail"]).describe("Binding verdict for the entire change"),
   summary: z.string().describe("2-3 sentence summary in English suitable as a PR comment"),
 });
 
+const MAX_DIFF_BYTES = 1024 * 1024; // 1 MB
+
 async function readDiff(): Promise<string> {
   const chunks: Buffer[] = [];
-  for await (const chunk of process.stdin) chunks.push(chunk as Buffer);
+  let totalBytes = 0;
+  for await (const chunk of process.stdin) {
+    totalBytes += (chunk as Buffer).length;
+    if (totalBytes > MAX_DIFF_BYTES) {
+      console.error(`Diff exceeds ${MAX_DIFF_BYTES / 1024 / 1024} MB limit. Pass a narrower diff.`);
+      process.exit(1);
+    }
+    chunks.push(chunk as Buffer);
+  }
   return Buffer.concat(chunks).toString("utf8");
 }
 
@@ -55,16 +65,22 @@ async function review(diff: string) {
   });
 
   const { output } = await reviewer.generate({
-    prompt: `Zrecenzuj ten diff:\n\n${diff}`,
+    prompt: `Review this diff:\n\n${diff}`,
   });
   return output;
 }
 
 const diff = await readDiff();
 if (!diff.trim()) {
-  console.error("Brak diffa na stdin. Użyj: git diff HEAD~1 | npx tsx packages/code-reviewer/review.ts");
+  console.error("No diff on stdin. Usage: git diff HEAD~1 | npx tsx packages/code-reviewer/review.ts");
   process.exit(1);
 }
 
-const result = await review(diff);
-console.log(JSON.stringify(result, null, 2));
+try {
+  const result = await review(diff);
+  console.log(JSON.stringify(result, null, 2));
+} catch (error) {
+  const message = error instanceof Error ? error.message : String(error);
+  console.error(`Review failed (model: ${MODEL}): ${message}`);
+  process.exit(1);
+}

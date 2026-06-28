@@ -57,7 +57,7 @@ async function readDiff(): Promise<string> {
 
 async function review(diff: string) {
   const reviewer = new ToolLoopAgent({
-    model: openrouter.chat(MODEL, { structuredOutputs: false }),
+    model: openrouter.chat(MODEL),
     instructions: SYSTEM_PROMPT,
     tools: {},
     output: Output.object({ schema: REVIEW_SCHEMA }),

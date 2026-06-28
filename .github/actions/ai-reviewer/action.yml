@@ -5,8 +5,8 @@ inputs:
   api-key:
     description: OpenRouter API key
     required: true
-  diff:
-    description: Git diff content to review
+  diff-file:
+    description: Path to file containing the git diff
     required: true
 
 outputs:
@@ -21,13 +21,13 @@ runs:
       id: agent
       shell: bash
       run: |
-        RESULT=$(echo "$DIFF_INPUT" | npx tsx ${{ github.action_path }}/../../../packages/code-reviewer/review.ts 2>&1)
+        RESULT=$(npx tsx ${{ github.action_path }}/../../../packages/code-reviewer/review.ts < "$DIFF_FILE" 2>&1)
         echo "result<<EOF" >> "$GITHUB_OUTPUT"
         echo "$RESULT" >> "$GITHUB_OUTPUT"
         echo "EOF" >> "$GITHUB_OUTPUT"
       env:
         OPENROUTER_API_KEY: ${{ inputs.api-key }}
-        DIFF_INPUT: ${{ inputs.diff }}
+        DIFF_FILE: ${{ inputs.diff-file }}
 
     - name: Parse verdict
       id: parse

@@ -25,19 +25,14 @@ jobs:
         run: npm ci
 
       - name: Get diff
-        id: diff
-        run: |
-          DIFF=$(git diff origin/${{ github.base_ref }}...HEAD -- ':!context/')
-          echo "value<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$DIFF" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
+        run: git diff origin/${{ github.base_ref }}...HEAD -- ':!context/' ':!package-lock.json' > /tmp/pr-diff.txt
 
       - name: Run AI Review
         id: review
         uses: ./.github/actions/ai-reviewer
         with:
           api-key: ${{ secrets.OPENROUTER_API_KEY }}
-          diff: ${{ steps.diff.outputs.value }}
+          diff-file: /tmp/pr-diff.txt
 
       - name: Log verdict
         run: |

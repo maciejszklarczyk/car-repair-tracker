@@ -74,7 +74,7 @@ async function review(diff: string) {
     model: openrouter.chat(MODEL),
     system: SYSTEM_PROMPT,
     prompt: `Review this diff:\n\n${diff}`,
-    maxTokens: 1024,
+    maxOutputTokens: 1024,
   });
 
   const parsed: unknown = JSON.parse(extractJson(text));

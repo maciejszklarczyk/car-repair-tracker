@@ -16,8 +16,7 @@ const openrouter = createOpenAI({
 });
 
 // Override via OPENROUTER_MODEL env var — see https://openrouter.ai/models?q=free
-// openrouter/free auto-routes to a free model supporting the needed features (structured outputs etc.)
-const MODEL = process.env.OPENROUTER_MODEL ?? "openrouter/free";
+const MODEL = process.env.OPENROUTER_MODEL ?? "meta-llama/llama-3.3-70b-instruct:free";
 
 const SYSTEM_PROMPT = `You are a precise, constructive code reviewer assessing a pull request.
 Score the provided diff on five criteria from 1-10 (1 = serious issues, 10 = exemplary):

@@ -24,10 +24,17 @@ runs:
       id: agent
       shell: bash
       run: |
+        set +e
         RESULT=$(npx tsx ${{ github.action_path }}/../../../packages/code-reviewer/review.ts < "$DIFF_FILE" 2>&1)
+        EXIT_CODE=$?
+        set -e
         echo "result<<EOF" >> "$GITHUB_OUTPUT"
         echo "$RESULT" >> "$GITHUB_OUTPUT"
         echo "EOF" >> "$GITHUB_OUTPUT"
+        if [ $EXIT_CODE -ne 0 ]; then
+          echo "::warning::Agent exited with code $EXIT_CODE"
+          echo "$RESULT"
+        fi
       env:
         OPENROUTER_API_KEY: ${{ inputs.api-key }}
         DIFF_FILE: ${{ inputs.diff-file }}

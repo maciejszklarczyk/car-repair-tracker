@@ -62,9 +62,9 @@ async function readDiff(): Promise<string> {
 }
 
 function extractJson(text: string): string {
-  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+  const fenced = /```(?:json)?\s*([\s\S]*?)```/.exec(text);
   if (fenced) return fenced[1].trim();
-  const braced = text.match(/\{[\s\S]*\}/);
+  const braced = /\{[\s\S]*\}/.exec(text);
   if (braced) return braced[0];
   return text.trim();
 }
@@ -77,7 +77,7 @@ async function review(diff: string) {
     maxTokens: 1024,
   });
 
-  const parsed = JSON.parse(extractJson(text));
+  const parsed: unknown = JSON.parse(extractJson(text));
   return REVIEW_SCHEMA.parse(parsed);
 }
 

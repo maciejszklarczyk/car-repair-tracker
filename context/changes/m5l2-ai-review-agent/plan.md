@@ -187,12 +187,12 @@ git diff HEAD~1 | npx tsx packages/code-reviewer/review.ts
 ## Progress
 
 ### Phase 1: Setup zależności i klucza API
-- [x] 1.1 Klucz `GEMINI_API_KEY` w `.env` (reużyty z istniejącej konfiguracji)
-- [x] 1.2 `npm install` przechodzi bez błędów
-- [x] 1.3 `npx tsx --version` wypisuje wersję
+- [x] 1.1 Klucz `GEMINI_API_KEY` w `.env` (reużyty z istniejącej konfiguracji) — f9c4140
+- [x] 1.2 `npm install` przechodzi bez błędów — f9c4140
+- [x] 1.3 `npx tsx --version` wypisuje wersję — f9c4140
 
 ### Phase 2: Implementacja agenta
-- [ ] 2.1 `packages/code-reviewer/review.ts` istnieje
+- [x] 2.1 `packages/code-reviewer/review.ts` istnieje
 
 ### Phase 3: Weryfikacja
 - [ ] 3.1 `git diff HEAD~1 | npx tsx packages/code-reviewer/review.ts` zwraca poprawny JSON

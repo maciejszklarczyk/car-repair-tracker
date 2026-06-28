@@ -1,20 +1,29 @@
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import "dotenv/config";
+import { createOpenAI } from "@ai-sdk/openai";
 import { ToolLoopAgent, Output, stepCountIs } from "ai";
 import { z } from "zod";
 
-const apiKey = process.env.GEMINI_API_KEY;
+const apiKey = process.env.OPENROUTER_API_KEY;
 if (!apiKey) {
-  console.error("GEMINI_API_KEY is not set in .env");
+  console.error("OPENROUTER_API_KEY is not set in .env");
   process.exit(1);
 }
 
-const google = createGoogleGenerativeAI({ apiKey });
+// use .chat() to force /chat/completions — OpenRouter doesn't support /responses
+const openrouter = createOpenAI({
+  apiKey,
+  baseURL: "https://openrouter.ai/api/v1",
+});
 
-const SYSTEM_PROMPT = `Jesteś precyzyjnym, konstruktywnym recenzentem kodu oceniającym pull request.
-Oceń podany diff w pięciu kryteriach w skali 1-10 (1 = poważne braki, 10 = wzorowo):
-poprawność implementacji, idiomatyczność, złożoność, pokrycie testami względem ryzyka, bezpieczeństwo.
-Następnie wydaj wiążący werdykt (pass/fail) dla całej zmiany i dołącz krótkie podsumowanie (2-3 zdania)
-po polsku, na podstawie którego autor PR-a będzie mógł działać.`;
+// Override via OPENROUTER_MODEL env var — see https://openrouter.ai/models?q=free
+// openrouter/free auto-routes to a free model supporting the needed features (structured outputs etc.)
+const MODEL = process.env.OPENROUTER_MODEL ?? "openrouter/free";
+
+const SYSTEM_PROMPT = `You are a precise, constructive code reviewer assessing a pull request.
+Score the provided diff on five criteria from 1-10 (1 = serious issues, 10 = exemplary):
+implementation correctness, idiomaticity, complexity, test coverage relative to risk, security.
+Then issue a binding verdict (pass/fail) for the entire change and include a short summary (2-3 sentences)
+in English that the PR author can act on.`;
 
 const REVIEW_SCHEMA = z.object({
   implementationCorrectness: z
@@ -27,7 +36,7 @@ const REVIEW_SCHEMA = z.object({
   testCoverage: z.number().describe("Pokrycie testami proporcjonalne do ryzyka (1-10)."),
   security: z.number().describe("Bezpieczeństwo: brak podatności i wycieków sekretów (1-10)."),
   verdict: z.enum(["pass", "fail"]).describe("Wiążący werdykt dla całej zmiany"),
-  summary: z.string().describe("Podsumowanie 2-3 zdania po polsku jako komentarz do PR"),
+  summary: z.string().describe("2-3 sentence summary in English suitable as a PR comment"),
 });
 
 async function readDiff(): Promise<string> {
@@ -38,7 +47,7 @@ async function readDiff(): Promise<string> {
 
 async function review(diff: string) {
   const reviewer = new ToolLoopAgent({
-    model: google("gemini-2.0-flash"),
+    model: openrouter.chat(MODEL, { structuredOutputs: false }),
     instructions: SYSTEM_PROMPT,
     tools: {},
     output: Output.object({ schema: REVIEW_SCHEMA }),
@@ -53,7 +62,7 @@ async function review(diff: string) {
 
 const diff = await readDiff();
 if (!diff.trim()) {
-  console.error("Brak diffa na stdin. Użyj: git diff | npx tsx review.ts");
+  console.error("Brak diffa na stdin. Użyj: git diff HEAD~1 | npx tsx packages/code-reviewer/review.ts");
   process.exit(1);
 }
 

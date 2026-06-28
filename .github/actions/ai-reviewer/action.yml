@@ -1,0 +1,54 @@
+name: AI Code Reviewer
+description: Reviews PR diff using Gemini AI via Vercel AI SDK
+
+inputs:
+  api-key:
+    description: OpenRouter API key
+    required: true
+  diff:
+    description: Git diff content to review
+    required: true
+
+outputs:
+  verdict:
+    description: "pass or fail"
+    value: ${{ steps.parse.outputs.verdict }}
+
+runs:
+  using: composite
+  steps:
+    - name: Run review agent
+      id: agent
+      shell: bash
+      run: |
+        RESULT=$(echo "$DIFF_INPUT" | npx tsx ${{ github.action_path }}/../../../packages/code-reviewer/review.ts 2>&1)
+        echo "result<<EOF" >> "$GITHUB_OUTPUT"
+        echo "$RESULT" >> "$GITHUB_OUTPUT"
+        echo "EOF" >> "$GITHUB_OUTPUT"
+      env:
+        OPENROUTER_API_KEY: ${{ inputs.api-key }}
+        DIFF_INPUT: ${{ inputs.diff }}
+
+    - name: Parse verdict
+      id: parse
+      shell: bash
+      run: |
+        VERDICT=$(echo "$AGENT_RESULT" | node -e "
+          let d=''; process.stdin.on('data',c=>d+=c).on('end',()=>{
+            try { console.log(JSON.parse(d).verdict); } catch { console.log('error'); }
+          });
+        ")
+        echo "verdict=$VERDICT" >> "$GITHUB_OUTPUT"
+      env:
+        AGENT_RESULT: ${{ steps.agent.outputs.result }}
+
+    - name: Write Job Summary
+      shell: bash
+      run: |
+        echo "## 🤖 AI Code Review" >> "$GITHUB_STEP_SUMMARY"
+        echo "" >> "$GITHUB_STEP_SUMMARY"
+        echo '```json' >> "$GITHUB_STEP_SUMMARY"
+        echo "$AGENT_RESULT" >> "$GITHUB_STEP_SUMMARY"
+        echo '```' >> "$GITHUB_STEP_SUMMARY"
+      env:
+        AGENT_RESULT: ${{ steps.agent.outputs.result }}

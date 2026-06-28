@@ -195,6 +195,6 @@ git diff HEAD~1 | npx tsx packages/code-reviewer/review.ts
 - [x] 2.1 `packages/code-reviewer/review.ts` istnieje — 4309750
 
 ### Phase 3: Weryfikacja
-- [x] 3.1 `git diff HEAD~1 | npx tsx packages/code-reviewer/review.ts` zwraca poprawny JSON
-- [x] 3.2 JSON zawiera wszystkie 7 pól zgodnych ze schematem
-- [x] 3.3 `verdict` jest `"pass"` lub `"fail"`
+- [x] 3.1 `git diff HEAD~1 | npx tsx packages/code-reviewer/review.ts` zwraca poprawny JSON — 48cd296
+- [x] 3.2 JSON zawiera wszystkie 7 pól zgodnych ze schematem — 48cd296
+- [x] 3.3 `verdict` jest `"pass"` lub `"fail"` — 48cd296

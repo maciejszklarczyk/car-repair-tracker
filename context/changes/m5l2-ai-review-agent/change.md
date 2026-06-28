@@ -1,7 +1,7 @@
 ---
 id: m5l2-ai-review-agent
 title: "M5L2: AI Code Review Agent (lokalnie)"
-status: implementing
+status: implemented
 created: 2026-06-28
 updated: 2026-06-28
 ---

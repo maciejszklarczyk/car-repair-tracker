@@ -1,0 +1,53 @@
+providers:
+  - id: google:gemini-2.0-flash
+    config:
+      apiKey: "${GOOGLE_AI_API_KEY}"
+
+  - id: openrouter:meta-llama/llama-3.3-70b-instruct:free
+    config:
+      apiKey: "${OPENROUTER_API_KEY}"
+
+  - id: openrouter:google/gemma-3-27b-it:free
+    config:
+      apiKey: "${OPENROUTER_API_KEY}"
+
+prompts:
+  - |
+    Jesteś recenzentem kodu. Oceń diff i zwróć wyłącznie JSON (bez markdown) z polami:
+    verdict ("pass" lub "fail"), summary (string 2-3 zdania po polsku).
+    Diff:
+    {{diff}}
+
+tests:
+  - description: "SQL injection — powinien fail"
+    vars:
+      diff: |
+        -const query = `SELECT * FROM users WHERE id = ${userId}`;
+        +const { data } = await supabase.from('users').select('*').eq('id', userId);
+    assert:
+      - type: is-valid-json
+      - type: llm-rubric
+        value: Odpowiedź identyfikuje podatność SQL injection w usuniętej linii i wskazuje na poprawę w nowej
+
+  - description: "Czysty kod utility — powinien pass"
+    vars:
+      diff: |
+        +export function formatDate(date: Date): string {
+        +  return date.toISOString().split('T')[0];
+        +}
+    assert:
+      - type: is-valid-json
+      - type: llm-rubric
+        value: Odpowiedź ocenia kod pozytywnie i nie wskazuje poważnych problemów
+
+  - description: "Brak obsługi błędów — powinien fail lub needs-attention"
+    vars:
+      diff: |
+        +async function fetchRepair(id: string) {
+        +  const res = await fetch(`/api/repairs/${id}`);
+        +  return res.json();
+        +}
+    assert:
+      - type: is-valid-json
+      - type: llm-rubric
+        value: Odpowiedź zauważa brak obsługi błędów HTTP lub wyjątków sieciowych

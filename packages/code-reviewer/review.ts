@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { createOpenAI } from "@ai-sdk/openai";
-import { ToolLoopAgent, Output, stepCountIs } from "ai";
+import { generateText } from "ai";
 import { z } from "zod";
 
 const apiKey = process.env.OPENROUTER_API_KEY;
@@ -16,27 +16,33 @@ const openrouter = createOpenAI({
 });
 
 // Override via OPENROUTER_MODEL env var — see https://openrouter.ai/models?q=free
-// openrouter/free auto-routes to a free model supporting the needed features (structured outputs etc.)
-const MODEL = process.env.OPENROUTER_MODEL ?? "openrouter/free";
+const MODEL = process.env.OPENROUTER_MODEL ?? "google/gemma-4-26b-a4b-it:free";
 
 const SYSTEM_PROMPT = `You are a precise, constructive code reviewer assessing a pull request.
 Score the provided diff on five criteria from 1-10 (1 = serious issues, 10 = exemplary):
 implementation correctness, idiomaticity, complexity, test coverage relative to risk, security.
 Then issue a binding verdict (pass/fail) for the entire change and include a short summary (2-3 sentences)
-in English that the PR author can act on.`;
+in English that the PR author can act on.
+
+You MUST respond with ONLY a valid JSON object (no markdown, no code fences) matching this exact schema:
+{
+  "implementationCorrectness": <number 1-10>,
+  "idiomaticity": <number 1-10>,
+  "complexity": <number 1-10>,
+  "testCoverage": <number 1-10>,
+  "security": <number 1-10>,
+  "verdict": "pass" | "fail",
+  "summary": "<string>"
+}`;
 
 const REVIEW_SCHEMA = z.object({
-  implementationCorrectness: z
-    .number()
-    .describe("Implementation correctness (1-10). 1: broken logic. 10: correct on happy path and edge cases."),
-  idiomaticity: z.number().describe("Idiomaticity: adherence to language and project conventions (1-10)."),
-  complexity: z
-    .number()
-    .describe("Complexity: simplicity relative to the problem (1-10). 1: over-engineered. 10: minimal."),
-  testCoverage: z.number().describe("Test coverage proportional to risk (1-10)."),
-  security: z.number().describe("Security: no vulnerabilities or leaked secrets (1-10)."),
-  verdict: z.enum(["pass", "fail"]).describe("Binding verdict for the entire change"),
-  summary: z.string().describe("2-3 sentence summary in English suitable as a PR comment"),
+  implementationCorrectness: z.number(),
+  idiomaticity: z.number(),
+  complexity: z.number(),
+  testCoverage: z.number(),
+  security: z.number(),
+  verdict: z.enum(["pass", "fail"]),
+  summary: z.string(),
 });
 
 const MAX_DIFF_BYTES = 1024 * 1024; // 1 MB
@@ -55,19 +61,24 @@ async function readDiff(): Promise<string> {
   return Buffer.concat(chunks).toString("utf8");
 }
 
+function extractJson(text: string): string {
+  const fenced = /```(?:json)?\s*([\s\S]*?)```/.exec(text);
+  if (fenced) return fenced[1].trim();
+  const braced = /\{[\s\S]*\}/.exec(text);
+  if (braced) return braced[0];
+  return text.trim();
+}
+
 async function review(diff: string) {
-  const reviewer = new ToolLoopAgent({
+  const { text } = await generateText({
     model: openrouter.chat(MODEL),
-    instructions: SYSTEM_PROMPT,
-    tools: {},
-    output: Output.object({ schema: REVIEW_SCHEMA }),
-    stopWhen: stepCountIs(2),
+    system: SYSTEM_PROMPT,
+    prompt: `Review this diff:\n\n${diff}`,
+    maxOutputTokens: 1024,
   });
 
-  const { output } = await reviewer.generate({
-    prompt: `Review this diff:\n\n${diff}`,
-  });
-  return output;
+  const parsed: unknown = JSON.parse(extractJson(text));
+  return REVIEW_SCHEMA.parse(parsed);
 }
 
 const diff = await readDiff();

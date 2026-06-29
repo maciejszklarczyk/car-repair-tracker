@@ -86,6 +86,7 @@ npm run dev
 - `npm run test` — run unit tests (Vitest)
 - `npm run test:watch` — run tests in watch mode
 - `npm run e2e` — run E2E tests (Playwright, requires local Supabase running)
+- `npm run review:eval` — run promptfoo evaluation comparing AI review models
 
 ## Project Structure
 
@@ -156,6 +157,7 @@ Add these variables to `.env`:
 | `SUPABASE_SERVICE_ROLE_KEY` | Optional — service role key for demo account creation (from Supabase dashboard → Settings → API) |
 | `SENTRY_DSN` | Optional — Sentry DSN for error tracking |
 | `SENTRY_AUTH_TOKEN` | Optional — Sentry auth token for source map uploads |
+| `OPENROUTER_API_KEY` | Optional — [OpenRouter](https://openrouter.ai) API key for AI code review agent and promptfoo evaluation |
 
 ### Email confirmation in local development
 
@@ -198,6 +200,36 @@ Get a free key from [Google AI Studio](https://aistudio.google.com/apikey). The 
 - 30 requests per minute, 1,500 requests per day
 - Classification adds ~1–2s to repair creation (3s timeout)
 
+## AI Code Review Agent
+
+An AI-powered code review agent in `packages/code-reviewer/` scores diffs on five criteria (correctness, idiomaticity, complexity, test coverage, security) and returns a pass/fail verdict with a summary.
+
+### Local usage
+
+```bash
+# Review last commit
+git diff HEAD~1 | npx tsx packages/code-reviewer/review.ts
+
+# Review staged changes
+git diff --cached | npx tsx packages/code-reviewer/review.ts
+
+# Review a specific range
+git diff main...HEAD | npx tsx packages/code-reviewer/review.ts
+```
+
+Requires `OPENROUTER_API_KEY` in `.env`. Override the model with `OPENROUTER_MODEL` env var (default: `openrouter/free`).
+
+### Model evaluation (promptfoo)
+
+Compare multiple models on the same test diffs:
+
+```bash
+npm run review:eval
+npx promptfoo view  # opens UI with results matrix
+```
+
+Requires `OPENROUTER_API_KEY` and optionally `GOOGLE_AI_API_KEY` in environment.
+
 ## Deployment
 
 A `Dockerfile` and `docker-compose.prod.yml` are included for deployment.
@@ -211,10 +243,11 @@ docker compose -f docker-compose.prod.yml up -d
 GitHub Actions workflows:
 
 - **`ci.yml`** — runs lint (ESLint + `astro check`), unit tests (Vitest), and build as parallel jobs on every push and PR to `main`. E2E tests (Playwright) run on PRs only, against a local Supabase instance.
+- **`ai-review.yml`** — AI code review on every PR to `main`/`master`. Reviews the diff using OpenRouter, posts verdict as a PR comment and Job Summary.
 - **`deploy.yml`** — builds and pushes a Docker image on release publish or manual trigger.
 - **`demo-cleanup.yml`** — nightly cron (03:00 UTC) deletes expired demo accounts and their data.
 
-Required repository secrets: `SUPABASE_URL`, `SUPABASE_KEY`. Additional secrets for demo cleanup: `SUPABASE_SERVICE_ROLE_KEY`.
+Required repository secrets: `SUPABASE_URL`, `SUPABASE_KEY`. Additional secrets: `OPENROUTER_API_KEY` (AI review), `SUPABASE_SERVICE_ROLE_KEY` (demo cleanup).
 
 ## License
 

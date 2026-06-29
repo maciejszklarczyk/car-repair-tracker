@@ -54,7 +54,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Sync compose file and restart
         run: |
-          cp docker-compose.prod.yml /home/maciej/docker/apps/car-repair-tracker/docker-compose.prod.yml
-          cd /home/maciej/docker/apps/car-repair-tracker
-          docker compose -f docker-compose.prod.yml pull
-          docker compose -f docker-compose.prod.yml up -d
+          cp docker-compose.prod.yml /home/maciej/docker/stacks/car-repair-tracker/compose.yaml
+          cd /home/maciej/docker/stacks/car-repair-tracker
+          docker compose pull
+          docker compose up -d

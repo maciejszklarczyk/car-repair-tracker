@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-06-29
+
+- [898469b] docs: add badge checklist with evidence and AI review screenshots
+
 ## 2026-06-26
 
 - [d9e78f1] refactor(vehicle-god-page): impl review fixes — parallel queries, select assertions, user_id filters

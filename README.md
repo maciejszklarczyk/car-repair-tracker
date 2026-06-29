@@ -249,6 +249,16 @@ GitHub Actions workflows:
 
 Required repository secrets: `SUPABASE_URL`, `SUPABASE_KEY`. Additional secrets: `OPENROUTER_API_KEY` (AI review), `SUPABASE_SERVICE_ROLE_KEY` (demo cleanup).
 
+### AI Code Review in action
+
+Pipeline logs — the `review` job runs AI review, logs the verdict, and comments on the PR:
+
+![AI Review pipeline logs](./docs/screenshots/ai-review-pipeline-logs.png)
+
+PR comment posted by the AI reviewer:
+
+![AI Review PR comment](./docs/screenshots/ai-review-pr-comment.png)
+
 ## License
 
 MIT

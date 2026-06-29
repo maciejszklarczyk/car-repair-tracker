@@ -2,6 +2,7 @@
 
 ## 2026-06-29
 
+- [8b45e48] fix(docker): install only production deps in runtime stage
 - [898469b] docs: add badge checklist with evidence and AI review screenshots
 
 ## 2026-06-26

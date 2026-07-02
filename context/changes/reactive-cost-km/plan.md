@@ -273,9 +273,9 @@ Not applicable — no data model or schema changes.
 
 #### Automated
 
-- [x] 2.1 Unit tests pass: `npm run test`
-- [x] 2.2 Type checking passes: `npm run astro check`
-- [x] 2.3 Linting passes: `npm run lint`
+- [x] 2.1 Unit tests pass: `npm run test` — 081510a
+- [x] 2.2 Type checking passes: `npm run astro check` — 081510a
+- [x] 2.3 Linting passes: `npm run lint` — 081510a
 
 #### Manual
 
@@ -287,10 +287,10 @@ Not applicable — no data model or schema changes.
 
 #### Automated
 
-- [ ] 3.1 Full unit test suite passes: `npm run test`
-- [ ] 3.2 Type checking passes: `npm run astro check`
-- [ ] 3.3 Linting passes: `npm run lint`
-- [ ] 3.4 E2E suite passes: `npm run e2e`
+- [x] 3.1 Full unit test suite passes: `npm run test`
+- [x] 3.2 Type checking passes: `npm run astro check`
+- [x] 3.3 Linting passes: `npm run lint`
+- [x] 3.4 E2E suite passes: `npm run e2e`
 
 #### Manual
 

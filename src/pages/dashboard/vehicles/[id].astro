@@ -3,6 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import { createClient } from "@/lib/supabase";
 import { getVehiclePageData } from "@/lib/services/vehiclePageData";
 import CostTrendChart from "@/components/vehicles/CostTrendChart";
+import VehicleStatsHeader from "@/components/vehicles/VehicleStatsHeader";
 import RepairList from "@/components/repairs/RepairList";
 import ServiceReminders from "@/components/service-reminders/ServiceReminders";
 import ServiceThresholdList from "@/components/service-reminders/ServiceThresholdList";
@@ -23,7 +24,7 @@ if (!data) {
   return Astro.redirect("/dashboard/vehicles");
 }
 
-const { vehicle, repairs, currentMileage, costPerKm, chartData, totalCostData, mileageData, thresholdSummary } = data;
+const { vehicle, repairs, chartData, totalCostData, mileageData, thresholdSummary } = data;
 
 const success = Astro.url.searchParams.get("success");
 const successMessage =
@@ -62,18 +63,7 @@ const successMessage =
             {vehicle.model}
           </h1>
           <div class="mt-3 flex flex-wrap gap-6 text-sm text-blue-100/70">
-            <span>Year: {vehicle.year}</span>
-            <span>Mileage: {currentMileage.toLocaleString()} km</span>
-            <span>
-              Cost/km:{" "}
-              {
-                costPerKm !== null ? (
-                  `${costPerKm.toFixed(2)} PLN/km`
-                ) : (
-                  <span class="text-xs text-blue-100/40">(— PLN/km — no cost data yet)</span>
-                )
-              }
-            </span>
+            <VehicleStatsHeader vehicle={vehicle} initialRepairs={repairs} client:load />
           </div>
         </div>
         <a
@@ -111,7 +101,7 @@ const successMessage =
 
     <div class="mt-8">
       <h2 class="mb-4 text-xl font-semibold text-blue-100/80">Repair History</h2>
-      <RepairList repairs={repairs} client:load />
+      <RepairList initialRepairs={repairs} client:load />
     </div>
   </div>
 </Layout>

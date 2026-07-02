@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import CategoryBadge from "@/components/repairs/CategoryBadge";
+import { useRepairsStore } from "@/components/hooks/useRepairsStore";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,11 +17,11 @@ import { Button } from "@/components/ui/button";
 import type { Repair } from "@/types";
 
 interface Props {
-  repairs: Repair[];
+  initialRepairs: Repair[];
 }
 
-export default function RepairList({ repairs: initialRepairs }: Props) {
-  const [repairs, setRepairs] = useState<Repair[]>(initialRepairs);
+export default function RepairList({ initialRepairs }: Props) {
+  const [repairs, deleteRepair] = useRepairsStore(initialRepairs);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
   async function handleDelete(repairId: string) {
@@ -28,7 +29,7 @@ export default function RepairList({ repairs: initialRepairs }: Props) {
     try {
       const response = await fetch(`/api/repairs/${repairId}`, { method: "DELETE" });
       if (response.ok) {
-        setRepairs((prev) => prev.filter((r) => r.id !== repairId));
+        deleteRepair(repairId);
       } else {
         const data = (await response.json()) as { error?: string };
         setDeleteError(data.error ?? "Failed to delete repair. Please try again.");

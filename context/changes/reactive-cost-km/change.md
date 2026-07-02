@@ -1,9 +1,9 @@
 ---
 change_id: reactive-cost-km
 title: Reactive cost/km update after repair delete
-status: new
+status: implementing
 created: 2026-06-26
-updated: 2026-06-26
+updated: 2026-07-02
 archived_at: null
 ---
 

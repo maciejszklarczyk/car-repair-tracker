@@ -25,10 +25,6 @@ describe("getVehiclePageData", () => {
     expect(result.vehicle).toEqual(vehicle);
     expect(result.repairs).toEqual(repairs);
     expect(result.currentMileage).toBe(12000);
-    expect(result.costPerKm).toBeTypeOf("number");
-    expect(result.chartData).toBeInstanceOf(Array);
-    expect(result.totalCostData).toBeInstanceOf(Array);
-    expect(result.mileageData).toBeInstanceOf(Array);
     expect(result.thresholdSummary).toBeInstanceOf(Array);
     expect(result.thresholdSummary).toHaveLength(1);
   });
@@ -103,9 +99,5 @@ describe("getVehiclePageData", () => {
     expect(result).not.toBeNull();
     if (result === null) return;
     expect(result.currentMileage).toBe(12000);
-    expect(result.costPerKm).toBeCloseTo(0.4);
-    expect(result.chartData).toHaveLength(2);
-    expect(result.totalCostData).toHaveLength(2);
-    expect(result.mileageData).toHaveLength(2);
   });
 });

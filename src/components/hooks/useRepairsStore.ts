@@ -15,20 +15,30 @@ export function resetRepairsStore(): void {
   listeners.clear();
 }
 
+function subscribe(listener: () => void): () => void {
+  if (typeof window === "undefined") {
+    return () => undefined;
+  }
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
+
+function getSnapshot(): Repair[] | null {
+  return typeof window === "undefined" ? null : repairs;
+}
+
 export function useRepairsStore(initialRepairs: Repair[]): [Repair[], (id: string) => void] {
-  function subscribe(listener: () => void): () => void {
+  const isServer = typeof window === "undefined";
+  if (!isServer) {
     repairs ??= initialRepairs;
-    listeners.add(listener);
-    return () => listeners.delete(listener);
   }
 
-  function getSnapshot(): Repair[] {
-    return repairs ?? initialRepairs;
-  }
-
-  const snapshot = useSyncExternalStore(subscribe, getSnapshot, () => initialRepairs);
+  const snapshot = useSyncExternalStore(subscribe, getSnapshot, () => null) ?? initialRepairs;
 
   function deleteRepair(id: string): void {
+    if (isServer) {
+      return;
+    }
     repairs = (repairs ?? initialRepairs).filter((r) => r.id !== id);
     notify();
   }

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-07-02
+
+- [e11195b] fix(reactive-cost-km): SSR isolation guard + store perf + trim dead server fields
+
 ## 2026-06-29
 
 - [8b45e48] fix(docker): install only production deps in runtime stage

@@ -2,7 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import { createClient } from "@/lib/supabase";
 import { getVehiclePageData } from "@/lib/services/vehiclePageData";
-import CostTrendChart from "@/components/vehicles/CostTrendChart";
+import ReactiveCostTrends from "@/components/vehicles/ReactiveCostTrends";
 import VehicleStatsHeader from "@/components/vehicles/VehicleStatsHeader";
 import RepairList from "@/components/repairs/RepairList";
 import ServiceReminders from "@/components/service-reminders/ServiceReminders";
@@ -24,7 +24,7 @@ if (!data) {
   return Astro.redirect("/dashboard/vehicles");
 }
 
-const { vehicle, repairs, chartData, totalCostData, mileageData, thresholdSummary } = data;
+const { vehicle, repairs, thresholdSummary } = data;
 
 const success = Astro.url.searchParams.get("success");
 const successMessage =
@@ -75,21 +75,7 @@ const successMessage =
       </div>
     </div>
 
-    {
-      (chartData.length >= 2 || totalCostData.length >= 2 || mileageData.length >= 2) && (
-        <div class="mt-6">
-          <h2 class="mb-4 text-xl font-semibold text-blue-100/80">Cost Trends</h2>
-          <div class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
-            <CostTrendChart
-              costPerKmData={chartData}
-              totalCostData={totalCostData}
-              mileageData={mileageData}
-              client:load
-            />
-          </div>
-        </div>
-      )
-    }
+    <ReactiveCostTrends vehicle={vehicle} initialRepairs={repairs} client:load />
 
     <ServiceReminders thresholds={thresholdSummary} client:load />
 

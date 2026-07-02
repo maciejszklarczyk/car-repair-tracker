@@ -1,25 +1,12 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Vehicle, Repair, ServiceThreshold } from "@/types";
-import {
-  computeCostPerKm,
-  computeCurrentMileage,
-  computeCostTrendData,
-  computeTotalCostTrendData,
-  computeMileageTrendData,
-  type CostTrendPoint,
-  type TotalCostPoint,
-  type MileagePoint,
-} from "@/lib/costPerKm";
+import { computeCurrentMileage } from "@/lib/costPerKm";
 import { computeThresholdSummary, type ThresholdWithStatus } from "@/lib/serviceReminders";
 
 export interface VehiclePageData {
   vehicle: Vehicle;
   repairs: Repair[];
   currentMileage: number;
-  costPerKm: number | null;
-  chartData: CostTrendPoint[];
-  totalCostData: TotalCostPoint[];
-  mileageData: MileagePoint[];
   thresholdSummary: ThresholdWithStatus[];
 }
 
@@ -64,20 +51,12 @@ export async function getVehiclePageData(
   const thresholds: ServiceThreshold[] = thresholdsResult.data;
 
   const currentMileage = computeCurrentMileage(repairs, vehicle.baseline_mileage);
-  const costPerKm = computeCostPerKm(vehicle, repairs);
-  const chartData = computeCostTrendData(vehicle, repairs);
-  const totalCostData = computeTotalCostTrendData(repairs);
-  const mileageData = computeMileageTrendData(repairs);
   const thresholdSummary = computeThresholdSummary(thresholds, currentMileage);
 
   return {
     vehicle,
     repairs,
     currentMileage,
-    costPerKm,
-    chartData,
-    totalCostData,
-    mileageData,
     thresholdSummary,
   };
 }

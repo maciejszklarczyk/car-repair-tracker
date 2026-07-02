@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import RepairList from "@/components/repairs/RepairList";
+import { resetRepairsStore } from "@/components/hooks/useRepairsStore";
 import { makeRepair } from "@/test/helpers";
 
 const repairs = [
@@ -11,6 +12,7 @@ const repairs = [
 
 beforeEach(() => {
   vi.restoreAllMocks();
+  resetRepairsStore();
 });
 
 describe("RepairList delete behavior", () => {
@@ -18,7 +20,7 @@ describe("RepairList delete behavior", () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(new Response(null, { status: 200 }));
     const user = userEvent.setup();
 
-    render(<RepairList repairs={repairs} />);
+    render(<RepairList initialRepairs={repairs} />);
     expect(screen.getByText("Oil change")).toBeInTheDocument();
     expect(screen.getByText("Brake pads")).toBeInTheDocument();
 
@@ -41,7 +43,7 @@ describe("RepairList delete behavior", () => {
     );
     const user = userEvent.setup();
 
-    render(<RepairList repairs={repairs} />);
+    render(<RepairList initialRepairs={repairs} />);
 
     const deleteButtons = screen.getAllByRole("button", { name: /delete/i });
     await user.click(deleteButtons[0]);

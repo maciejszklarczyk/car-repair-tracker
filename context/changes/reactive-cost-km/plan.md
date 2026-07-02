@@ -287,10 +287,10 @@ Not applicable — no data model or schema changes.
 
 #### Automated
 
-- [x] 3.1 Full unit test suite passes: `npm run test`
-- [x] 3.2 Type checking passes: `npm run astro check`
-- [x] 3.3 Linting passes: `npm run lint`
-- [x] 3.4 E2E suite passes: `npm run e2e`
+- [x] 3.1 Full unit test suite passes: `npm run test` — a07e58c
+- [x] 3.2 Type checking passes: `npm run astro check` — a07e58c
+- [x] 3.3 Linting passes: `npm run lint` — a07e58c
+- [x] 3.4 E2E suite passes: `npm run e2e` — a07e58c
 
 #### Manual
 

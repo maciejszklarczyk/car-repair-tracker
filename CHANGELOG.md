@@ -2,6 +2,7 @@
 
 ## 2026-07-02
 
+- [3e8c988] fix(docker): stop passing Supabase/Gemini secrets as build ARG/ENV
 - [e11195b] fix(reactive-cost-km): SSR isolation guard + store perf + trim dead server fields
 
 ## 2026-06-29

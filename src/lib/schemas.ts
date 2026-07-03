@@ -8,6 +8,8 @@ function isValidRepairDate(value: string): boolean {
   return date.toISOString().slice(0, 10) === value;
 }
 
+// "Today" is evaluated in server/UTC time, not the submitting user's local timezone —
+// a narrow false-reject/false-accept window exists within a few hours of local midnight.
 function isNotFutureRepairDate(value: string): boolean {
   const today = new Date().toISOString().slice(0, 10);
   return value <= today;

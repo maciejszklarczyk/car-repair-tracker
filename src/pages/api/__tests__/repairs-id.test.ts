@@ -214,7 +214,7 @@ describe("PUT /api/repairs/[id]", () => {
         error: null,
       },
       { data: { baseline_mileage: 10000 }, error: null },
-      { data: null, error: null },
+      { data: [], error: null },
     ]);
 
     const ctx = createMockContext({
@@ -258,7 +258,7 @@ describe("PUT /api/repairs/[id]", () => {
         error: null,
       },
       { data: { baseline_mileage: 10000 }, error: null },
-      { data: null, error: null },
+      { data: [], error: null },
     ]);
     mockedClassify.mockResolvedValueOnce("hamulce");
 
@@ -277,7 +277,7 @@ describe("PUT /api/repairs/[id]", () => {
     mockResults([
       { data: makeRepair({ user_id: "user-1", category: null, category_source: null }), error: null },
       { data: { baseline_mileage: 10000 }, error: null },
-      { data: null, error: null },
+      { data: [], error: null },
     ]);
     mockedClassify.mockResolvedValueOnce("silnik");
 
@@ -307,7 +307,7 @@ describe("PUT /api/repairs/[id]", () => {
         error: null,
       },
       { data: { baseline_mileage: 10000 }, error: null },
-      { data: null, error: null },
+      { data: [], error: null },
     ]);
 
     const ctx = createMockContext({

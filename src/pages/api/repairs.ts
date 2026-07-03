@@ -30,10 +30,16 @@ export const POST: APIRoute = async (context) => {
     return context.redirect(`/dashboard/vehicles?error=${encodeURIComponent("Vehicle not found")}`);
   }
 
-  const { data: siblingRepairs } = await supabase
+  const { data: siblingRepairs, error: siblingsError } = await supabase
     .from("repairs")
     .select("id, repair_date, mileage")
     .eq("car_id", carId);
+
+  if (siblingsError) {
+    return context.redirect(
+      `/dashboard/repairs/new?vehicle_id=${carId}&error=${encodeURIComponent("Could not verify existing repairs, please try again")}`,
+    );
+  }
 
   const raw = {
     car_id: carId,
@@ -49,7 +55,7 @@ export const POST: APIRoute = async (context) => {
     return context.redirect(`/dashboard/repairs/new?vehicle_id=${carId}&error=${encodeURIComponent(message)}`);
   }
 
-  const bounds = computeMileageBounds(siblingRepairs ?? [], Number(car.baseline_mileage), result.data.repair_date);
+  const bounds = computeMileageBounds(siblingRepairs, Number(car.baseline_mileage), result.data.repair_date);
   if (result.data.mileage < bounds.min) {
     return context.redirect(
       `/dashboard/repairs/new?vehicle_id=${carId}&error=${encodeURIComponent(`Mileage must be at least ${bounds.min} km based on baseline mileage and previously logged repairs`)}`,

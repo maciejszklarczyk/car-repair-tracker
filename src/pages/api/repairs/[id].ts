@@ -42,10 +42,14 @@ export const PUT: APIRoute = async (context) => {
     return Response.json({ error: "Vehicle not found" }, { status: 404 });
   }
 
-  const { data: siblingRepairs } = await supabase
+  const { data: siblingRepairs, error: siblingsError } = await supabase
     .from("repairs")
     .select("id, repair_date, mileage")
     .eq("car_id", repair.car_id);
+
+  if (siblingsError) {
+    return Response.json({ error: "Could not verify existing repairs, please try again" }, { status: 500 });
+  }
 
   let body: unknown;
   try {
@@ -60,12 +64,7 @@ export const PUT: APIRoute = async (context) => {
     return Response.json({ error: message }, { status: 400 });
   }
 
-  const bounds = computeMileageBounds(
-    siblingRepairs ?? [],
-    Number(car.baseline_mileage),
-    result.data.repair_date,
-    repairId,
-  );
+  const bounds = computeMileageBounds(siblingRepairs, Number(car.baseline_mileage), result.data.repair_date, repairId);
   if (result.data.mileage < bounds.min) {
     return Response.json(
       { error: `Mileage must be at least ${bounds.min} km based on baseline mileage and previously logged repairs` },

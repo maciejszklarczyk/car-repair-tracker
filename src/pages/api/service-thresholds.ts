@@ -44,11 +44,14 @@ export const POST: APIRoute = async (context) => {
   if (result.data.last_performed_mileage !== undefined) {
     const baselineMileage = Number(car.baseline_mileage);
     if (result.data.last_performed_date !== undefined) {
-      const { data: repairs } = await supabase
+      const { data: repairs, error: repairsError } = await supabase
         .from("repairs")
         .select("id, repair_date, mileage")
         .eq("car_id", result.data.car_id);
-      const bounds = computeMileageBounds(repairs ?? [], baselineMileage, result.data.last_performed_date);
+      if (repairsError) {
+        return Response.json({ error: "Could not verify existing repairs, please try again" }, { status: 500 });
+      }
+      const bounds = computeMileageBounds(repairs, baselineMileage, result.data.last_performed_date);
       if (result.data.last_performed_mileage < bounds.min) {
         return Response.json(
           {

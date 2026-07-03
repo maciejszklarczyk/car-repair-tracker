@@ -1,7 +1,7 @@
 ---
 change_id: issue-58
 title: Repair mileage not validated against previously logged repairs
-status: implemented
+status: impl_reviewed
 created: 2026-07-03
 updated: 2026-07-03
 archived_at: null

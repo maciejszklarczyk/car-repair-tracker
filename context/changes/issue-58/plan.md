@@ -274,9 +274,9 @@ No data migration — existing repairs/thresholds that already violate the new i
 
 #### Automated
 
-- [x] 2.1 Unit tests pass (`npm run test -- repairs`)
-- [x] 2.2 Type checking passes (`npm run build`)
-- [x] 2.3 Lint passes (`npm run lint`)
+- [x] 2.1 Unit tests pass (`npm run test -- repairs`) — 6280d86
+- [x] 2.2 Type checking passes (`npm run build`) — 6280d86
+- [x] 2.3 Lint passes (`npm run lint`) — 6280d86
 
 #### Manual
 
@@ -290,9 +290,9 @@ No data migration — existing repairs/thresholds that already violate the new i
 
 #### Automated
 
-- [ ] 3.1 Unit tests pass (`npm run test -- schemas`)
-- [ ] 3.2 Type checking passes (`npm run build`)
-- [ ] 3.3 Lint passes (`npm run lint`)
+- [x] 3.1 Unit tests pass (`npm run test -- schemas`)
+- [x] 3.2 Type checking passes (`npm run build`)
+- [x] 3.3 Lint passes (`npm run lint`)
 
 #### Manual
 

@@ -290,9 +290,9 @@ No data migration — existing repairs/thresholds that already violate the new i
 
 #### Automated
 
-- [x] 3.1 Unit tests pass (`npm run test -- schemas`)
-- [x] 3.2 Type checking passes (`npm run build`)
-- [x] 3.3 Lint passes (`npm run lint`)
+- [x] 3.1 Unit tests pass (`npm run test -- schemas`) — ceb0067
+- [x] 3.2 Type checking passes (`npm run build`) — ceb0067
+- [x] 3.3 Lint passes (`npm run lint`) — ceb0067
 
 #### Manual
 
@@ -304,9 +304,9 @@ No data migration — existing repairs/thresholds that already violate the new i
 
 #### Automated
 
-- [ ] 4.1 Unit tests pass (`npm run test -- service-thresholds`)
-- [ ] 4.2 Type checking passes (`npm run build`)
-- [ ] 4.3 Lint passes (`npm run lint`)
+- [x] 4.1 Unit tests pass (`npm run test -- service-thresholds`)
+- [x] 4.2 Type checking passes (`npm run build`)
+- [x] 4.3 Lint passes (`npm run lint`)
 
 #### Manual
 

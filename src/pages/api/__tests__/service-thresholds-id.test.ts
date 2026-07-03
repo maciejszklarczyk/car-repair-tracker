@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import "./setup";
 import { mockResult, mockResults } from "./setup";
-import { createMockContext, makeServiceThreshold, jsonRequest } from "@/test/helpers";
+import { createMockContext, makeServiceThreshold, makeRepair, jsonRequest } from "@/test/helpers";
 import { PUT, DELETE } from "@/pages/api/service-thresholds/[id]";
 
 beforeEach(() => {
@@ -83,6 +83,69 @@ describe("PUT /api/service-thresholds/[id]", () => {
     const ctx = createMockContext({
       params: { id: "st1" },
       request: jsonRequest("http://test/api/service-thresholds/st1", "PUT", { name: "New name" }),
+    });
+    const res = await PUT(ctx);
+    expect(res.status).toBe(200);
+  });
+
+  it("returns 400 when last_performed_mileage is below baseline", async () => {
+    mockResults([
+      { data: makeServiceThreshold({ user_id: "user-1", car_id: "v1" }), error: null },
+      { data: { baseline_mileage: 10000 }, error: null },
+    ]);
+
+    const ctx = createMockContext({
+      params: { id: "st1" },
+      request: jsonRequest("http://test/api/service-thresholds/st1", "PUT", { last_performed_mileage: 9000 }),
+    });
+    const res = await PUT(ctx);
+    expect(res.status).toBe(400);
+    const body = (await res.json()) as { error: string };
+    expect(body.error).toContain("at least");
+  });
+
+  it("falls back to the stored last_performed_date when only mileage is updated", async () => {
+    mockResults([
+      {
+        data: makeServiceThreshold({
+          user_id: "user-1",
+          car_id: "v1",
+          last_performed_date: "2024-03-01",
+          last_performed_mileage: 10500,
+        }),
+        error: null,
+      },
+      { data: { baseline_mileage: 10000 }, error: null },
+      { data: [makeRepair({ id: "r1", repair_date: "2024-06-01", mileage: 11000 })], error: null },
+    ]);
+
+    const ctx = createMockContext({
+      params: { id: "st1" },
+      request: jsonRequest("http://test/api/service-thresholds/st1", "PUT", { last_performed_mileage: 11500 }),
+    });
+    const res = await PUT(ctx);
+    expect(res.status).toBe(400);
+    const body = (await res.json()) as { error: string };
+    expect(body.error).toContain("at most");
+  });
+
+  it("skips the check when last_performed_mileage is cleared to null", async () => {
+    mockResults([
+      {
+        data: makeServiceThreshold({
+          user_id: "user-1",
+          car_id: "v1",
+          last_performed_date: "2024-03-01",
+          last_performed_mileage: 10500,
+        }),
+        error: null,
+      },
+      { data: makeServiceThreshold({ user_id: "user-1", last_performed_mileage: null }), error: null },
+    ]);
+
+    const ctx = createMockContext({
+      params: { id: "st1" },
+      request: jsonRequest("http://test/api/service-thresholds/st1", "PUT", { last_performed_mileage: null }),
     });
     const res = await PUT(ctx);
     expect(res.status).toBe(200);

@@ -304,9 +304,9 @@ No data migration — existing repairs/thresholds that already violate the new i
 
 #### Automated
 
-- [x] 4.1 Unit tests pass (`npm run test -- service-thresholds`)
-- [x] 4.2 Type checking passes (`npm run build`)
-- [x] 4.3 Lint passes (`npm run lint`)
+- [x] 4.1 Unit tests pass (`npm run test -- service-thresholds`) — 788783d
+- [x] 4.2 Type checking passes (`npm run build`) — 788783d
+- [x] 4.3 Lint passes (`npm run lint`) — 788783d
 
 #### Manual
 

@@ -283,8 +283,8 @@ No data migration — existing repairs/thresholds that already violate the new i
 - [x] 2.4 Add Repair: mileage below nearest earlier-dated repair (or baseline) rejected — verified manually via Playwright MCP against the dev server + local Supabase (Skoda Octavia seed vehicle)
 - [x] 2.5 Add Repair: mileage above nearest later-dated repair rejected — verified manually via Playwright MCP
 - [x] 2.6 Add Repair: backfilled repair with mileage consistent with its date-neighbors succeeds — verified manually via Playwright MCP
-- [ ] 2.7 Edit Repair: lowering own mileage to correct a typo succeeds when neighbor-consistent
-- [ ] 2.8 Edit Repair: changing date re-validates against new neighbors
+- [x] 2.7 Edit Repair: lowering own mileage to correct a typo succeeds when neighbor-consistent — verified manually via Playwright MCP
+- [x] 2.8 Edit Repair: changing date re-validates against new neighbors — verified manually via Playwright MCP
 
 ### Phase 3: repair_date format and future-date validation
 
@@ -296,7 +296,7 @@ No data migration — existing repairs/thresholds that already violate the new i
 
 #### Manual
 
-- [ ] 3.4 Malformed repair_date rejected
+- [x] 3.4 Malformed repair_date rejected — verified manually via direct fetch POST to /api/repairs (bypassing the type="date" input) through Playwright MCP
 - [x] 3.5 Future repair_date rejected — verified manually via Playwright MCP
 - [x] 3.6 Valid past/today dates still succeed — verified manually via Playwright MCP (backfilled past date succeeded)
 
@@ -312,5 +312,5 @@ No data migration — existing repairs/thresholds that already violate the new i
 
 - [x] 4.4 Add Service Threshold: last_performed_mileage below baseline rejected — verified manually via Playwright MCP
 - [x] 4.5 Add Service Threshold: mileage/date pair inconsistent with repairs rejected — verified manually via Playwright MCP
-- [ ] 4.6 Edit Service Threshold: partial update falls back to stored date/mileage correctly
-- [ ] 4.7 Edit Service Threshold: clearing last_performed_mileage to null skips the check
+- [x] 4.6 Edit Service Threshold: partial update falls back to stored date/mileage correctly — verified manually via direct fetch PUT through Playwright MCP
+- [x] 4.7 Edit Service Threshold: clearing last_performed_mileage to null skips the check — verified manually via direct fetch PUT through Playwright MCP

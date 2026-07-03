@@ -266,17 +266,17 @@ No data migration — existing repairs/thresholds that already violate the new i
 
 #### Automated
 
-- [x] 1.1 Unit tests pass (`npm run test -- mileageValidation`)
-- [x] 1.2 Type checking passes (`npm run build`)
-- [x] 1.3 Lint passes (`npm run lint`)
+- [x] 1.1 Unit tests pass (`npm run test -- mileageValidation`) — 92c4661
+- [x] 1.2 Type checking passes (`npm run build`) — 92c4661
+- [x] 1.3 Lint passes (`npm run lint`) — 92c4661
 
 ### Phase 2: Repair create/update validation
 
 #### Automated
 
-- [ ] 2.1 Unit tests pass (`npm run test -- repairs`)
-- [ ] 2.2 Type checking passes (`npm run build`)
-- [ ] 2.3 Lint passes (`npm run lint`)
+- [x] 2.1 Unit tests pass (`npm run test -- repairs`)
+- [x] 2.2 Type checking passes (`npm run build`)
+- [x] 2.3 Lint passes (`npm run lint`)
 
 #### Manual
 

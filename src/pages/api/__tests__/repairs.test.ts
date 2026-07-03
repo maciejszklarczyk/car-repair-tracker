@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import "./setup";
 import { mockResult, mockResults, insert } from "./setup";
-import { createMockContext, makeVehicle, formRequest } from "@/test/helpers";
+import { createMockContext, makeVehicle, makeRepair, formRequest } from "@/test/helpers";
 import { POST } from "@/pages/api/repairs";
 import { createClient } from "@/lib/supabase";
 import { classifyRepair } from "@/lib/classifyRepair";
@@ -73,7 +73,10 @@ describe("POST /api/repairs", () => {
   });
 
   it("redirects with error when mileage below baseline", async () => {
-    mockResult({ data: makeVehicle({ user_id: "user-1", baseline_mileage: 20000 }), error: null });
+    mockResults([
+      { data: makeVehicle({ user_id: "user-1", baseline_mileage: 20000 }), error: null },
+      { data: [], error: null },
+    ]);
 
     const ctx = createMockContext({
       request: formRequest("http://test/api/repairs", { ...VALID_FIELDS, mileage: "11000" }),
@@ -84,9 +87,46 @@ describe("POST /api/repairs", () => {
     expect(location).toContain("baseline");
   });
 
+  it("redirects with error when mileage above a later-dated sibling repair", async () => {
+    mockResults([
+      { data: makeVehicle({ user_id: "user-1", baseline_mileage: 5000 }), error: null },
+      { data: [makeRepair({ id: "r2", repair_date: "2024-12-01", mileage: 9000 })], error: null },
+    ]);
+
+    const ctx = createMockContext({
+      request: formRequest("http://test/api/repairs", { ...VALID_FIELDS, repair_date: "2024-06-01", mileage: "9500" }),
+    });
+    const res = await POST(ctx);
+    expect(res.status).toBe(302);
+    const location = res.headers.get("Location") ?? "";
+    expect(location).toContain("at%20most");
+  });
+
+  it("succeeds when mileage falls between earlier and later sibling repairs", async () => {
+    mockResults([
+      { data: makeVehicle({ user_id: "user-1", baseline_mileage: 5000 }), error: null },
+      {
+        data: [
+          makeRepair({ id: "r1", repair_date: "2024-01-01", mileage: 6000 }),
+          makeRepair({ id: "r2", repair_date: "2024-12-01", mileage: 9000 }),
+        ],
+        error: null,
+      },
+      { data: null, error: null },
+    ]);
+
+    const ctx = createMockContext({
+      request: formRequest("http://test/api/repairs", { ...VALID_FIELDS, repair_date: "2024-06-01", mileage: "7000" }),
+    });
+    const res = await POST(ctx);
+    expect(res.status).toBe(302);
+    expect(res.headers.get("Location")).toContain("/dashboard/vehicles/v1?success=1");
+  });
+
   it("redirects to vehicle page on valid creation", async () => {
     mockResults([
       { data: makeVehicle({ user_id: "user-1" }), error: null },
+      { data: [], error: null },
       { data: null, error: null },
     ]);
 
@@ -99,6 +139,7 @@ describe("POST /api/repairs", () => {
   it("sets category to 'pending' when classifyRepair returns null", async () => {
     mockResults([
       { data: makeVehicle({ user_id: "user-1" }), error: null },
+      { data: [], error: null },
       { data: null, error: null },
     ]);
     mockedClassify.mockResolvedValueOnce(null);
@@ -114,6 +155,7 @@ describe("POST /api/repairs", () => {
   it("redirects with error when insert fails", async () => {
     mockResults([
       { data: makeVehicle({ user_id: "user-1" }), error: null },
+      { data: [], error: null },
       { data: null, error: { message: "constraint violation" } },
     ]);
 
@@ -127,6 +169,7 @@ describe("POST /api/repairs", () => {
   it("inserts mileage field matching the database column name", async () => {
     mockResults([
       { data: makeVehicle({ user_id: "user-1" }), error: null },
+      { data: [], error: null },
       { data: null, error: null },
     ]);
 
@@ -139,6 +182,7 @@ describe("POST /api/repairs", () => {
   it("sets category from classifyRepair when it returns a value", async () => {
     mockResults([
       { data: makeVehicle({ user_id: "user-1" }), error: null },
+      { data: [], error: null },
       { data: null, error: null },
     ]);
     mockedClassify.mockResolvedValueOnce("hamulce");

@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 import { updateRepairSchema, categoryOverrideSchema } from "@/lib/schemas";
 import { classifyRepair } from "@/lib/classifyRepair";
+import { computeMileageBounds } from "@/lib/mileageValidation";
 
 export const prerender = false;
 
@@ -41,6 +42,11 @@ export const PUT: APIRoute = async (context) => {
     return Response.json({ error: "Vehicle not found" }, { status: 404 });
   }
 
+  const { data: siblingRepairs } = await supabase
+    .from("repairs")
+    .select("id, repair_date, mileage")
+    .eq("car_id", repair.car_id);
+
   let body: unknown;
   try {
     body = await context.request.json();
@@ -54,9 +60,23 @@ export const PUT: APIRoute = async (context) => {
     return Response.json({ error: message }, { status: 400 });
   }
 
-  if (result.data.mileage < car.baseline_mileage) {
+  const bounds = computeMileageBounds(
+    siblingRepairs ?? [],
+    Number(car.baseline_mileage),
+    result.data.repair_date,
+    repairId,
+  );
+  if (result.data.mileage < bounds.min) {
     return Response.json(
-      { error: `Mileage must be at or above baseline mileage (${car.baseline_mileage} km)` },
+      { error: `Mileage must be at least ${bounds.min} km based on baseline mileage and previously logged repairs` },
+      { status: 400 },
+    );
+  }
+  if (result.data.mileage > bounds.max) {
+    return Response.json(
+      {
+        error: `Mileage must be at most ${bounds.max} km to stay consistent with a later repair already logged for this vehicle`,
+      },
       { status: 400 },
     );
   }

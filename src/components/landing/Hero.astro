@@ -1,5 +1,6 @@
 ---
 import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 ---
 
 <div class="mx-auto flex max-w-4xl flex-col items-center justify-center px-4 py-24 text-center sm:py-32 lg:py-40">
@@ -13,10 +14,43 @@ import { Button, buttonVariants } from "@/components/ui/button";
     spreadsheets.
   </p>
   <div class="flex flex-col gap-4 sm:flex-row">
-    <a href="/auth/signup" class:list={[buttonVariants({ variant: "default", size: "lg" })]}>Sign Up</a>
-    <a href="/auth/signin" class:list={[buttonVariants({ variant: "outline", size: "lg" })]}>Sign In</a>
+    <a
+      href="/auth/signup"
+      class:list={[
+        cn(
+          buttonVariants({
+            variant: "default",
+            size: "lg",
+          }),
+          "bg-purple-600 text-white hover:bg-purple-500",
+        ),
+      ]}
+    >
+      Sign Up
+    </a>
+    <a
+      href="/auth/signin"
+      class:list={[
+        cn(
+          buttonVariants({
+            variant: "outline",
+            size: "lg",
+          }),
+          "border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white",
+        ),
+      ]}
+    >
+      Sign In
+    </a>
     <form method="POST" action="/api/demo">
-      <Button variant="outline" size="lg" type="submit">Try Demo</Button>
+      <Button
+        variant="outline"
+        size="lg"
+        type="submit"
+        className="border-emerald-400/40 bg-transparent text-emerald-200 hover:bg-emerald-500/10 hover:text-emerald-200"
+      >
+        Try Demo
+      </Button>
     </form>
   </div>
 </div>

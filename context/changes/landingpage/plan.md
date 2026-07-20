@@ -244,9 +244,9 @@ Not applicable — no data model or schema changes.
 
 #### Automated
 
-- [x] 2.1 Build succeeds: `npm run build`
-- [x] 2.2 Lint passes: `npm run lint`
-- [x] 2.3 Unit tests still pass: `npm run test`
+- [x] 2.1 Build succeeds: `npm run build` — 746b04b
+- [x] 2.2 Lint passes: `npm run lint` — 746b04b
+- [x] 2.3 Unit tests still pass: `npm run test` — 746b04b
 
 #### Manual
 
@@ -260,10 +260,10 @@ Not applicable — no data model or schema changes.
 
 #### Automated
 
-- [ ] 3.1 No remaining references: `grep -r "Welcome" src/`
-- [ ] 3.2 Full build passes: `npm run build`
-- [ ] 3.3 Full lint passes: `npm run lint`
-- [ ] 3.4 Full test suite passes: `npm run test`
+- [x] 3.1 No remaining references: `grep -r "Welcome" src/`
+- [x] 3.2 Full build passes: `npm run build`
+- [x] 3.3 Full lint passes: `npm run lint`
+- [x] 3.4 Full test suite passes: `npm run test`
 
 #### Manual
 

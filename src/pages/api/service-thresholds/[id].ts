@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 import { updateServiceThresholdSchema } from "@/lib/schemas";
+import { computeMileageBounds } from "@/lib/mileageValidation";
 import type { ServiceThreshold } from "@/types";
 
 export const prerender = false;
@@ -30,7 +31,7 @@ export const PUT: APIRoute = async (context) => {
 
   const { data: existing, error: fetchError } = await supabase
     .from("service_thresholds")
-    .select("id, user_id")
+    .select("id, user_id, car_id, last_performed_date, last_performed_mileage")
     .eq("id", thresholdId)
     .single();
 
@@ -47,6 +48,61 @@ export const PUT: APIRoute = async (context) => {
   if (!result.success) {
     const message = result.error.issues.map((e) => e.message).join(". ");
     return Response.json({ error: message }, { status: 400 });
+  }
+
+  const effectiveMileage: number | null | undefined =
+    result.data.last_performed_mileage !== undefined
+      ? result.data.last_performed_mileage
+      : (existing.last_performed_mileage as number | null);
+  const effectiveDate: string | null | undefined =
+    result.data.last_performed_date !== undefined
+      ? result.data.last_performed_date
+      : (existing.last_performed_date as string | null);
+
+  if (typeof effectiveMileage === "number") {
+    const { data: car, error: carError } = await supabase
+      .from("cars")
+      .select("baseline_mileage")
+      .eq("id", existing.car_id as string)
+      .single();
+
+    if (carError) {
+      return Response.json({ error: "Vehicle not found" }, { status: 404 });
+    }
+
+    const baselineMileage = Number(car.baseline_mileage);
+
+    if (typeof effectiveDate === "string") {
+      const { data: repairs, error: repairsError } = await supabase
+        .from("repairs")
+        .select("id, repair_date, mileage")
+        .eq("car_id", existing.car_id as string);
+      if (repairsError) {
+        return Response.json({ error: "Could not verify existing repairs, please try again" }, { status: 500 });
+      }
+      const bounds = computeMileageBounds(repairs, baselineMileage, effectiveDate);
+      if (effectiveMileage < bounds.min) {
+        return Response.json(
+          {
+            error: `Last performed mileage must be at least ${bounds.min} km based on baseline mileage and logged repairs`,
+          },
+          { status: 400 },
+        );
+      }
+      if (effectiveMileage > bounds.max) {
+        return Response.json(
+          {
+            error: `Last performed mileage must be at most ${bounds.max} km to stay consistent with a later repair already logged for this vehicle`,
+          },
+          { status: 400 },
+        );
+      }
+    } else if (effectiveMileage < baselineMileage) {
+      return Response.json(
+        { error: `Last performed mileage must be at least ${baselineMileage} km based on baseline mileage` },
+        { status: 400 },
+      );
+    }
   }
 
   const updateData: Record<string, unknown> = {};

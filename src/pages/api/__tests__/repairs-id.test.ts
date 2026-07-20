@@ -60,6 +60,7 @@ describe("PUT /api/repairs/[id]", () => {
     mockResults([
       { data: makeRepair({ user_id: "user-1" }), error: null },
       { data: { baseline_mileage: 10000 }, error: null },
+      { data: [], error: null },
     ]);
 
     const ctx = createMockContext({
@@ -80,6 +81,7 @@ describe("PUT /api/repairs/[id]", () => {
     mockResults([
       { data: makeRepair({ user_id: "user-1" }), error: null },
       { data: { baseline_mileage: 10000 }, error: null },
+      { data: [], error: null },
     ]);
 
     const ctx = createMockContext({
@@ -97,6 +99,7 @@ describe("PUT /api/repairs/[id]", () => {
     mockResults([
       { data: makeRepair({ user_id: "user-1" }), error: null },
       { data: { baseline_mileage: 10000 }, error: null },
+      { data: [], error: null },
     ]);
 
     const ctx = createMockContext({
@@ -114,6 +117,7 @@ describe("PUT /api/repairs/[id]", () => {
     mockResults([
       { data: makeRepair({ user_id: "user-1" }), error: null },
       { data: { baseline_mileage: 10000 }, error: null },
+      { data: [], error: null },
     ]);
 
     const ctx = createMockContext({
@@ -129,6 +133,80 @@ describe("PUT /api/repairs/[id]", () => {
     expect(body.error).toContain("baseline");
   });
 
+  it("returns 400 when mileage above a later-dated sibling repair", async () => {
+    mockResults([
+      { data: makeRepair({ id: "r1", user_id: "user-1" }), error: null },
+      { data: { baseline_mileage: 5000 }, error: null },
+      { data: [makeRepair({ id: "r2", repair_date: "2024-12-01", mileage: 9000 })], error: null },
+    ]);
+
+    const ctx = createMockContext({
+      params: { id: "r1" },
+      request: jsonRequest("http://test/api/repairs/r1", "PUT", {
+        ...VALID_UPDATE,
+        repair_date: "2024-06-01",
+        mileage: 9500,
+      }),
+    });
+    const res = await PUT(ctx);
+    expect(res.status).toBe(400);
+    const body = (await res.json()) as { error: string };
+    expect(body.error).toContain("at most");
+  });
+
+  it("excludes itself from the sibling set so lowering its own mileage succeeds", async () => {
+    mockResults([
+      { data: makeRepair({ id: "r1", user_id: "user-1" }), error: null },
+      { data: { baseline_mileage: 5000 }, error: null },
+      {
+        data: [
+          makeRepair({ id: "r1", repair_date: "2024-06-01", mileage: 20000 }),
+          makeRepair({ id: "r2", repair_date: "2024-01-01", mileage: 6000 }),
+        ],
+        error: null,
+      },
+      { data: null, error: null },
+    ]);
+
+    const ctx = createMockContext({
+      params: { id: "r1" },
+      request: jsonRequest("http://test/api/repairs/r1", "PUT", {
+        ...VALID_UPDATE,
+        repair_date: "2024-06-01",
+        mileage: 6500,
+      }),
+    });
+    const res = await PUT(ctx);
+    expect(res.status).toBe(200);
+  });
+
+  it("re-validates against neighbors of the newly submitted repair_date", async () => {
+    mockResults([
+      { data: makeRepair({ id: "r1", user_id: "user-1" }), error: null },
+      { data: { baseline_mileage: 5000 }, error: null },
+      {
+        data: [
+          makeRepair({ id: "r1", repair_date: "2024-06-01", mileage: 8000 }),
+          makeRepair({ id: "r2", repair_date: "2024-03-01", mileage: 7000 }),
+        ],
+        error: null,
+      },
+    ]);
+
+    const ctx = createMockContext({
+      params: { id: "r1" },
+      request: jsonRequest("http://test/api/repairs/r1", "PUT", {
+        ...VALID_UPDATE,
+        repair_date: "2024-01-01",
+        mileage: 7500,
+      }),
+    });
+    const res = await PUT(ctx);
+    expect(res.status).toBe(400);
+    const body = (await res.json()) as { error: string };
+    expect(body.error).toContain("at most");
+  });
+
   it("returns success on valid update", async () => {
     mockResults([
       {
@@ -136,7 +214,7 @@ describe("PUT /api/repairs/[id]", () => {
         error: null,
       },
       { data: { baseline_mileage: 10000 }, error: null },
-      { data: null, error: null },
+      { data: [], error: null },
     ]);
 
     const ctx = createMockContext({
@@ -156,6 +234,7 @@ describe("PUT /api/repairs/[id]", () => {
         error: null,
       },
       { data: { baseline_mileage: 10000 }, error: null },
+      { data: [], error: null },
       { data: null, error: { message: "constraint violation" } },
     ]);
 
@@ -179,7 +258,7 @@ describe("PUT /api/repairs/[id]", () => {
         error: null,
       },
       { data: { baseline_mileage: 10000 }, error: null },
-      { data: null, error: null },
+      { data: [], error: null },
     ]);
     mockedClassify.mockResolvedValueOnce("hamulce");
 
@@ -198,7 +277,7 @@ describe("PUT /api/repairs/[id]", () => {
     mockResults([
       { data: makeRepair({ user_id: "user-1", category: null, category_source: null }), error: null },
       { data: { baseline_mileage: 10000 }, error: null },
-      { data: null, error: null },
+      { data: [], error: null },
     ]);
     mockedClassify.mockResolvedValueOnce("silnik");
 
@@ -228,7 +307,7 @@ describe("PUT /api/repairs/[id]", () => {
         error: null,
       },
       { data: { baseline_mileage: 10000 }, error: null },
-      { data: null, error: null },
+      { data: [], error: null },
     ]);
 
     const ctx = createMockContext({

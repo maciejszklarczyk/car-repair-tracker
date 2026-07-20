@@ -1,10 +1,31 @@
 import { z } from "zod";
 import { REPAIR_CATEGORIES } from "@/lib/repairCategories";
 
+function isValidRepairDate(value: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return false;
+  return date.toISOString().slice(0, 10) === value;
+}
+
+// "Today" is evaluated in server/UTC time, not the submitting user's local timezone —
+// a narrow false-reject/false-accept window exists within a few hours of local midnight.
+function isNotFutureRepairDate(value: string): boolean {
+  const today = new Date().toISOString().slice(0, 10);
+  return value <= today;
+}
+
+const repairDateSchema = z
+  .string()
+  .trim()
+  .min(1, "Repair date is required")
+  .refine(isValidRepairDate, "Repair date must be a valid date")
+  .refine((value) => !isValidRepairDate(value) || isNotFutureRepairDate(value), "Repair date cannot be in the future");
+
 // For FormData input (POST) — cost is a string that gets transformed to number | null.
 export const createRepairSchema = z.object({
   car_id: z.string().trim().min(1, "Car is required"),
-  repair_date: z.string().trim().min(1, "Repair date is required"),
+  repair_date: repairDateSchema,
   description: z.string().trim().min(1, "Description is required").max(500, "Description cannot exceed 500 characters"),
   cost: z
     .string()
@@ -16,7 +37,7 @@ export const createRepairSchema = z.object({
 
 // For JSON body input (PUT) — cost is already a number or null; omitting the field nulls it (PUT semantics).
 export const updateRepairSchema = z.object({
-  repair_date: z.string().trim().min(1, "Repair date is required"),
+  repair_date: repairDateSchema,
   description: z.string().trim().min(1, "Description is required").max(500, "Description cannot exceed 500 characters"),
   cost: z.number().positive("Cost must be positive").nullable().optional(),
   mileage: z.number({ error: "Mileage must be a number" }).int().min(0, "Mileage cannot be negative"),

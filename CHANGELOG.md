@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-07-20
+
+- [afa6362] fix(ai-review): fall back to alternate free-tier models on provider error
+- [51df671] fix(ai-review): use openrouter/free router as fallback, fix swallowed fallback errors
+
+## 2026-07-03
+
+- [b221de4] fix(issue-58): fail closed on sibling-repairs fetch errors, document UTC future-date check
+
 ## 2026-07-02
 
 - [3e8c988] fix(docker): stop passing Supabase/Gemini secrets as build ARG/ENV

@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 import { createRepairSchema } from "@/lib/schemas";
 import { classifyRepair } from "@/lib/classifyRepair";
+import { computeMileageBounds } from "@/lib/mileageValidation";
 
 export const prerender = false;
 
@@ -29,6 +30,17 @@ export const POST: APIRoute = async (context) => {
     return context.redirect(`/dashboard/vehicles?error=${encodeURIComponent("Vehicle not found")}`);
   }
 
+  const { data: siblingRepairs, error: siblingsError } = await supabase
+    .from("repairs")
+    .select("id, repair_date, mileage")
+    .eq("car_id", carId);
+
+  if (siblingsError) {
+    return context.redirect(
+      `/dashboard/repairs/new?vehicle_id=${carId}&error=${encodeURIComponent("Could not verify existing repairs, please try again")}`,
+    );
+  }
+
   const raw = {
     car_id: carId,
     repair_date: form.get("repair_date") as string,
@@ -43,9 +55,15 @@ export const POST: APIRoute = async (context) => {
     return context.redirect(`/dashboard/repairs/new?vehicle_id=${carId}&error=${encodeURIComponent(message)}`);
   }
 
-  if (result.data.mileage < car.baseline_mileage) {
+  const bounds = computeMileageBounds(siblingRepairs, Number(car.baseline_mileage), result.data.repair_date);
+  if (result.data.mileage < bounds.min) {
     return context.redirect(
-      `/dashboard/repairs/new?vehicle_id=${carId}&error=${encodeURIComponent(`Mileage must be at or above baseline mileage (${car.baseline_mileage} km)`)}`,
+      `/dashboard/repairs/new?vehicle_id=${carId}&error=${encodeURIComponent(`Mileage must be at least ${bounds.min} km based on baseline mileage and previously logged repairs`)}`,
+    );
+  }
+  if (result.data.mileage > bounds.max) {
+    return context.redirect(
+      `/dashboard/repairs/new?vehicle_id=${carId}&error=${encodeURIComponent(`Mileage must be at most ${bounds.max} km to stay consistent with a later repair already logged for this vehicle`)}`,
     );
   }
 

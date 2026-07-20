@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 import { createServiceThresholdSchema } from "@/lib/schemas";
+import { computeMileageBounds } from "@/lib/mileageValidation";
 import type { ServiceThreshold } from "@/types";
 
 export const prerender = false;
@@ -29,15 +30,50 @@ export const POST: APIRoute = async (context) => {
     return Response.json({ error: message }, { status: 400 });
   }
 
-  const { error: carError } = await supabase
+  const { data: car, error: carError } = await supabase
     .from("cars")
-    .select("id")
+    .select("id, baseline_mileage")
     .eq("id", result.data.car_id)
     .eq("user_id", user.id)
     .single();
 
   if (carError) {
     return Response.json({ error: "Vehicle not found" }, { status: 404 });
+  }
+
+  if (result.data.last_performed_mileage !== undefined) {
+    const baselineMileage = Number(car.baseline_mileage);
+    if (result.data.last_performed_date !== undefined) {
+      const { data: repairs, error: repairsError } = await supabase
+        .from("repairs")
+        .select("id, repair_date, mileage")
+        .eq("car_id", result.data.car_id);
+      if (repairsError) {
+        return Response.json({ error: "Could not verify existing repairs, please try again" }, { status: 500 });
+      }
+      const bounds = computeMileageBounds(repairs, baselineMileage, result.data.last_performed_date);
+      if (result.data.last_performed_mileage < bounds.min) {
+        return Response.json(
+          {
+            error: `Last performed mileage must be at least ${bounds.min} km based on baseline mileage and logged repairs`,
+          },
+          { status: 400 },
+        );
+      }
+      if (result.data.last_performed_mileage > bounds.max) {
+        return Response.json(
+          {
+            error: `Last performed mileage must be at most ${bounds.max} km to stay consistent with a later repair already logged for this vehicle`,
+          },
+          { status: 400 },
+        );
+      }
+    } else if (result.data.last_performed_mileage < baselineMileage) {
+      return Response.json(
+        { error: `Last performed mileage must be at least ${baselineMileage} km based on baseline mileage` },
+        { status: 400 },
+      );
+    }
   }
 
   const { data: threshold, error } = (await supabase

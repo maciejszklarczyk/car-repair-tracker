@@ -15,8 +15,10 @@ const openrouter = createOpenAI({
   baseURL: "https://openrouter.ai/api/v1",
 });
 
-// Override via OPENROUTER_MODEL env var — see https://openrouter.ai/models?q=free
-const MODEL = process.env.OPENROUTER_MODEL ?? "google/gemma-4-26b-a4b-it:free";
+// First model overridable via OPENROUTER_MODEL env var — see https://openrouter.ai/models?q=free
+// "openrouter/free" is OpenRouter's own router: it auto-picks from whichever free models are
+// currently available, so it doesn't go stale the way a hardcoded free-model slug does.
+const MODELS = [process.env.OPENROUTER_MODEL ?? "google/gemma-4-26b-a4b-it:free", "openrouter/free"];
 
 const SYSTEM_PROMPT = `You are a precise, constructive code reviewer assessing a pull request.
 Score the provided diff on five criteria from 1-10 (1 = serious issues, 10 = exemplary):
@@ -69,9 +71,9 @@ function extractJson(text: string): string {
   return text.trim();
 }
 
-async function review(diff: string) {
+async function review(diff: string, model: string) {
   const { text } = await generateText({
-    model: openrouter.chat(MODEL),
+    model: openrouter.chat(model),
     system: SYSTEM_PROMPT,
     prompt: `Review this diff:\n\n${diff}`,
     maxOutputTokens: 1024,
@@ -87,11 +89,18 @@ if (!diff.trim()) {
   process.exit(1);
 }
 
-try {
-  const result = await review(diff);
-  console.log(JSON.stringify(result, null, 2));
-} catch (error) {
-  const message = error instanceof Error ? error.message : String(error);
-  console.error(`Review failed (model: ${MODEL}): ${message}`);
-  process.exit(1);
+const errors: string[] = [];
+for (const model of MODELS) {
+  try {
+    const result = await review(diff, model);
+    console.log(JSON.stringify(result, null, 2));
+    process.exit(0);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`Model ${model} failed: ${message}`);
+    errors.push(`${model}: ${message}`);
+  }
 }
+
+console.error(`Review failed (tried ${MODELS.length} models):\n${errors.join("\n")}`);
+process.exit(1);

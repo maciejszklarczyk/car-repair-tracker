@@ -15,8 +15,13 @@ const openrouter = createOpenAI({
   baseURL: "https://openrouter.ai/api/v1",
 });
 
-// Override via OPENROUTER_MODEL env var — see https://openrouter.ai/models?q=free
-const MODEL = process.env.OPENROUTER_MODEL ?? "google/gemma-4-26b-a4b-it:free";
+// First model overridable via OPENROUTER_MODEL env var — see https://openrouter.ai/models?q=free
+// Remaining entries are free-tier fallbacks tried in order if an earlier model's provider errors out.
+const MODELS = [
+  process.env.OPENROUTER_MODEL ?? "google/gemma-4-26b-a4b-it:free",
+  "meta-llama/llama-3.3-70b-instruct:free",
+  "deepseek/deepseek-chat-v3.1:free",
+];
 
 const SYSTEM_PROMPT = `You are a precise, constructive code reviewer assessing a pull request.
 Score the provided diff on five criteria from 1-10 (1 = serious issues, 10 = exemplary):
@@ -69,9 +74,9 @@ function extractJson(text: string): string {
   return text.trim();
 }
 
-async function review(diff: string) {
+async function review(diff: string, model: string) {
   const { text } = await generateText({
-    model: openrouter.chat(MODEL),
+    model: openrouter.chat(model),
     system: SYSTEM_PROMPT,
     prompt: `Review this diff:\n\n${diff}`,
     maxOutputTokens: 1024,
@@ -87,11 +92,18 @@ if (!diff.trim()) {
   process.exit(1);
 }
 
-try {
-  const result = await review(diff);
-  console.log(JSON.stringify(result, null, 2));
-} catch (error) {
-  const message = error instanceof Error ? error.message : String(error);
-  console.error(`Review failed (model: ${MODEL}): ${message}`);
-  process.exit(1);
+let lastError: unknown;
+for (const model of MODELS) {
+  try {
+    const result = await review(diff, model);
+    console.log(JSON.stringify(result, null, 2));
+    process.exit(0);
+  } catch (error) {
+    lastError = error;
+    console.error(`Model ${model} failed, trying next fallback...`);
+  }
 }
+
+const message = lastError instanceof Error ? lastError.message : String(lastError);
+console.error(`Review failed (tried: ${MODELS.join(", ")}): ${message}`);
+process.exit(1);

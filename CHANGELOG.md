@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-07-20
+
+- [afa6362] fix(ai-review): fall back to alternate free-tier models on provider error
+
 ## 2026-07-03
 
 - [b221de4] fix(issue-58): fail closed on sibling-repairs fetch errors, document UTC future-date check

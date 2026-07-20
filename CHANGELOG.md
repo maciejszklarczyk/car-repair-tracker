@@ -3,6 +3,7 @@
 ## 2026-07-20
 
 - [afa6362] fix(ai-review): fall back to alternate free-tier models on provider error
+- [51df671] fix(ai-review): use openrouter/free router as fallback, fix swallowed fallback errors
 
 ## 2026-07-03
 

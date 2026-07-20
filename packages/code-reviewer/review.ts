@@ -16,12 +16,9 @@ const openrouter = createOpenAI({
 });
 
 // First model overridable via OPENROUTER_MODEL env var — see https://openrouter.ai/models?q=free
-// Remaining entries are free-tier fallbacks tried in order if an earlier model's provider errors out.
-const MODELS = [
-  process.env.OPENROUTER_MODEL ?? "google/gemma-4-26b-a4b-it:free",
-  "meta-llama/llama-3.3-70b-instruct:free",
-  "deepseek/deepseek-chat-v3.1:free",
-];
+// "openrouter/free" is OpenRouter's own router: it auto-picks from whichever free models are
+// currently available, so it doesn't go stale the way a hardcoded free-model slug does.
+const MODELS = [process.env.OPENROUTER_MODEL ?? "google/gemma-4-26b-a4b-it:free", "openrouter/free"];
 
 const SYSTEM_PROMPT = `You are a precise, constructive code reviewer assessing a pull request.
 Score the provided diff on five criteria from 1-10 (1 = serious issues, 10 = exemplary):
@@ -92,18 +89,18 @@ if (!diff.trim()) {
   process.exit(1);
 }
 
-let lastError: unknown;
+const errors: string[] = [];
 for (const model of MODELS) {
   try {
     const result = await review(diff, model);
     console.log(JSON.stringify(result, null, 2));
     process.exit(0);
   } catch (error) {
-    lastError = error;
-    console.error(`Model ${model} failed, trying next fallback...`);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`Model ${model} failed: ${message}`);
+    errors.push(`${model}: ${message}`);
   }
 }
 
-const message = lastError instanceof Error ? lastError.message : String(lastError);
-console.error(`Review failed (tried: ${MODELS.join(", ")}): ${message}`);
+console.error(`Review failed (tried ${MODELS.length} models):\n${errors.join("\n")}`);
 process.exit(1);

@@ -1,0 +1,34 @@
+---
+const features = [
+  {
+    title: "Vehicle & Repair Tracking",
+    description:
+      "Add vehicles and log every repair — date, description, cost, and odometer reading — building a structured history in place of spreadsheets.",
+  },
+  {
+    title: "AI-Powered Classification",
+    description:
+      "Repairs are automatically categorized — engine, brakes, electrical, tires, inspection, or other — using Google Gemini, with manual override always available.",
+  },
+  {
+    title: "Cost/km Dashboard",
+    description:
+      "See your cost-per-kilometer update automatically after every repair, plus trend charts for cost, total spend, and mileage over time.",
+  },
+  {
+    title: "Service Reminders",
+    description: "Set km- or time-based maintenance thresholds per vehicle and get alerted before you miss a deadline.",
+  },
+];
+---
+
+<div class="mx-auto grid max-w-4xl grid-cols-1 gap-6 px-4 pb-16 sm:grid-cols-2">
+  {
+    features.map((feature) => (
+      <div class="rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+        <h3 class="mb-2 text-lg font-semibold text-white">{feature.title}</h3>
+        <p class="text-sm leading-relaxed text-blue-100/60">{feature.description}</p>
+      </div>
+    ))
+  }
+</div>

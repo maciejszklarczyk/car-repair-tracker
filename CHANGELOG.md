@@ -4,6 +4,7 @@
 
 - [afa6362] fix(ai-review): fall back to alternate free-tier models on provider error
 - [51df671] fix(ai-review): use openrouter/free router as fallback, fix swallowed fallback errors
+- [b3d3be1] fix(deploy): attach X-Forwarded-Proto header middleware to Traefik router
 
 ## 2026-07-03
 

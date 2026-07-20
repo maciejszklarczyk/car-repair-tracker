@@ -16,8 +16,7 @@ services:
       - "traefik.http.routers.car-repair-tracker.rule=Host(`car-repair-tracker.msolve.it`)"
       - "traefik.http.routers.car-repair-tracker.entrypoints=web"
       - "traefik.http.services.car-repair-tracker.loadbalancer.server.port=4321"
-      # - "traefik.http.routers.car-repair-tracker.middlewares=auth,car-repair-tracker-headers"
-      # - "traefik.http.middlewares.auth.basicauth.users=${BASIC_AUTH_USERS}"
+      - "traefik.http.routers.car-repair-tracker.middlewares=car-repair-tracker-headers"
       - "traefik.http.middlewares.car-repair-tracker-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.services.car-repair-tracker.loadbalancer.passHostHeader=true"
 

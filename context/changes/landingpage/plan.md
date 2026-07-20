@@ -231,9 +231,9 @@ Not applicable — no data model or schema changes.
 
 #### Automated
 
-- [x] 1.1 Typecheck passes: `npx astro check`
-- [x] 1.2 Lint passes: `npm run lint`
-- [x] 1.3 Build succeeds: `npm run build`
+- [x] 1.1 Typecheck passes: `npx astro check` — c6c8126
+- [x] 1.2 Lint passes: `npm run lint` — c6c8126
+- [x] 1.3 Build succeeds: `npm run build` — c6c8126
 
 #### Manual
 
@@ -244,9 +244,9 @@ Not applicable — no data model or schema changes.
 
 #### Automated
 
-- [ ] 2.1 Build succeeds: `npm run build`
-- [ ] 2.2 Lint passes: `npm run lint`
-- [ ] 2.3 Unit tests still pass: `npm run test`
+- [x] 2.1 Build succeeds: `npm run build`
+- [x] 2.2 Lint passes: `npm run lint`
+- [x] 2.3 Unit tests still pass: `npm run test`
 
 #### Manual
 

@@ -260,10 +260,10 @@ Not applicable — no data model or schema changes.
 
 #### Automated
 
-- [x] 3.1 No remaining references: `grep -r "Welcome" src/`
-- [x] 3.2 Full build passes: `npm run build`
-- [x] 3.3 Full lint passes: `npm run lint`
-- [x] 3.4 Full test suite passes: `npm run test`
+- [x] 3.1 No remaining references: `grep -r "Welcome" src/` — f9719d6
+- [x] 3.2 Full build passes: `npm run build` — f9719d6
+- [x] 3.3 Full lint passes: `npm run lint` — f9719d6
+- [x] 3.4 Full test suite passes: `npm run test` — f9719d6
 
 #### Manual
 
@@ -273,7 +273,7 @@ Not applicable — no data model or schema changes.
 
 #### Automated
 
-- [ ] 4.1 Issue created successfully: `gh issue view <number>`
+- [x] 4.1 Issue created successfully: `gh issue view <number>` — issue #60
 
 #### Manual
 

@@ -1,5 +1,5 @@
 ---
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 ---
 
 <div class="mx-auto flex max-w-4xl flex-col items-center justify-center px-4 py-24 text-center sm:py-32 lg:py-40">
@@ -13,14 +13,10 @@ import { Button } from "@/components/ui/button";
     spreadsheets.
   </p>
   <div class="flex flex-col gap-4 sm:flex-row">
-    <Button variant="default" size="lg" asChild>
-      <a href="/auth/signup">Sign Up</a>
-    </Button>
-    <Button variant="outline" size="lg" asChild>
-      <a href="/auth/signin">Sign In</a>
-    </Button>
+    <a href="/auth/signup" class:list={[buttonVariants({ variant: "default", size: "lg" })]}>Sign Up</a>
+    <a href="/auth/signin" class:list={[buttonVariants({ variant: "outline", size: "lg" })]}>Sign In</a>
     <form method="POST" action="/api/demo">
-      <Button variant="ghost" size="lg" type="submit">Try Demo</Button>
+      <Button variant="outline" size="lg" type="submit">Try Demo</Button>
     </form>
   </div>
 </div>

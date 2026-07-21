@@ -1,6 +1,9 @@
 ---
-import Welcome from "@/components/Welcome.astro";
 import Layout from "@/layouts/Layout.astro";
+import CosmicBackground from "@/components/CosmicBackground.astro";
+import Hero from "@/components/landing/Hero.astro";
+import FeatureGrid from "@/components/landing/FeatureGrid.astro";
+import SecondaryFeatures from "@/components/landing/SecondaryFeatures.astro";
 
 if (Astro.locals.user) {
   return Astro.redirect("/dashboard/vehicles");
@@ -9,7 +12,7 @@ if (Astro.locals.user) {
 const error = Astro.url.searchParams.get("error");
 ---
 
-<Layout>
+<Layout title="Car Repair Tracker — Track repairs, know your cost/km">
   {
     error === "demo_failed" && (
       <div class="fixed top-4 left-1/2 z-50 -translate-x-1/2 rounded-lg border border-red-500/30 bg-red-950/80 px-6 py-3 text-sm text-red-200 backdrop-blur-sm">
@@ -17,5 +20,9 @@ const error = Astro.url.searchParams.get("error");
       </div>
     )
   }
-  <Welcome />
+  <CosmicBackground>
+    <Hero />
+    <FeatureGrid />
+    <SecondaryFeatures />
+  </CosmicBackground>
 </Layout>
